@@ -1,19 +1,7 @@
 import React from 'react'
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
-import { makeStyles } from '@material-ui/core'
+import "./SearchBar.css"
 
-const useStyles = makeStyles({
-
-    search_bar: {
-        display: 'flex',
-        justifyContent: 'center',
-        width: '80%',
-        // "@media (max-width: 600px)": {
-        //     width: '60%',
-        // },
-    },
-
-});
 
 const SearchBar = () => {
 
@@ -66,10 +54,9 @@ const SearchBar = () => {
     }
 
 
-    const classes = useStyles();
 
     return (
-        <div className={classes.search_bar}>
+        <div className="search_bar">
 
             <div style={{ width: 800 }}>
                 <ReactSearchAutocomplete

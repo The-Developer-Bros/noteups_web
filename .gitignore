@@ -1,5 +1,6 @@
 # Custom files
 .env
+package-lock.json
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 .history/

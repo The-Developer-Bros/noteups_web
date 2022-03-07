@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import './App.css';
+import Footer from './components/footer/Footer';
 import Header from './components/header/Header';
 import AboutPage from './pages/AboutPage';
 import HomePage from './pages/HomePage';
@@ -25,6 +26,8 @@ function App() {
         {/* <Route path="/signup" element={<SignupPage />} /> */}
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+
+      {/* <Footer /> */}
     </BrowserRouter>
 
   );

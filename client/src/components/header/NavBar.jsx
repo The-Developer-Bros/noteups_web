@@ -30,28 +30,28 @@ const NavBar = () => {
 
                 <ul className={click ? "nav_menu active" : "nav_menu"}>
 
-                    {/* Create hamburger Menu */}
+
                     <li className="nav_item">
-                        <Link to="/" className="nav_links">
-                            <i className="fas fa-home" /> Home
+                        <Link to="/categories" className="nav_links">
+                            <i className="fas fa-list" /> Categories
                         </Link>
                     </li>
 
                     <li className="nav_item">
-                        <Link to="/notes" className="nav_links">
-                            <i className="fas fa-book" /> Notes
+                        <Link to="/pricing" className="nav_links">
+                            <i className="fas fa-dollar-sign" /> Pricing
                         </Link>
                     </li>
 
                     <li className="nav_item">
-                        <Link to="/about" className="nav_links">
-                            <i className="fas fa-info-circle" /> About
+                        <Link to="/earn" className="nav_links">
+                            <i className="fas fa-coins" /> Earn
                         </Link>
                     </li>
 
                     <li className="nav_item">
                         <Link to="/contact" className="nav_links">
-                            <i className="fas fa-envelope" /> Contact
+                            <i className="fas fa-phone" /> Contact
                         </Link>
                     </li>
 
@@ -62,7 +62,7 @@ const NavBar = () => {
                                 <div>
 
                                     <LoginButton />
-                                    <Box className="login_options">
+                                    <Box className="login_box">
                                         <Profile />
                                         <LogoutButton />
                                     </Box>

@@ -1,0 +1,42 @@
+.footer_box {
+  background-color: black;
+  color: white;
+  padding-top: 30px;
+  text-align: center;
+  font-size: 12px;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 20px;
+  overflow: hidden;
+}
+.footer_column {
+  flex: 1;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  padding: 0px;
+  margin: 0px;
+}
+.footer_list {
+  list-style: none;
+  text-decoration: none;
+  line-height: 2;
+}
+.footer_list p {
+  font-size: 18px;
+}
+
+.footer_list_items {
+  text-decoration: none;
+  font-size: 22px;
+  align-items: center;
+  color: white;
+}
+.fab {
+  align-items: center;
+  color: white;
+}

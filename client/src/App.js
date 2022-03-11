@@ -9,7 +9,8 @@ import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 // import ContactPage from './pages/ContactPage';
 import PricingPage from './pages/PricingPage';
-
+import ProductCategoriesPage from './pages/ProductCategoriesPage';
+import ProductSinglePage from './pages/ProductSinglePage';
 
 
 function App() {
@@ -22,12 +23,13 @@ function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/pricing" element={<PricingPage />} />
         {/* <Route path="/contact" element={<ContactPage />} /> */}
-        {/* <Route path="/login" element={<LoginPage />} /> */}
-        {/* <Route path="/signup" element={<SignupPage />} /> */}
+        <Route path="/categories" element={<ProductCategoriesPage />} />
+        <Route path="/product/:id" element={<ProductSinglePage />} />
+
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
-      {/* <Footer /> */}
+      <Footer />
     </BrowserRouter>
 
   );

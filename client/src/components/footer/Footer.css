@@ -5,8 +5,11 @@
   text-align: center;
   font-size: 12px;
   width: 100%;
-  position: fixed;
+  
+  /* Non-sticky and Non-overlapping Footer */
   bottom: 0;
+  position: relative;
+  margin-top: auto;
 
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

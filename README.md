@@ -2,7 +2,7 @@
 
 - Frontend Deployed on -> Netlify
 - Backend Deployed on -> Heroku
-- Database Deployed on -> MongoDB Atlas
+- Database Deployed on -> Cloudinary
 
 <!-- URL -->
 # URL for tutorial

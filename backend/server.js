@@ -13,7 +13,6 @@ cloudinary.config({
 
 const cors = require('cors');
 
-
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
@@ -54,24 +53,57 @@ app.get('/', async (req, res, next) => {
 
 // });
 
-app.get('/api/download/:domain/:subject', async (req, res) => {
+// Function to get all domain folders from cloudinary
+app.get("/api/domains", async (req, res) => {
+  try {
+    const result = await cloudinary.api.sub_folders("noteups");
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Function to get all subdomain within a domain folder from cloudinary
+app.get("/api/:domain/subdomains", async (req, res) => {
+  try {
+    const result = await cloudinary.api.sub_folders(`noteups/${req.params.domain}`);
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Function to get all pds within a subject within a domain folder from cloudinary
+app.get("/api/:domain/:subdomain/:subject", async (req, res) => {
+  try {
+    const result = await cloudinary.api.resources(`noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject}`);
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+app.get('/api/download/:domain/:subdomain/:subject', async (req, res, next) => {
   const { resources } = await cloudinary.search
-    .expression(`folder:${req.params.domain}/${req.params.subject}`)
+    .expression(`folder:noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject}`)
     .sort_by('created_at', 'desc')
     .max_results(10)
     .execute();
 
+  console.log(req.params.domain, req.params.subject);
   const publicIds = resources.map(file => file.public_id);
+  console.log(publicIds);
   res.send(publicIds);
 });
 
-app.post('/api/upload/:domain/:subject', async (req, res) => {
+app.post('/api/upload/:domain/:subdomain/:subject', async (req, res, next) => {
   try {
     const fileStr = req.body.data;
     console.log(fileStr);
 
     const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
-      folder: `${req.params.domain}/${req.params.subject}`,
+      folder: `noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject}`,
       use_filename: true,
       unique_filename: false,
       overwrite: true

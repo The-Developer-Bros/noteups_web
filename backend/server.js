@@ -73,7 +73,18 @@ app.get("/api/:domain/subdomains", async (req, res) => {
   }
 });
 
-// Function to get all pds within a subject within a domain folder from cloudinary
+// Function to get all subjects within a subdomain folder from cloudinary
+app.get("/api/:domain/:subdomain/subjects", async (req, res) => {
+  try {
+    const result = await cloudinary.api.sub_folders(`noteups/${req.params.domain}/${req.params.subdomain}`);
+    res.send(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+// Function to get all pdfs within a subject within a domain folder from cloudinary
 app.get("/api/:domain/:subdomain/:subject", async (req, res) => {
   try {
     const result = await cloudinary.api.resources(`noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject}`);

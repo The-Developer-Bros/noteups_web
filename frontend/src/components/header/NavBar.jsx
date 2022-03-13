@@ -44,8 +44,8 @@ const NavBar = () => {
                     </li>
 
                     <li className="nav_item">
-                        <Link to="/earn" className="nav_links">
-                            <i className="fas fa-coins" /> Earn
+                        <Link to="/contribute" className="nav_links">
+                            <i className="fas fa-coins" /> Contribute
                         </Link>
                     </li>
 

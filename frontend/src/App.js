@@ -11,6 +11,7 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import PricingPage from './pages/PricingPage/PricingPage';
 import ProductCategoriesPage from './pages/ProductCategoriesPage/ProductCategoriesPage';
 import ProductSinglePage from './pages/ProductSinglePage/ProductSinglePage';
+import ContributePage from './pages/ContributePage/ContributePage';
 
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
         <Route path="/pricing" element={<PricingPage />} />
         {/* <Route path="/contact" element={<ContactPage />} /> */}
         <Route path="/categories" element={<ProductCategoriesPage />} />
+        <Route path="/contribute" element={<ContributePage />} />
         <Route path="/product/:id" element={<ProductSinglePage />} />
 
         <Route path="*" element={<NotFoundPage />} />

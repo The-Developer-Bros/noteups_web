@@ -113,15 +113,21 @@ app.post('/api/upload/:domain/:subdomain/:subject', async (req, res, next) => {
     const fileStr = req.body.data;
     console.log(fileStr);
 
-    const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+    let promises = [];
+
+    const uploadedResponse = promises.push(cloudinary.uploader.upload(fileStr, {
       folder: `noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject}`,
       use_filename: true,
       unique_filename: false,
       overwrite: true
-    });
+    }));
 
-    console.log(uploadedResponse);
-    res.json({ msg: 'success', data: uploadedResponse });
+    // console.log(uploadedResponse);
+    // res.json({ msg: 'success', data: uploadedResponse });
+
+    Promise.all(promises).then(results => {
+      res.send(results);
+    });
 
   } catch (error) {
     console.log(error);

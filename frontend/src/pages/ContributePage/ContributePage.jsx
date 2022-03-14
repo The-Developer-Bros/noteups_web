@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import "./ContributePage.css";
+import axios from "axios";
+import { useDropzone } from 'react-dropzone';
 
 // File heirarchy:
 // domain/subdomain/subject/example.pdf
@@ -26,6 +29,8 @@ import React, { useState, useEffect } from "react";
 //   }
 
 function ContributePage() {
+
+    //////////////////////////////// Dropdown Menu Selector ////////////////////////////////////////////////
     const [domains, setDomains] = useState([]);
     const [domainId, setDomainId] = useState('');
 
@@ -61,9 +66,9 @@ function ContributePage() {
         const getSubdomains = async () => {
             const req = await fetch(`/api/${domainId}/subdomains`);
             const res = await req.json();
-
             // for each folder in the response, add it to the subdomains array
             const subdomains = res.folders?.map(folder => {
+
                 return {
                     name: folder.name,
                     path: folder.path
@@ -116,39 +121,127 @@ function ContributePage() {
         event.preventDefault();
     }
 
+    //////////////////////////////// React Dropzone ////////////////////////////////////////////////
+
+    const [PDFs, setPDFs] = useState([]);
+
+    const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
+        console.log("accepted Files ", acceptedFiles);
+        console.log("rejected Files ", rejectedFiles);
+
+        acceptedFiles.forEach(file => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                setPDFs(prevPDFs => [...prevPDFs, reader.result]);
+            };
+            reader.readAsDataURL(file);
+        });
+    }, []);
+
+    useEffect(() => {
+        console.log("PDFs ", PDFs);
+    }, [PDFs]);
+
+    function handleUpload(domain, subdomain, subject) {
+        console.log("Uploading PDF to Cloudinary...");
+
+        // TODO: Axios is posting to frontend and not backend 
+        axios.post(`/api/upload/${domain}/${subdomain}/${subject}`, { PDFs })
+            .then(res => {
+                console.log("Response from server ", res);
+            })
+            .catch(err => {
+                console.log("Error ", err);
+            });
+    }
+
+    // accept only PDFs
+    const { getRootProps, getInputProps, isDragActive } = useDropzone(
+        {
+            onDrop,
+            accept: "application/pdf"
+        }
+    );
+
+    console.log("getRootProps ", getRootProps);
+    console.log("getInputProps ", getInputProps);
+
+
+
     return (
         <div className="content">
-            <div>
-                <select name="domain" className="form-control" onChange={(e) => handleDomain(e)}>
-                    <option>-- Select Domain--</option>
-                    {
-                        domains?.map((domain) => (
-                            <option key={domain.path} value={domain.name}> {domain.name}</option>
-                        ))
-                    }
+            <div className="contribute_container">
 
-                </select>
+                <div className="container_left">
+                    <div className="contribute_header">
+                        <h1>Contribute</h1>
+                    </div>
+                    <h2>
+                        Select a domain
+                    </h2>
+                    <select name="domain" className="dropdown_menu" onChange={(e) => handleDomain(e)}>
+                        <option>-- Select Domain--</option>
+                        {
+                            domains?.map((domain) => (
+                                <option key={domain.path} value={domain.name}> {domain.name}</option>
+                            ))
+                        }
 
-                <select name="subdomain" className="form-control" onChange={(e) => handleSubdomain(e)}>
-                    <option>-- Select Subdomain--</option>
-                    {
-                        subdomains?.map((subdomain) => (
-                            <option key={subdomain.path} value={subdomain.name}> {subdomain.name}</option>
-                        ))
-                    }
-                </select>
+                    </select>
 
-                <select name="subject" className="form-control" onChange={(e) => handleSubject(e)}>
-                    <option>-- Select Subject--</option>
-                    {
-                        subjects?.map((subject) => (
-                            <option key={subject.path} value={subject.name}> {subject.name}</option>
-                        ))
-                    }
-                </select>
+                    <h2>
+                        Select a subdomain
+                    </h2>
 
-                <div className="form-group col-md-2 mt-4">
-                    <button className="btn btn-success mt-2" >Submit</button>
+                    <select name="subdomain" className="dropdown_menu" onChange={(e) => handleSubdomain(e)}>
+                        <option>-- Select Subdomain--</option>
+                        {
+                            subdomains?.map((subdomain) => (
+                                <option key={subdomain.path} value={subdomain.name}> {subdomain.name}</option>
+                            ))
+                        }
+                    </select>
+
+                    <h2>
+                        Select a subject
+                    </h2>
+
+                    <select name="subject" className="dropdown_menu" onChange={(e) => handleSubject(e)}>
+                        <option>-- Select Subject--</option>
+                        {
+                            subjects?.map((subject) => (
+                                <option key={subject.path} value={subject.name}> {subject.name}</option>
+                            ))
+                        }
+                    </select>
+                </div>
+
+                <div className="container_right">
+                    <div className="dropzone" {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        {isDragActive ? "Drag is active" : "Drag your files here"}
+                    </div>
+                    <div className="pdfs">
+                        {
+                            PDFs.map((pdf, index) => (
+                                <div key={index}>
+                                    <iframe
+                                        src={pdf}
+                                        width="100%"
+                                        height="500px"
+                                        frameBorder="0"
+                                        allowFullScreen
+                                        title="samplePDF"
+                                    />
+
+                                </div>
+                            ))
+                        }
+                    </div>
+
+                    <div className="form-group col-md-2 mt-4">
+                        <button className="btn btn-success mt-2" onClick={() => handleUpload(domainId, subdomainId, subjectId)}>Upload</button>
+                    </div>
                 </div>
             </div>
         </div>

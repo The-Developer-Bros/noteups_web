@@ -23,35 +23,24 @@ app.get('/', async (req, res, next) => {
   res.send({ message: 'Awesome it works 🐻' });
 });
 
-// app.post('/upload', async (req, res, next) => {
+// Function to add poster url to each subdomain from cloudinary
+const addPosterUrl = (subdomains) => {
 
-//   try {
+  // Create a clone of subdomains
+  const subdomainsClone = JSON.parse(JSON.stringify(subdomains));
 
-//     const { files } = req.body;
-//     let promises = [];
+  // Correct way to add JSON fields to an object 
+  subdomainsClone.folders.map((subdomain) => {
+    subdomain.poster = cloudinary.url(`noteups/engineering/${subdomain.name}/poster.jpg`, {
+      width: 250,
+      height: 350,
+      crop: 'fill',
+    });
+  });
 
-//     files.forEach(file => {
-//       promises.push(cloudinary.uploader.upload(file, {
-//         folder: 'test',
-//         use_filename: true,
-//         unique_filename: false,
-//         // transformation: [
-//         //   { width: 500, height: 500, crop: 'limit' },
-//         //   { quality: 'auto' }
-//         // ]
-//       }
-//       ));
-//     });
+  return subdomainsClone;
+};
 
-//     Promise.all(promises).then(results => {
-//       res.send(results);
-//     });
-
-//   } catch (error) {
-//     next(error);
-//   }
-
-// });
 
 // Function to get all domain folders from cloudinary
 app.get("/api/domains", async (req, res) => {
@@ -66,8 +55,14 @@ app.get("/api/domains", async (req, res) => {
 // Function to get all subdomain within a domain folder from cloudinary
 app.get("/api/:domain/subdomains", async (req, res) => {
   try {
-    const result = await cloudinary.api.sub_folders(`noteups/${req.params.domain}`);
-    res.send(result);
+    const subdomains = await cloudinary.api.sub_folders(`noteups/${req.params.domain}`);
+    // console.log(subdomains);
+    // res.send(subdomains);    
+    
+    const subdomainsWithPosters = addPosterUrl(subdomains);
+    console.log(subdomainsWithPosters);
+    res.send(subdomainsWithPosters);
+
   } catch (error) {
     next(error);
   }

@@ -11,7 +11,7 @@ const ProductCard = (props) => {
             {/* <Link to={`/movie/${data.imdbID}`}> */}
             <div className="card-inner">
                 <div className="card-top">
-                    <img src={data.Poster} alt="movie-poster" />
+                    <img src={data.poster} alt="movie-poster" />
                 </div>
                 <div className="card-bottom">
                     <div className="card-info">

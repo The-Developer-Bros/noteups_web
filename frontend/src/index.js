@@ -1,8 +1,10 @@
 import { Auth0Provider } from "@auth0/auth0-react";
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from "react-redux";
 import App from './App';
 import './index.css';
+import { store } from "./redux/store";
 
 // Dotenv in react
 const domain = process.env.REACT_APP_AUTHO_DOMAIN;
@@ -16,11 +18,13 @@ ReactDOM.render(
       domain={domain}
       clientId={clientId}
       redirectUri={window.location.origin}
-    // audience={process.env.REACT_APP_AUTH0_AUDIENCE}
-    // scope="read:current_user update:current_user_metadata"
-    // onRedirectCallback={() => window.history.replaceState({}, document.title, window.location.pathname)}
+      audience={`https://${domain}/userinfo`}
+      scope="read:current_user"
+      onRedirectCallback={() => window.history.replaceState({}, document.title, window.location.pathname)}
     >
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </Auth0Provider>
   </React.StrictMode>,
   document.getElementById('root')

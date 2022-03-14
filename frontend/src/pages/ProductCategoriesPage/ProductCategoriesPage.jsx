@@ -1,8 +1,28 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import ProductListing from './ProductListing';
 
-function ProductCategoriesPage() {
+import { useDispatch } from 'react-redux';
+import { fetchAsyncEngineeringSubjects, fetchAsyncArtsSubjects, fetchAsyncCommerceSubjects } from "../../redux/subjects/SubjectSlice";
+
+const ProductCategoriesPage = () => {
+
+  const dispatch = useDispatch();
+  const searchText = "-";
+
+  useEffect(() => {
+    dispatch(fetchAsyncEngineeringSubjects(searchText));
+    dispatch(fetchAsyncArtsSubjects(searchText));
+    dispatch(fetchAsyncCommerceSubjects(searchText));
+  }, [dispatch]);
+
+
+
   return (
-    <div>ProductCategoriesPage</div>
+    <div>
+      <div className="banner-img">
+      </div>
+      <ProductListing />
+    </div>
   )
 }
 

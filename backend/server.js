@@ -110,20 +110,23 @@ app.get('/api/download/:domain/:subdomain/:subject', async (req, res, next) => {
 
 app.post('/api/upload/:domain/:subdomain/:subject', async (req, res, next) => {
   try {
-    const fileStr = req.body.data;
-    console.log(fileStr);
+    const fileStr = req.body.PDFs;
+    console.log(`fileStr ${fileStr}`);
 
     let promises = [];
 
-    const uploadedResponse = promises.push(cloudinary.uploader.upload(fileStr, {
-      folder: `noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject}`,
-      use_filename: true,
-      unique_filename: false,
-      overwrite: true
-    }));
-
-    // console.log(uploadedResponse);
-    // res.json({ msg: 'success', data: uploadedResponse });
+    fileStr.forEach(file => {
+      promises.push(cloudinary.uploader.upload(file, {
+        folder: `noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject}`,
+        use_filename: true,
+        unique_filename: false,
+        // transformation: [
+        //   { width: 500, height: 500, crop: 'limit' },
+        //   { quality: 'auto' }
+        // ]
+      }
+      ));
+    });
 
     Promise.all(promises).then(results => {
       res.send(results);

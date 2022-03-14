@@ -214,6 +214,10 @@ function ContributePage() {
                             ))
                         }
                     </select>
+
+                    <div className="form-group col-md-2 mt-4 submit_btn_div">
+                        <button className="btn btn-success mt-2 submit_btn" onClick={() => handleUpload(domainId, subdomainId, subjectId)}>Upload</button>
+                    </div>
                 </div>
 
                 <div className="container_right">
@@ -239,9 +243,7 @@ function ContributePage() {
                         }
                     </div>
 
-                    <div className="form-group col-md-2 mt-4">
-                        <button className="btn btn-success mt-2" onClick={() => handleUpload(domainId, subdomainId, subjectId)}>Upload</button>
-                    </div>
+
                 </div>
             </div>
         </div>

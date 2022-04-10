@@ -22,19 +22,15 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/pricing" element={<PricingPage />} />
+        <Route path="about" element={<AboutPage />} />
+        <Route path="pricing" element={<PricingPage />} />
         {/* <Route path="/contact" element={<ContactPage />} /> */}
-        <Route path="/contribute" element={<ContributePage />} />
+        <Route path="contribute" element={<ContributePage />} />
 
-        <Route path="/products" element={<ProductCategoriesPage />} >
-          {/* /products/domains/subdomains/subjects (product) */}
-          <Route path=":domain" element={<ProductCategoriesPage />} >
-            <Route path=":subdomain" element={<ProductListingPage />} >
-              <Route path=":subject" element={<ProductDetailPage />} />
-            </Route>
-          </Route>
-        </Route>
+        <Route path="products" element={<ProductCategoriesPage />} />
+        <Route path="products/:domain" element={<ProductCategoriesPage />} />
+        <Route path="products/:domain/:subdomain" element={<ProductListingPage />} />
+        <Route path="products/:domain/:subdomain/:subject" element={<ProductDetailPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import ProductListing from './ProductListing';
+import ProductCategories from './ProductCategories';
 
 import { useDispatch } from 'react-redux';
 import { fetchAsyncEngineeringSubjects, fetchAsyncArtsSubjects, fetchAsyncCommerceSubjects } from "../../redux/subjects/SubjectSlice";
@@ -44,7 +44,7 @@ const ProductCategoriesPage = () => {
           </button>
         </form>
       </div>
-      <ProductListing />
+      <ProductCategories />
     </div>
   )
 }

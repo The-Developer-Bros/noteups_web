@@ -24,7 +24,7 @@ app.get('/', async (req, res, next) => {
 });
 
 // Function to add poster url to each subdomain from cloudinary
-const addPosterUrl = (subdomains, domain) => {
+const addSubdomainPosterUrl = (domain, subdomains) => {
 
   // Create a clone of subdomains
   const subdomainsClone = JSON.parse(JSON.stringify(subdomains));
@@ -38,9 +38,28 @@ const addPosterUrl = (subdomains, domain) => {
       //   crop: 'fill',
       // }
     );
-  });
+  }); 
 
   return subdomainsClone;
+};
+
+const addSubjectPosterUrl = (domain, subdomain, subjects) => {
+
+  // Create a clone of subjects
+  const subjectsClone = JSON.parse(JSON.stringify(subjects));
+
+  // Correct way to add JSON fields to an object
+  subjectsClone.folders.map((subject) => {
+    subject.poster = cloudinary.url(`noteups/${domain}/${subdomain}/${subject.name}/poster.jpg`,
+      // {
+      //   width: 250,
+      //   height: 350,
+      //   crop: 'fill',
+      // }
+    );
+  });
+
+  return subjectsClone;
 };
 
 
@@ -61,7 +80,7 @@ app.get("/api/:domain/subdomains", async (req, res) => {
     // console.log(subdomains);
     // res.send(subdomains);    
 
-    const subdomainsWithPosters = addPosterUrl(subdomains, req.params.domain);
+    const subdomainsWithPosters = addSubdomainPosterUrl(req.params.domain, subdomains);
     console.log(subdomainsWithPosters);
     res.send(subdomainsWithPosters);
 
@@ -73,8 +92,12 @@ app.get("/api/:domain/subdomains", async (req, res) => {
 // Function to get all subjects within a subdomain folder from cloudinary
 app.get("/api/:domain/:subdomain/subjects", async (req, res) => {
   try {
-    const result = await cloudinary.api.sub_folders(`noteups/${req.params.domain}/${req.params.subdomain}`);
-    res.send(result);
+    const subjects = await cloudinary.api.sub_folders(`noteups/${req.params.domain}/${req.params.subdomain}`);
+    // res.send(subjects);
+
+    const subjectsWithPosters = addSubjectPosterUrl(req.params.domain, req.params.subdomain, subjects);
+    res.send(subjectsWithPosters);
+
   } catch (error) {
     next(error);
   }

@@ -12,7 +12,7 @@ import NotFoundPage from './pages/NotFoundPage/NotFoundPage';
 import PricingPage from './pages/PricingPage/PricingPage';
 import ProductCategoriesPage from './pages/ProductCategoriesPage/ProductCategoriesPage';
 import ProductDetailPage from './pages/ProductDetailPage/ProductDetailPage';
-import ProductListingPage from './pages/ProductDetailPage/ProductListingPage';
+import ProductListingPage from './pages/ProductListingPage/ProductListingPage';
 
 
 function App() {

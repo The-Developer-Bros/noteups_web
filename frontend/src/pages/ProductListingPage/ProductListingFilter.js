@@ -11,7 +11,7 @@ function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubd
             setFiltered(all);
         } else {
             const allClone = JSON.parse(JSON.stringify(all));
-            allClone.folders = allClone.folders.filter(subject => {
+            allClone.folders = all.folders.filter(subject => {
                 return subject.path.split('/')[1] === activeSubdomain;
             });
             setFiltered(allClone);
@@ -26,16 +26,10 @@ function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubd
             <button onClick={() => setActiveSubdomain(12)} className={activeSubdomain === 12 ? "active" : ""}>Adventure</button>
             <button onClick={() => setActiveSubdomain(16)} className={activeSubdomain === 16 ? "active" : ""}>Animation</button> */}
 
-            {/* wait till all.length is available */}
-            {all.folders && all.folders.map(subject => {
-                return (
-                    <button key={subject.id} onClick={() => setActiveSubdomain(subject.path.split('/')[1])} className={activeSubdomain === subject.path.split('/')[1] ? "active" : ""}>{subject.name}</button>
-                )
-            })}
+            <button onClick={() => setActiveSubdomain("computer-science-and-it")} className={activeSubdomain === "action" ? "active" : ""}>Computer Science and IT</button>
 
 
 
-            
 
         </div>
     )

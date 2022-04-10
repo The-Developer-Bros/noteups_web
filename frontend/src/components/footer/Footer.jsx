@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { MuiThemeProvider, createTheme } from '@material-ui/core/styles';
 import { IconContext } from 'react-icons/lib'
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from 'react-icons/fa'
-import "./Footer.css";
+import "./Footer.scss";
 
 
 const THEME = createTheme({

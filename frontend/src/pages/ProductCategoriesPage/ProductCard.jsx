@@ -1,10 +1,21 @@
 import React from 'react';
-import "./ProductCard.css";
+import "./ProductCard.scss";
+
 
 const ProductCard = (props) => {
 
     const { data } = props;
     console.log("data is", data);
+
+    // Convert dashed casing to Sentence Casing
+    // "electrical-and-electronics" to "Electrical and Electronics"
+    const convertToSentenceCase = (str) => {
+        return str.replace(/-/g, ' ').replace(/\w\S*/g, function (txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+    }
+
+    const subjectName = convertToSentenceCase(data.name);
 
     return (
         <div className="card-item">
@@ -15,7 +26,7 @@ const ProductCard = (props) => {
                 </div>
                 <div className="card-bottom">
                     <div className="card-info">
-                        <h4>{data.name}</h4>
+                        <h3>{subjectName}</h3>
                         <p>{data.path}</p>
                     </div>
                 </div>

@@ -2,7 +2,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Box } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 
-import "./Auth.css";
+import "./Auth.scss";
 
 export const LoginButton = () => {
 

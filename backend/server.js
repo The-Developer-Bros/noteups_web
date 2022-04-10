@@ -24,18 +24,20 @@ app.get('/', async (req, res, next) => {
 });
 
 // Function to add poster url to each subdomain from cloudinary
-const addPosterUrl = (subdomains) => {
+const addPosterUrl = (subdomains, domain) => {
 
   // Create a clone of subdomains
   const subdomainsClone = JSON.parse(JSON.stringify(subdomains));
 
   // Correct way to add JSON fields to an object 
   subdomainsClone.folders.map((subdomain) => {
-    subdomain.poster = cloudinary.url(`noteups/engineering/${subdomain.name}/poster.jpg`, {
-      width: 250,
-      height: 350,
-      crop: 'fill',
-    });
+    subdomain.poster = cloudinary.url(`noteups/${domain}/${subdomain.name}/poster.jpg`,
+      // {
+      //   width: 250,
+      //   height: 350,
+      //   crop: 'fill',
+      // }
+    );
   });
 
   return subdomainsClone;
@@ -58,8 +60,8 @@ app.get("/api/:domain/subdomains", async (req, res) => {
     const subdomains = await cloudinary.api.sub_folders(`noteups/${req.params.domain}`);
     // console.log(subdomains);
     // res.send(subdomains);    
-    
-    const subdomainsWithPosters = addPosterUrl(subdomains);
+
+    const subdomainsWithPosters = addPosterUrl(subdomains, req.params.domain);
     console.log(subdomainsWithPosters);
     res.send(subdomainsWithPosters);
 

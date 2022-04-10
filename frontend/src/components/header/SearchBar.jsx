@@ -1,6 +1,6 @@
 import React from 'react'
 import { ReactSearchAutocomplete } from 'react-search-autocomplete'
-import "./SearchBar.css"
+import "./SearchBar.scss"
 
 
 const SearchBar = () => {

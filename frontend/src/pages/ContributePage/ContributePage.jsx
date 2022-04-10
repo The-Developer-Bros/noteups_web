@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import "./ContributePage.css";
+import "./ContributePage.scss";
 import axios from "axios";
 import { useDropzone } from 'react-dropzone';
 

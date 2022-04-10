@@ -8,7 +8,7 @@ import { LoginButton, LogoutButton, Profile } from './Auth';
 import { FaTimes, FaBars } from 'react-icons/fa'
 import { useState } from 'react';
 import SearchBar from './SearchBar';
-import "./NavBar.css";
+import "./NavBar.scss";
 
 const NavBar = () => {
 

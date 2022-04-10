@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { getAllArtsSubjects, getAllEngineeringSubjects, getAllCommerceSubjects } from '../../redux/subjects/SubjectSlice'
 import ProductCard from './ProductCard'
-import "./ProductListing.css"
+import "./ProductListing.scss"
 import Slider from 'react-slick';
 
 const ProductListing = () => {

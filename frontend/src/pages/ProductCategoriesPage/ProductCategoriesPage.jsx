@@ -7,7 +7,7 @@ import { fetchAsyncEngineeringSubjects, fetchAsyncArtsSubjects, fetchAsyncCommer
 const ProductCategoriesPage = () => {
 
   const dispatch = useDispatch();
-  const searchText = "-";
+  const searchText = "computer";
 
   useEffect(() => {
     dispatch(fetchAsyncEngineeringSubjects(searchText));

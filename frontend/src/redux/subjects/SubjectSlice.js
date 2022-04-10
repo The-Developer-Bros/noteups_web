@@ -6,6 +6,7 @@ export const fetchAsyncEngineeringSubjects = createAsyncThunk(
         const response = await fetch(`/api/engineering/subdomains`)
         const subjects = await response.json()
         console.log(`fetched Engineering subjects: ${subjects}`)
+        subjects.folders = subjects.folders.filter(subject => subject.name.includes(term))
         return subjects
     }
 )
@@ -16,6 +17,7 @@ export const fetchAsyncArtsSubjects = createAsyncThunk(
         const response = await fetch(`/api/arts/subdomains`)
         const subjects = await response.json()
         console.log(`fetched Arts subjects: ${subjects}`)
+        subjects.folders = subjects.folders.filter(subject => subject.name.includes(term))
         return subjects
     }
 )
@@ -26,6 +28,7 @@ export const fetchAsyncCommerceSubjects = createAsyncThunk(
         const response = await fetch(`/api/commerce/subdomains`)
         const subjects = await response.json()
         console.log(`fetched Commerce subjects: ${subjects}`)
+        subjects.folders = subjects.folders.filter(subject => subject.name.includes(term))
         return subjects
     }
 )

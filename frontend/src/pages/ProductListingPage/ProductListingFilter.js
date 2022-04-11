@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubdomain }) {
 
@@ -6,7 +7,12 @@ function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubd
     console.log(all)
     console.log(`activeSubdomain: ${activeSubdomain}`);
 
+    const dispatch = useDispatch();
+    const productsListing = useSelector((state) => state.productList);
+    const { products, loading, error } = productsListing;
+
     useEffect(() => {
+
         if (activeSubdomain === "all") {
             setFiltered(all);
         } else {
@@ -21,18 +27,32 @@ function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubd
 
     return (
         <div className="filter-container">
-            <button onClick={() => setActiveSubdomain("all")} className={activeSubdomain === "all" ? "active" : ""}>All</button>
-            {/* <button onClick={() => setActiveSubdomain(28)} className={activeSubdomain === 28 ? "active" : ""}>Action</button>
-            <button onClick={() => setActiveSubdomain(12)} className={activeSubdomain === 12 ? "active" : ""}>Adventure</button>
-            <button onClick={() => setActiveSubdomain(16)} className={activeSubdomain === 16 ? "active" : ""}>Animation</button> */}
+            {/* <button onClick={() => setActiveSubdomain("all")} className={activeSubdomain === "all" ? "active" : ""}>All</button> */}
 
-            <button onClick={() => setActiveSubdomain("computer-science-and-it")} className={activeSubdomain === "action" ? "active" : ""}>Computer Science and IT</button>
+            {
+                loading ?
+                    <div>Loading...</div>
+                    :
+                    error ?
+                        <div>{error}</div>
+                        :
+                        (<div>
+                            {
+                                products.map(subject => {
+                                    return <button
+                                        key={subject.path}
+                                        onClick={() => setActiveSubdomain(subject.path.split('/')[1])}
+                                        className={activeSubdomain === subject.path.split('/')[1] ? "active" : ""}>
+                                        {subject.name}</button>
+                                })
 
-
-
-
+                            }
+                        </div>)
+            }
         </div>
     )
 }
 
+
 export default ProductListingFilter
+{/* <button onClick={() => setActiveSubdomain("computer-science-and-it")} className={activeSubdomain === "action" ? "active" : ""}>Computer Science and IT</button> */ }

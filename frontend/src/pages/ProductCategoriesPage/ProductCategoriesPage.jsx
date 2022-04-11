@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchAsyncArtsSubjects, fetchAsyncCommerceSubjects, fetchAsyncEngineeringSubjects } from "../../redux/slices/SubjectSlice";
+import { fetchAsyncArtsSubdomains, fetchAsyncCommerceSubdomains, fetchAsyncEngineeringSubdomains } from "../../redux/slices/SubdomainSlice";
 import ProductCategories from './ProductCategories';
 
 
@@ -10,9 +10,9 @@ const ProductCategoriesPage = () => {
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
-    dispatch(fetchAsyncEngineeringSubjects(searchText));
-    dispatch(fetchAsyncArtsSubjects(searchText));
-    dispatch(fetchAsyncCommerceSubjects(searchText));
+    dispatch(fetchAsyncEngineeringSubdomains(searchText));
+    dispatch(fetchAsyncArtsSubdomains(searchText));
+    dispatch(fetchAsyncCommerceSubdomains(searchText));
   }, [searchText, dispatch]);
 
   // Backup when user clicks on the search button
@@ -22,9 +22,9 @@ const ProductCategoriesPage = () => {
       alert("Please enter a search searchText");
       return;
     } else {
-      dispatch(fetchAsyncEngineeringSubjects(searchText));
-      dispatch(fetchAsyncArtsSubjects(searchText));
-      dispatch(fetchAsyncCommerceSubjects(searchText));
+      dispatch(fetchAsyncEngineeringSubdomains(searchText));
+      dispatch(fetchAsyncArtsSubdomains(searchText));
+      dispatch(fetchAsyncCommerceSubdomains(searchText));
     }
     setSearchText("");
   }

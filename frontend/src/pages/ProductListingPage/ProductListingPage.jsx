@@ -1,12 +1,9 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAsyncArtsSubjects, fetchAsyncCommerceSubjects, fetchAsyncEngineeringSubjects } from '../../redux/slices/SubjectSlice';
-import "./ProductListingPage.scss";
+import { listSubdomainsActionCreater, detailsSubdomainAction, listSubjectsActionCreator } from '../../redux/actions/ProductActions';
 import ProductListingFilter from './ProductListingFilter';
-import ProductListingCard from './ProductListingCard';
-import axios from 'axios';
-import { listProducts } from '../../redux/actions/ProductActions';
+import "./ProductListingPage.scss";
 
 function ProductListingPage() {
 
@@ -65,28 +62,36 @@ function ProductListingPage() {
 
 
   const dispatch = useDispatch();
-  const productsListing = useSelector((state) => state.productList);
-  const { products, loading, error } = productsListing;
+
+  const subdomainListing = useSelector((state) => state.subdomainList);
+  const { products, loading, error } = subdomainListing;
+
+  const subjectListing = useSelector((state) => state.subjectList);
+  const { subjects, loading: loadingSubject, error: errorSubject } = subjectListing;
 
   useEffect(() => {
-    const fetchSubjects = async () => {
+    const fetchSubdomains = async () => {
       switch (domain) {
         case "engineering":
-          dispatch(listProducts("engineering"));
+          dispatch(listSubdomainsActionCreater("engineering"));
           break;
         case "arts":
-          dispatch(listProducts("arts"));
+          dispatch(listSubdomainsActionCreater("arts"));
           break;
         case "commerce":
-          dispatch(listProducts("commerce"));
+          dispatch(listSubdomainsActionCreater("commerce"));
           break;
         default:
           break;
       }
     }
-    fetchSubjects();
-  }, [domain, dispatch]);
 
+    const fetchSubjects = async () => {
+      dispatch(listSubjectsActionCreator(domain, subdomain));
+    }
+    fetchSubdomains();
+    fetchSubjects();
+  }, [domain, dispatch, subdomain]);
   return (
     <div className="product-listing-page">
       {loading ? (
@@ -99,7 +104,7 @@ function ProductListingPage() {
           setFiltered={setFiltered}
           activeSubdomain={activeSubdomain}
           setActiveSubdomain={setActiveSubdomain} />
-        // {/* <motion.div
+        // <motion.div
         //   layout
         //   className="all-subjects">
         //   <AnimatePresence>
@@ -107,11 +112,24 @@ function ProductListingPage() {
         //       return <ProductListingCard key={movie.id} movie={movie} />
         //     })}
         //   </AnimatePresence>
-        // </motion.div> */}
+        // </motion.div>
+
+      )}
+      {loadingSubject ? (
+        <div>Loading...</div>
+      ) : errorSubject ? (
+        <div>{errorSubject}</div>
+      ) : (
+        <div className="all-subjects">
+          {subjects.map(subject => {
+            return <h1 key={subject.path}>{subject.name}</h1>
+          })}
+        </div>
       )}
     </div>
-
   );
+
+
 
 }
 

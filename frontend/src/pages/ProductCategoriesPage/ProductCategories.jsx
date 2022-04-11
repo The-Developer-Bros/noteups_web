@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import Slider from 'react-slick'
-import { getAllArtsSubjects, getAllCommerceSubjects, getAllEngineeringSubjects } from '../../redux/slices/SubjectSlice'
+import { getAllArtsSubdomains, getAllCommerceSubdomains, getAllEngineeringSubdomains } from '../../redux/slices/SubdomainSlice'
 import ProductCard from './ProductCard'
 import "./ProductCategories.scss"
 
@@ -60,9 +60,9 @@ const ProductCategories = () => {
         ]
     };
 
-    const engineeringSubjects = useSelector(getAllEngineeringSubjects);
-    const artsSubjects = useSelector(getAllArtsSubjects);
-    const commerceSubjects = useSelector(getAllCommerceSubjects);
+    const engineeringSubjects = useSelector(getAllEngineeringSubdomains);
+    const artsSubjects = useSelector(getAllArtsSubdomains);
+    const commerceSubjects = useSelector(getAllCommerceSubdomains);
 
     let renderArtsSubjects = "";
 

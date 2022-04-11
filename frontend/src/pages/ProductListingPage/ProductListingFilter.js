@@ -8,8 +8,8 @@ function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubd
     console.log(`activeSubdomain: ${activeSubdomain}`);
 
     const dispatch = useDispatch();
-    const productsListing = useSelector((state) => state.productList);
-    const { products, loading, error } = productsListing;
+    const subdomainListing = useSelector((state) => state.subdomainList);
+    const { subdomains, loading, error } = subdomainListing;
 
     useEffect(() => {
 
@@ -38,7 +38,7 @@ function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubd
                         :
                         (<div>
                             {
-                                products.map(subject => {
+                                subdomains.map(subject => {
                                     return <button
                                         key={subject.path}
                                         onClick={() => setActiveSubdomain(subject.path.split('/')[1])}

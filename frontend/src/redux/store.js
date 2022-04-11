@@ -1,13 +1,15 @@
-import { createStore, configureStore } from '@reduxjs/toolkit';
+import { createStore } from '@reduxjs/toolkit';
 import { applyMiddleware, combineReducers, compose } from "redux";
 import thunk from "redux-thunk";
-import { productDetailsReducer, productListReducer } from "./reducers/ProductReducers";
-import subjectsReducer from './slices/SubjectSlice';
+import { subdomainDetailsReducer, subdomainListReducer, subjectDetailsReducer, subjectListReducer } from "./reducers/ProductReducers";
+import subdomainReducer from './slices/SubdomainSlice';
 
 const reducers = {
-    productList: productListReducer,
-    productDetail: productDetailsReducer,
-    subjects: subjectsReducer
+    subdomain: subdomainReducer,
+    subdomainDetails: subdomainDetailsReducer,
+    subdomainList: subdomainListReducer,
+    subjectDetails: subjectDetailsReducer,
+    subjectList: subjectListReducer
 }
 
 
@@ -16,17 +18,18 @@ const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const rootReducer = combineReducers(reducers);
 
 const initialState = {
-    productList: {
-        loading: true,
-        products: []
+    subdomain: {
+        engineering: {},
+        arts: {},
+        commerce: {},
     },
-    productDetail: {
+    subdomainDetails: {
         loading: true,
-        product: {}
+        subdomain: {}
     },
-    subjects: {
+    subdomainList: {
         loading: true,
-        subjects: []
+        subdomains: {}
     }
 }
 

@@ -32,8 +32,8 @@ const NavBar = () => {
 
 
                     <li className="nav_item">
-                        <Link to="/categories" className="nav_links">
-                            <i className="fas fa-list" /> Categories
+                        <Link to="/products" className="nav_links">
+                            <i className="fas fa-list" /> Products
                         </Link>
                     </li>
 

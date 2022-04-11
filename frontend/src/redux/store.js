@@ -5,23 +5,19 @@ import { subdomainDetailsReducer, subdomainListReducer, subjectDetailsReducer, s
 import subdomainReducer from './slices/SubdomainSlice';
 
 const reducers = {
-    subdomain: subdomainReducer,
+    subdomains: subdomainReducer,
     subdomainDetails: subdomainDetailsReducer,
     subdomainList: subdomainListReducer,
     subjectDetails: subjectDetailsReducer,
     subjectList: subjectListReducer
 }
 
-
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
-const rootReducer = combineReducers(reducers);
-
 const initialState = {
-    subdomain: {
+    subdomains: {
         engineering: {},
         arts: {},
         commerce: {},
+        selectedSubject: {},
     },
     subdomainDetails: {
         loading: true,
@@ -30,8 +26,19 @@ const initialState = {
     subdomainList: {
         loading: true,
         subdomains: {}
+    },
+    subjectDetails: {
+        loading: true,
+        subject: {}
+    },
+    subjectList: {
+        loading: true,
+        subjects: {}
     }
 }
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const rootReducer = combineReducers(reducers);
 
 export const store = createStore(
     rootReducer,

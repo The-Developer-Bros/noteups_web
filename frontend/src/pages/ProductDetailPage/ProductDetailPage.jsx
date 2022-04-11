@@ -1,5 +1,5 @@
-import React from 'react'
-import "./ProductDetailPage.scss"
+import React from 'react';
+import "./ProductDetailPage.scss";
 
 function ProductDetailPage() {
 

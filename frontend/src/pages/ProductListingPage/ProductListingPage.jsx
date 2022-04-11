@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchAsyncArtsSubjects, fetchAsyncCommerceSubjects, fetchAsyncEngineeringSubjects } from '../../redux/subjects/SubjectSlice';
+import { fetchAsyncArtsSubjects, fetchAsyncCommerceSubjects, fetchAsyncEngineeringSubjects } from '../../redux/slices/SubjectSlice';
 import "./ProductListingPage.scss";
 import ProductListingFilter from './ProductListingFilter';
 import ProductListingCard from './ProductListingCard';
@@ -56,7 +56,7 @@ function ProductListingPage() {
       const allSubdomains = {};
       allSubdomains.folders = [...engineeringSubdomains.data.folders, ...artsSubdomains.data.folders, ...commerceSubdomains.data.folders];
       console.log(allSubdomains);
-      
+
       setAll(allSubdomains);
     }
     fetchSubjects();

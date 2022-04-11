@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchAsyncArtsSubjects, fetchAsyncCommerceSubjects, fetchAsyncEngineeringSubjects } from "../../redux/slices/SubjectSlice";
 import ProductCategories from './ProductCategories';
 
-import { useDispatch } from 'react-redux';
-import { fetchAsyncEngineeringSubjects, fetchAsyncArtsSubjects, fetchAsyncCommerceSubjects } from "../../redux/subjects/SubjectSlice";
 
 const ProductCategoriesPage = () => {
 

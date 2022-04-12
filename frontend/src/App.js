@@ -28,7 +28,7 @@ function App() {
         <Route path="contribute" element={<ContributePage />} />
 
         <Route path="products" element={<ProductCategoriesPage />} />
-        <Route path="products/:domain" element={<ProductCategoriesPage />} />
+        <Route path="products/:domain" element={<ProductListingPage />} />
         <Route path="products/:domain/:subdomain" element={<ProductListingPage />} />
         <Route path="products/:domain/:subdomain/:subject" element={<ProductDetailPage />} />
         <Route path="*" element={<NotFoundPage />} />

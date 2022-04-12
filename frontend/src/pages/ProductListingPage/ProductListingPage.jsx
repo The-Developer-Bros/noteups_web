@@ -1,7 +1,8 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { listSubdomainsActionCreater, detailsSubdomainAction, listSubjectsActionCreator } from '../../redux/actions/ProductActions';
+import { listSubdomainsActionCreater, listSubjectsActionCreator } from '../../redux/actions/ProductActions';
+import ProductListingCard from './ProductListingCard';
 import ProductListingFilter from './ProductListingFilter';
 import "./ProductListingPage.scss";
 
@@ -14,60 +15,26 @@ function ProductListingPage() {
   const url = window.location.href;
   const urlArray = url.split("/");
 
-  const domain = urlArray[urlArray.length - 2];
-  const subdomain = urlArray[urlArray.length - 1];
+  let subdomainAvailable = (urlArray.length === 6);
 
+  let domain = "";
+  let subdomain = "";
 
-  // useEffect(() => {
-  //   const fetchSubjects = async () => {
-  //     switch (domain) {
-  //       case "engineering":
-  //         const engineeringSubdomains = await axios.get(`/api/engineering/subdomains`);
-  //         console.log(engineeringSubdomains.data);
-  //         setAll(engineeringSubdomains.data);
-  //         break;
-  //       case "arts":
-  //         const artsSubdomains = await axios.get(`/api/arts/subdomains`);
-  //         setAll(artsSubdomains.data);
-  //         break;
-  //       case "commerce":
-  //         const commerceSubdomains = await axios.get(`/api/commerce/subdomains`);
-  //         setAll(commerceSubdomains.data);
-  //         break;
-  //       default:
-  //         break;
-  //     }
-  //   }
-  //   fetchSubjects();
-  // }, [domain]);
-
-  // useEffect(() => {
-  //   const fetchSubjects = async () => {
-  //     const engineeringSubdomains = await axios.get(`/api/engineering/subdomains`);
-  //     const artsSubdomains = await axios.get(`/api/arts/subdomains`);
-  //     const commerceSubdomains = await axios.get(`/api/commerce/subdomains`);
-
-  //     console.log(engineeringSubdomains.data.folders);
-  //     console.log(artsSubdomains.data.folders);
-  //     console.log(commerceSubdomains.data.folders);
-
-  //     const allSubdomains = {};
-  //     allSubdomains.folders = [...engineeringSubdomains.data.folders, ...artsSubdomains.data.folders, ...commerceSubdomains.data.folders];
-  //     console.log(allSubdomains);
-
-  //     setAll(allSubdomains);
-  //   }
-  //   fetchSubjects();
-  // }, []);
-
+  if (subdomainAvailable) {
+    domain = urlArray[urlArray.length - 2];
+    subdomain = urlArray[urlArray.length - 1];
+  } else {
+    domain = urlArray[urlArray.length - 1];
+    subdomain = "all";
+  }
 
   const dispatch = useDispatch();
 
   const subdomainListing = useSelector((state) => state.subdomainList);
-  const { products, loading, error } = subdomainListing;
+  const { subdomains, loadingSubdomains, errorSubdomains } = subdomainListing;
 
   const subjectListing = useSelector((state) => state.subjectList);
-  const { subjects, loading: loadingSubject, error: errorSubject } = subjectListing;
+  const { subjects, loadingSubject, errorSubject } = subjectListing;
 
   useEffect(() => {
     const fetchSubdomains = async () => {
@@ -89,32 +56,59 @@ function ProductListingPage() {
     const fetchSubjects = async () => {
       dispatch(listSubjectsActionCreator(domain, subdomain));
     }
+
     fetchSubdomains();
     fetchSubjects();
-  }, [domain, dispatch, subdomain]);
+
+  }, [dispatch, domain, subdomain, subdomainAvailable]);
+
+  // When the loading of subdomains is complete, set the state of all and filtered
+  useEffect(() => {
+    if (!loadingSubject && !errorSubject) {
+      setAll(subjects);
+      setFiltered(subjects);
+    }
+  }, [loadingSubject, errorSubject, subjects]);
+  
+  useEffect(() => {
+
+    if (activeSubdomain === "all") {
+      setFiltered(all);
+    } else {
+      const allClone = JSON.parse(JSON.stringify(all));
+      allClone.folders = all.folders.filter(subject => {
+        return subject.path.split('/')[1] === activeSubdomain;
+      });
+      setFiltered(allClone);
+    }
+  }, [activeSubdomain, all, setFiltered]);
+
+
   return (
     <div className="product-listing-page">
-      {loading ? (
+      {loadingSubdomains ? (
         <div>Loading...</div>
-      ) : error ? (
-        <div>{error}</div>
+      ) : errorSubdomains ? (
+        <div>{errorSubdomains}</div>
       ) : (
         <ProductListingFilter
           all={all}
           setFiltered={setFiltered}
           activeSubdomain={activeSubdomain}
           setActiveSubdomain={setActiveSubdomain} />
-        // <motion.div
-        //   layout
-        //   className="all-subjects">
-        //   <AnimatePresence>
-        //     {filtered.map(movie => {
-        //       return <ProductListingCard key={movie.id} movie={movie} />
-        //     })}
-        //   </AnimatePresence>
-        // </motion.div>
-
       )}
+
+      {/* <motion.div
+        layout
+        className="all-subjects">
+        <AnimatePresence>
+          {filtered.map(movie => {
+            return <ProductListingCard key={movie.id} movie={movie} />
+          })}
+        </AnimatePresence>
+      </motion.div> */}
+
+
       {loadingSubject ? (
         <div>Loading...</div>
       ) : errorSubject ? (
@@ -125,6 +119,15 @@ function ProductListingPage() {
             return <h1 key={subject.path}>{subject.name}</h1>
           })}
         </div>
+        // <motion.div
+        //   layout
+        //   className="all-subjects">
+        //   <AnimatePresence>
+        //     {subjects.map(subject => {
+        //       return <ProductListingCard key={subject.path} subject={subject} />
+        //     })}
+        //   </AnimatePresence>
+        // </motion.div>
       )}
     </div>
   );

@@ -4,6 +4,7 @@ import Slider from 'react-slick'
 import { getAllArtsSubdomains, getAllCommerceSubdomains, getAllEngineeringSubdomains } from '../../redux/slices/SubdomainSlice'
 import ProductCard from './ProductCard'
 import "./ProductCategories.scss"
+import { motion, AnimatePresence } from 'framer-motion'
 
 function SampleNextArrow(props) {
     const { className, style, onClick } = props;
@@ -26,7 +27,7 @@ function SamplePrevArrow(props) {
     );
 }
 
-
+// TODO: React Slick shows duplicate slides when using searching
 const ProductCategories = () => {
 
 
@@ -125,29 +126,52 @@ const ProductCategories = () => {
 
             <div className="engineering-list">
                 <h2>Engineering Subjects</h2>
-                <div className="engineering-container">
-                    <Slider {...settings} >
-                        {renderEngineeringSubjects}
-                    </Slider>
-                </div>
+                <motion.div className="engineering-container"
+                    layout
+                    animate={{ opacity: 1 }}
+                    initial={{ opacity: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                >
+                    <AnimatePresence>
+                        <Slider {...settings} >
+                            {renderEngineeringSubjects}
+                        </Slider>
+                    </AnimatePresence>
+                </motion.div>
             </div>
 
             <div className="arts-list">
                 <h2>Arts Subjects</h2>
-                <div className="arts-container">
-                    <Slider {...settings} >
-                        {renderArtsSubjects}
-                    </Slider>
-                </div>
+                <motion.div className="arts-container"
+                    layout
+                    animate={{ opacity: 1 }}
+                    initial={{ opacity: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}>
+                    <AnimatePresence>
+                        <Slider {...settings} >
+                            {renderArtsSubjects}
+                        </Slider>
+                    </AnimatePresence>
+
+                </motion.div>
             </div>
 
             <div className="commerce-list">
                 <h2>Commerce Subjects</h2>
-                <div className="commerce-container">
-                    <Slider {...settings} >
-                        {renderCommerceSubjects}
-                    </Slider>
-                </div>
+                <motion.div className="commerce-container"
+                    layout
+                    animate={{ opacity: 1 }}
+                    initial={{ opacity: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.5 }}>
+                    <AnimatePresence>
+                        <Slider {...settings} >
+                            {renderCommerceSubjects}
+                        </Slider>
+                    </AnimatePresence>
+                </motion.div>
             </div>
 
         </div>

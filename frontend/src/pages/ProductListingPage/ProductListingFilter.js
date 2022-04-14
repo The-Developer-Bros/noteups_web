@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { convertToSentenceCase } from '../../utils';
 
 function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubdomain }) {
 
@@ -28,7 +29,6 @@ function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubd
 
     }, [activeSubdomain, all, setFiltered]);
 
-
     return (
         <div className="filter-container">
             {
@@ -46,7 +46,8 @@ function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubd
                                         key={subject.path}
                                         onClick={() => setActiveSubdomain(String(subject.path.split('/')[2]))}
                                         className={activeSubdomain === subject.path.split('/')[2] ? "active" : ""}>
-                                        {subject.name}</button>
+                                        {convertToSentenceCase(subject.name)}
+                                    </button>
                                 })
 
                             }

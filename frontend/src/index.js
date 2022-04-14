@@ -10,8 +10,6 @@ import { store } from "./redux/store";
 const domain = process.env.REACT_APP_AUTHO_DOMAIN;
 const clientId = process.env.REACT_APP_AUTHO_CLIENT_ID;
 
-console.log(domain, clientId);
-
 ReactDOM.render(
   <React.StrictMode>
     <Auth0Provider

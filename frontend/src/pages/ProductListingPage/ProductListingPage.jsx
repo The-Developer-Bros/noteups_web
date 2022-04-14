@@ -10,7 +10,7 @@ function ProductListingPage() {
 
   const [all, setAll] = useState([]);
   const [filtered, setFiltered] = useState([]);
-  const [activeSubdomain, setActiveSubdomain] = useState("all");
+  const [activeSubdomain, setActiveSubdomain] = useState(String("all"));
 
   const url = window.location.href;
   const urlArray = url.split("/");
@@ -31,10 +31,10 @@ function ProductListingPage() {
   const dispatch = useDispatch();
 
   const subdomainListing = useSelector((state) => state.subdomainList);
-  const { subdomains, loadingSubdomains, errorSubdomains } = subdomainListing;
+  const { subdomains, loading: loadingSubdomains, error: errorSubdomains } = subdomainListing;
 
   const subjectListing = useSelector((state) => state.subjectList);
-  const { subjects, loadingSubject, errorSubject } = subjectListing;
+  const { subjects, loading: loadingSubject, error: errorSubject } = subjectListing;
 
   useEffect(() => {
     const fetchSubdomains = async () => {
@@ -69,19 +69,6 @@ function ProductListingPage() {
       setFiltered(subjects);
     }
   }, [loadingSubject, errorSubject, subjects]);
-  
-  useEffect(() => {
-
-    if (activeSubdomain === "all") {
-      setFiltered(all);
-    } else {
-      const allClone = JSON.parse(JSON.stringify(all));
-      allClone.folders = all.folders.filter(subject => {
-        return subject.path.split('/')[1] === activeSubdomain;
-      });
-      setFiltered(allClone);
-    }
-  }, [activeSubdomain, all, setFiltered]);
 
 
   return (
@@ -98,15 +85,6 @@ function ProductListingPage() {
           setActiveSubdomain={setActiveSubdomain} />
       )}
 
-      {/* <motion.div
-        layout
-        className="all-subjects">
-        <AnimatePresence>
-          {filtered.map(movie => {
-            return <ProductListingCard key={movie.id} movie={movie} />
-          })}
-        </AnimatePresence>
-      </motion.div> */}
 
 
       {loadingSubject ? (
@@ -114,26 +92,27 @@ function ProductListingPage() {
       ) : errorSubject ? (
         <div>{errorSubject}</div>
       ) : (
-        <div className="all-subjects">
-          {subjects.map(subject => {
-            return <h1 key={subject.path}>{subject.name}</h1>
-          })}
+        <div>
+          {
+            Object.keys(filtered).map((key) => {
+              return <h1 key={key}>{filtered[key].name}</h1>
+            })
+          }
         </div>
-        // <motion.div
-        //   layout
-        //   className="all-subjects">
-        //   <AnimatePresence>
-        //     {subjects.map(subject => {
-        //       return <ProductListingCard key={subject.path} subject={subject} />
-        //     })}
-        //   </AnimatePresence>
-        // </motion.div>
       )}
     </div>
   );
 
-
-
 }
 
 export default ProductListingPage
+
+// <motion.div
+//   layout
+//   className="all-subjects">
+//   <AnimatePresence>
+//     {subjects.map(subject => {
+//       return <ProductListingCard key={subject.path} subject={subject} />
+//     })}
+//   </AnimatePresence>
+// </motion.div>

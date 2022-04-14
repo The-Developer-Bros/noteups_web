@@ -81,19 +81,30 @@ export const listSubjectsActionCreator = (domain, subdomain) => async (dispatch)
             subdomains = response.data.folders;
             console.log(`subdomains:`, subdomains);
 
-            for (let i = 0; i < subdomains.length; i++) {
-                response = await axios.get(`/api/${domain}/${subdomains[i].path.split('/')[2]}/subjects`)
+            // for (subdomain of subdomains) {
+            //     response = await axios.get(`/api/${domain}/${subdomain.path.split('/')[2]}/subjects`)
 
-                // TODO: Concurrency issue
-                if (response.data.folders.length > 0) {
-                    // Merge subjects
-                    subjects = { ...subjects, ...response.data.folders };
-                }
+                // if (response.data.folders.length > 0) {
+                //     console.log(`response.data.folders:`, response.data.folders);
+                //     subjects = Object.assign({}, subjects, response.data.folders);
+                // }
 
-            }
+                // Use promises to get all subjects
+
+            // }
+
+
+            const subjectsPromises = subdomains.map(async (subdomain) => {
+                response = await axios.get(`/api/${domain}/${subdomain.path.split('/')[2]}/subjects`)
+                return response.data.folders;
+            });
+
+            subjects = await Promise.all(subjectsPromises);
 
             console.log(`final subjects:`, subjects);
             dispatch({ type: SUBJECT_LIST_SUCCESS, payload: subjects });
+
+
         }
     } catch (error) {
         dispatch({ type: SUBJECT_LIST_FAIL, payload: error.message });

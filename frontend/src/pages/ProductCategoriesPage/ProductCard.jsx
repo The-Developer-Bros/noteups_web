@@ -6,7 +6,7 @@ import "./ProductCard.scss";
 const ProductCard = (props) => {
 
     const { data } = props;
-    console.log("data is", data);
+    console.log("product card data is", data);
 
     // Convert dashed casing to Sentence Casing
     // "electrical-and-electronics" to "Electrical and Electronics"

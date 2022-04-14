@@ -77,11 +77,8 @@ app.get("/api/domains", async (req, res) => {
 app.get("/api/:domain/subdomains", async (req, res) => {
   try {
     const subdomains = await cloudinary.api.sub_folders(`noteups/${req.params.domain}`);
-    // console.log(subdomains);
-    // res.send(subdomains);    
 
     const subdomainsWithPosters = addSubdomainPosterUrl(req.params.domain, subdomains);
-    console.log(subdomainsWithPosters);
     res.send(subdomainsWithPosters);
 
   } catch (error) {
@@ -93,7 +90,6 @@ app.get("/api/:domain/subdomains", async (req, res) => {
 app.get("/api/:domain/:subdomain/subjects", async (req, res) => {
   try {
     const subjects = await cloudinary.api.sub_folders(`noteups/${req.params.domain}/${req.params.subdomain}`);
-    // res.send(subjects);
 
     const subjectsWithPosters = addSubjectPosterUrl(req.params.domain, req.params.subdomain, subjects);
     res.send(subjectsWithPosters);

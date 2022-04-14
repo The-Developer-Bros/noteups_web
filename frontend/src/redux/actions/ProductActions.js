@@ -84,22 +84,22 @@ export const listSubjectsActionCreator = (domain, subdomain) => async (dispatch)
             // for (subdomain of subdomains) {
             //     response = await axios.get(`/api/${domain}/${subdomain.path.split('/')[2]}/subjects`)
 
-                // if (response.data.folders.length > 0) {
-                //     console.log(`response.data.folders:`, response.data.folders);
-                //     subjects = Object.assign({}, subjects, response.data.folders);
-                // }
-
-                // Use promises to get all subjects
-
+            // if (response.data.folders.length > 0) {
+            //     console.log(`response.data.folders:`, response.data.folders);
+            //     subjects = Object.assign({}, subjects, response.data.folders);
             // }
 
+            // Use promises to get all subjects
+            // }
 
             const subjectsPromises = subdomains.map(async (subdomain) => {
                 response = await axios.get(`/api/${domain}/${subdomain.path.split('/')[2]}/subjects`)
                 return response.data.folders;
             });
 
+            // Open all subjects
             subjects = await Promise.all(subjectsPromises);
+            subjects = subjects.flat();
 
             console.log(`final subjects:`, subjects);
             dispatch({ type: SUBJECT_LIST_SUCCESS, payload: subjects });

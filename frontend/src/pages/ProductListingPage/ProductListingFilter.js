@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubdomain }) {
 
     const subdomainListing = useSelector((state) => state.subdomainList);
-    const { subdomains, loading: loadingSubdomain, error : errorSubdomain} = subdomainListing;
+    const { subdomains, loading: loadingSubdomain, error: errorSubdomain } = subdomainListing;
 
     useEffect(() => {
 
@@ -26,7 +26,6 @@ function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubd
 
     return (
         <div className="filter-container">
-            {/* <button onClick={() => setActiveSubdomain("all")} className={activeSubdomain === "all" ? "active" : ""}>All</button> */}
             {
                 loadingSubdomain ?
                     <div>Loading...</div>
@@ -35,6 +34,7 @@ function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubd
                         <div>{errorSubdomain}</div>
                         :
                         (<div>
+                            <button onClick={() => setActiveSubdomain("all")} className={activeSubdomain === "all" ? "active" : ""}>All</button>
                             {
                                 subdomains.map(subject => {
                                     return <button

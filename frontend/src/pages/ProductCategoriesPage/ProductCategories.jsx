@@ -5,49 +5,66 @@ import { getAllArtsSubdomains, getAllCommerceSubdomains, getAllEngineeringSubdom
 import ProductCard from './ProductCard'
 import "./ProductCategories.scss"
 
+function SampleNextArrow(props) {
+    const { className, style, onClick } = props;
+    return (
+        <div
+            className={className}
+            style={{ ...style, display: "block", background: "red" }}
+            onClick={onClick}
+        />
+    );
+}
+function SamplePrevArrow(props) {
+    const { className, style, onClick } = props;
+    return (
+        <div
+            className={className}
+            style={{ ...style, display: "block", background: "green" }}
+            onClick={onClick}
+        />
+    );
+}
+
+
 const ProductCategories = () => {
 
 
     const settings = {
-        dots: false,
-        infinite: false,
+        dots: true,
+        infinite: true,
         speed: 500,
         slidesToShow: 6,
-        slidesToScroll: 3,
+        slidesToScroll: 1,
+        nextArrow: <SampleNextArrow />,
+        prevArrow: <SamplePrevArrow />,
         responsive: [
             {
                 breakpoint: 1500,
                 settings: {
-                    slidesToShow: 5,
-                    slidesToScroll: 4,
-                    infinite: true,
-                    dots: false
+                    slidesToShow: 4,
+                    slidesToScroll: 1,
                 }
             },
             {
                 breakpoint: 1300,
                 settings: {
-                    slidesToShow: 4,
-                    slidesToScroll: 3,
-                    infinite: true,
-                    dots: false
+                    slidesToShow: 3,
+                    slidesToScroll: 1,
                 }
             },
             {
                 breakpoint: 1024,
                 settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 3,
-                    infinite: true,
-                    dots: false
+                    slidesToShow: 2,
+                    slidesToScroll: 1,
                 }
             },
             {
                 breakpoint: 600,
                 settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2,
-                    initialSlide: 2
+                    slidesToShow: 1,
+                    slidesToScroll: 1,
                 }
             },
             {

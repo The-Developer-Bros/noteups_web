@@ -1,16 +1,19 @@
 import { motion } from 'framer-motion'
 import React from 'react'
 
-const ProductListingCard = ({ movie }) => {
+const ProductListingCard = ({ subject }) => {
+    console.log(`subject:`, subject);
     return (
-        <motion.div layout
+        <motion.div
+            layout
             animate={{ opacity: 1 }}
             initial={{ opacity: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
         >
-            <h2>{movie.title}</h2>
-            <img src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} alt={movie.title} />
+            <h2>{subject.name}</h2>
+            <img src={subject.poster} alt={subject.name}
+            />
         </motion.div>
     )
 }

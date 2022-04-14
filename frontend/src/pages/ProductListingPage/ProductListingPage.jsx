@@ -54,13 +54,13 @@ function ProductListingPage() {
     }
 
     const fetchSubjects = async () => {
-      dispatch(listSubjectsActionCreator(domain, subdomain));
+      dispatch(listSubjectsActionCreator(domain, "all"));
     }
 
     fetchSubdomains();
     fetchSubjects();
 
-  }, [dispatch, domain, subdomain, subdomainAvailable]);
+  }, [dispatch, domain]);
 
   // When the loading of subdomains is complete, set the state of all and filtered
   useEffect(() => {
@@ -92,13 +92,18 @@ function ProductListingPage() {
       ) : errorSubject ? (
         <div>{errorSubject}</div>
       ) : (
-        <div>
-          {
-            Object.keys(filtered).map((key) => {
-              return <h1 key={key}>{filtered[key].name}</h1>
-            })
-          }
-        </div>
+
+        <motion.div
+          layout
+          className="product-listing-page-cards"
+        >
+          <AnimatePresence>
+            {Object.keys(filtered).map((key) => {
+              return <ProductListingCard key={key} subject={filtered[key]} />
+            })}
+          </AnimatePresence>
+        </motion.div>
+
       )}
     </div>
   );
@@ -106,13 +111,3 @@ function ProductListingPage() {
 }
 
 export default ProductListingPage
-
-// <motion.div
-//   layout
-//   className="all-subjects">
-//   <AnimatePresence>
-//     {subjects.map(subject => {
-//       return <ProductListingCard key={subject.path} subject={subject} />
-//     })}
-//   </AnimatePresence>
-// </motion.div>

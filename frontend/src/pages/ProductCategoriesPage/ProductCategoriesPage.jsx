@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchAsyncArtsSubdomains, fetchAsyncCommerceSubdomains, fetchAsyncEngineeringSubdomains } from "../../redux/slices/SubdomainSlice";
 import ProductCategories from './ProductCategories';
-
+import "./ProductCategoriesPage.scss";
 
 const ProductCategoriesPage = () => {
 
@@ -30,16 +30,18 @@ const ProductCategoriesPage = () => {
   }
 
   return (
-    <div>
-      <div className="banner-img">
-      </div>
+    <div className="product-categories-page">
       <div className="search-bar">
-        <form onSubmit={submitHandler}>
+        <form
+          className="search-bar-form"
+          onSubmit={submitHandler}>
           <input
             type="text"
-            placeholder="Search Movies"
-            onChange={(e) => setSearchText(e.target.value)} />
-          <button type="submit">
+            placeholder="Search Subjects..."
+            onChange={(e) => setSearchText(e.target.value)}
+            className="search-bar-input"
+          />
+          <button type="submit" className="search-bar-button">
             <i className="fa fa-search"></i>
           </button>
         </form>

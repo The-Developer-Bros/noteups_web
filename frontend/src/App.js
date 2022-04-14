@@ -20,19 +20,21 @@ function App() {
     <BrowserRouter>
       <Header />
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="about" element={<AboutPage />} />
-        <Route path="pricing" element={<PricingPage />} />
-        {/* <Route path="/contact" element={<ContactPage />} /> */}
-        <Route path="contribute" element={<ContributePage />} />
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="pricing" element={<PricingPage />} />
+          {/* <Route path="/contact" element={<ContactPage />} /> */}
+          <Route path="contribute" element={<ContributePage />} />
 
-        <Route path="products" element={<ProductCategoriesPage />} />
-        <Route path="products/:domain" element={<ProductListingPage />} />
-        <Route path="products/:domain/:subdomain" element={<ProductListingPage />} />
-        <Route path="products/:domain/:subdomain/:subject" element={<ProductDetailPage />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+          <Route path="products" element={<ProductCategoriesPage />} />
+          <Route path="products/:domain" element={<ProductListingPage />} />
+          <Route path="products/:domain/:subdomain" element={<ProductListingPage />} />
+          <Route path="products/:domain/:subdomain/:subject" element={<ProductDetailPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </div>
 
       <Footer />
     </BrowserRouter>

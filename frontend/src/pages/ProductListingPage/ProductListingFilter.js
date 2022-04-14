@@ -1,26 +1,31 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubdomain }) {
 
     const subdomainListing = useSelector((state) => state.subdomainList);
     const { subdomains, loading: loadingSubdomain, error: errorSubdomain } = subdomainListing;
 
+
+    const filterSubjectsBasedOnSubdomain = (all, activeSubdomain) => {
+        let allClone = Object.fromEntries(Object.entries(all).filter(([key, value]) => {
+            console.log(`key: ${key} and value: ${value}`);
+            return value.path.split('/')[2] === (activeSubdomain);
+        }));
+        return allClone;
+    }
+
     useEffect(() => {
 
         if (activeSubdomain === "all") {
             setFiltered(all);
         } else {
-
             // Filter the the all object based on subject.path matching activesubdomain
-            let allClone = Object.fromEntries(Object.entries(all).filter(([key, value]) => {
-                console.log(`key: ${key} and value: ${value}`);
-                return value.path.split('/')[2] === (activeSubdomain);
-            }));
-
+            let allClone = filterSubjectsBasedOnSubdomain(all, activeSubdomain);
             console.log(`allClone:`, { allClone });
             setFiltered(allClone);
         }
+
     }, [activeSubdomain, all, setFiltered]);
 
 

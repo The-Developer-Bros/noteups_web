@@ -21,7 +21,7 @@ const NavBar = () => {
 
     return (
         <Box className="navbar">
-            <div className="navbar_container">
+            <nav className="navbar_container">
                 <Link to="/" className="navbar_logo" >
                     NOTEUPS
                 </Link>
@@ -87,7 +87,7 @@ const NavBar = () => {
                         />}
 
                 </div>
-            </div>
+            </nav>
         </Box >
     )
 }

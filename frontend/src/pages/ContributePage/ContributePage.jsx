@@ -176,11 +176,9 @@ function ContributePage() {
                     <div className="contribute_header">
                         <h1>Contribute</h1>
                     </div>
-                    <h2>
-                        Select a domain
-                    </h2>
+                    <h2 className="contribute_subheader">Select a subject to contribute to</h2>
                     <select name="domain" className="dropdown_menu" onChange={(e) => handleDomain(e)}>
-                        <option>-- Select Domain--</option>
+                        <option className="dropdown_option">-- Select Domain--</option>
                         {
                             domains?.map((domain) => (
                                 <option key={domain.path} value={domain.name}> {domain.name}</option>
@@ -189,12 +187,10 @@ function ContributePage() {
 
                     </select>
 
-                    <h2>
-                        Select a subdomain
-                    </h2>
-
+                    <h2 className="contribute_subheader">Select a subdomain to contribute to</h2>
                     <select name="subdomain" className="dropdown_menu" onChange={(e) => handleSubdomain(e)}>
-                        <option>-- Select Subdomain--</option>
+                        <option className="dropdown_option">-- Select Domain--</option>
+
                         {
                             subdomains?.map((subdomain) => (
                                 <option key={subdomain.path} value={subdomain.name}> {subdomain.name}</option>
@@ -202,12 +198,10 @@ function ContributePage() {
                         }
                     </select>
 
-                    <h2>
-                        Select a subject
-                    </h2>
-
+                    <h2 className="contribute_subheader">Select a subject to contribute to</h2>
                     <select name="subject" className="dropdown_menu" onChange={(e) => handleSubject(e)}>
-                        <option>-- Select Subject--</option>
+                        <option className="dropdown_option">-- Select Domain--</option>
+
                         {
                             subjects?.map((subject) => (
                                 <option key={subject.path} value={subject.name}> {subject.name}</option>

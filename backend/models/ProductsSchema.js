@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 
 // Heirarchy of Products
@@ -47,6 +47,8 @@ const SubjectSchema = new mongoose.Schema({
     ],
 });
 
-module.exports = mongoose.model("Subject", SubjectSchema);
-module.exports = mongoose.model("Subdomain", SubdomainSchema);
-module.exports = mongoose.model("Domain", DomainSchema);
+module.exports = {
+    Domain: mongoose.model("Domain", DomainSchema),
+    Subdomain: mongoose.model("Subdomain", SubdomainSchema),
+    Subject: mongoose.model("Subject", SubjectSchema)
+}

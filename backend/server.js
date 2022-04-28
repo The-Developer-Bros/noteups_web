@@ -169,5 +169,8 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Sync MongoDB with Cloudinary
+
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`🚀 @ http://localhost:${PORT}`));

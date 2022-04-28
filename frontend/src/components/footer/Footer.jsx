@@ -39,7 +39,7 @@ function Footer() {
 
           <ul className="footer_list">
             <p>
-              We are commited to provide affordable and quality notes to students, working professionals and teachers.
+              We are committed to providing affordable and quality notes to students, working professionals, and teachers.
             </p>
           </ul>
         </Container>

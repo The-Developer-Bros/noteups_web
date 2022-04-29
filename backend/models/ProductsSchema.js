@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const DomainSchema = new mongoose.Schema({
     name: {
         type: String,
+        unique: true,
         required: true
     },
 });
@@ -15,6 +16,7 @@ const DomainSchema = new mongoose.Schema({
 const SubdomainSchema = new mongoose.Schema({
     name: {
         type: String,
+        unique: true,
         required: true
     },
     domain: {
@@ -26,6 +28,7 @@ const SubdomainSchema = new mongoose.Schema({
 const SubjectSchema = new mongoose.Schema({
     name: {
         type: String,
+        unique: true,
         required: true
     },
     subdomain: {

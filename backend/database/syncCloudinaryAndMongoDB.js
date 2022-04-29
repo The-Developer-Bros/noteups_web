@@ -25,50 +25,6 @@ cloudinary.config({
 // 5. if there are extra subdomains, then delete them from the Subdomain Collection
 // 6. if there are extra subjects, then delete them from the Subject Collection
 
-
-// const DomainSchema = new mongoose.Schema({
-//   name: {
-//       type: String,
-//       required: true
-//   },
-// });
-
-
-// const SubdomainSchema = new mongoose.Schema({
-//   name: {
-//       type: String,
-//       required: true
-//   },
-//   domain: {
-//       type: mongoose.Schema.Types.ObjectId,
-//       ref: "Domain"
-//   }
-// });
-
-// const SubjectSchema = new mongoose.Schema({
-//   name: {
-//       type: String,
-//       required: true
-//   },
-//   subdomain: {
-//       type: mongoose.Schema.Types.ObjectId,
-//       ref: "Subdomain"
-//   },
-//   domain: {
-//       type: mongoose.Schema.Types.ObjectId,
-//       ref: "Domain"
-//   },
-//   pdfUrl: {
-//       type: String
-//   },
-//   usersPurchased: [
-//       {
-//           type: mongoose.Schema.Types.ObjectId,
-//           ref: "User"
-//       }
-//   ],
-// });
-
 let finalDomains = [];
 let finalSubdomains = [];
 let finalSubjects = [];
@@ -106,6 +62,8 @@ const fetchAllDomainsFromCloudinaryAndAddToDatabase = async () => {
         if (extraDomainsInDatabase.length > 0) {
             await Domain.deleteMany({ _id: { $in: extraDomainsInDatabase.map(domain => domain._id) } });
         }
+
+        console.log(`finalDomains: `, finalDomains);
 
     } catch (error) {
         console.log(error);
@@ -165,6 +123,8 @@ const fetchAllSubdomainsFromCloudinaryAndAddToDatabase = async () => {
         //   await Subdomain.deleteMany({ _id: { $in: duplicateSubdomainsInDatabase.map(subdomain => subdomain._id) } });
         // }
 
+        console.log(`finalSubdomains:`, finalSubdomains);
+
     } catch (error) {
         console.log(error);
     }
@@ -205,11 +165,8 @@ const fetchAllSubjectsFromCloudinaryAndAddToDatabase = async () => {
         // Add subjects missing in the database
         if (subjectsMissingInDatabase.length > 0) {
             const subjectsToAdd = subjectsMissingInDatabase.map(allDomainSubjects => {
-                console.log(`allDomainSubjects: ${allDomainSubjects}`);
                 return allDomainSubjects.map(allSubdomainSubjects => {
-                    console.log(`allSubdomainSubjects: ${allSubdomainSubjects}`);
                     return allSubdomainSubjects.map(subject => {
-                        console.log(`subject: ${subject}`);
                         if (subject != false) {
                             return {
                                 _id: new mongoose.Types.ObjectId(),
@@ -226,14 +183,15 @@ const fetchAllSubjectsFromCloudinaryAndAddToDatabase = async () => {
             });
 
 
-            subjectsToAdd.flat().map(subject => {
-                if (subject != false) {
-                    return Subject.insertMany(subject);
-                } else {
-                    return false;
-                }
+            subjectsToAdd.flat().map(allSubdomainSubjects => {
+                allSubdomainSubjects.map(subject => {
+                    if (subject != false) {
+                        return Subject.insertMany(subject);
+                    }
+                });
             });
         }
+        console.log(`finalSubjects:`, finalSubjects);
     } catch (error) {
         console.log(error);
     }

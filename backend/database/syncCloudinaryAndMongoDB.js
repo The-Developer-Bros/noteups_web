@@ -191,6 +191,17 @@ const fetchAllSubjectsFromCloudinaryAndAddToDatabase = async () => {
                 });
             });
         }
+
+        // Delete extra subjects in the database
+        const extraSubjectsInDatabase = subjectsInDatabase.filter(dbSubject => {
+            return !finalSubjects.find(subject => subject === dbSubject.name);
+        });
+
+        if (extraSubjectsInDatabase.length > 0) {
+            await Subject.deleteMany({ _id: { $in: extraSubjectsInDatabase.map(subject => subject._id) } });
+        }
+
+
         console.log(`finalSubjects:`, finalSubjects);
     } catch (error) {
         console.log(error);

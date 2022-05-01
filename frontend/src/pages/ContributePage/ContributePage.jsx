@@ -176,9 +176,9 @@ function ContributePage() {
                     <div className="contribute_header">
                         <h1>Contribute</h1>
                     </div>
-                    <h2 className="contribute_subheader">Select a subject to contribute to</h2>
+                    <h2 className="contribute_subheader">Select a domain to contribute to</h2>
                     <select name="domain" className="dropdown_menu" onChange={(e) => handleDomain(e)}>
-                        <option className="dropdown_option">-- Select Domain--</option>
+                        <option className="dropdown_option">-- Select domain--</option>
                         {
                             domains?.map((domain) => (
                                 <option key={domain.path} value={domain.name}> {domain.name}</option>
@@ -189,7 +189,7 @@ function ContributePage() {
 
                     <h2 className="contribute_subheader">Select a subdomain to contribute to</h2>
                     <select name="subdomain" className="dropdown_menu" onChange={(e) => handleSubdomain(e)}>
-                        <option className="dropdown_option">-- Select Domain--</option>
+                        <option className="dropdown_option">-- Select subdomain--</option>
 
                         {
                             subdomains?.map((subdomain) => (
@@ -200,7 +200,7 @@ function ContributePage() {
 
                     <h2 className="contribute_subheader">Select a subject to contribute to</h2>
                     <select name="subject" className="dropdown_menu" onChange={(e) => handleSubject(e)}>
-                        <option className="dropdown_option">-- Select Domain--</option>
+                        <option className="dropdown_option">-- Select subject--</option>
 
                         {
                             subjects?.map((subject) => (

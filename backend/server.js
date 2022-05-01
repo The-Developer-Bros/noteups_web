@@ -33,20 +33,56 @@ app.get('/', async (req, res, next) => {
 });
 
 // Function to add poster url to each subdomain from cloudinary
-const addSubdomainPosterUrl = (domain, subdomains) => {
+const addSubdomainPosterUrl = async (domain, subdomains) => {
 
   // Create a clone of subdomains
   const subdomainsClone = JSON.parse(JSON.stringify(subdomains));
 
-  // Correct way to add JSON fields to an object 
+  // // Correct way to add JSON fields to an object 
+  // subdomainsClone.folders.map((subdomain) => {
+  //   cloudinary.search
+  //     // format can be 'jpg', 'png', 'gif', 'webp'
+  //     .expression(`folder:noteups/${domain}/${subdomain.name} AND resource_type:image AND (format:jpg OR format:png OR format:gif OR format:webp)`)
+  //     .execute()
+  //     .then((result) => {
+  //       // Check if result is not undefined
+  //       if (result && result.resources && result.resources.length > 0) {
+  //         subdomain.poster = result.resources[0].secure_url;
+  //       } else {
+  //         subdomain.poster =  "https://files.prokerala.com/movies/assets/img/no-poster-available.jpg";
+  //       }
+  //       console.log(`Subdomain ${subdomain.name} poster url: ${subdomain.poster}`);
+  //     }).catch((err) => {
+  //       console.log(`Error: ${err}`);
+  //     });
+
+  // });
+
+  // Do the above code in Promise.all
+  await Promise.all(subdomainsClone.folders.map((subdomain) => {
+    return new Promise((resolve, reject) => {
+      cloudinary.search
+        // format can be 'jpg', 'png', 'gif', 'webp'
+        .expression(`folder:noteups/${domain}/${subdomain.name} AND resource_type:image AND (format:jpg OR format:png OR format:gif OR format:webp)`)
+        .execute()
+        .then((result) => {
+          // Check if result is not undefined
+          if (result && result.resources && result.resources.length > 0) {
+            subdomain.poster = result.resources[0].secure_url;
+          } else {
+            subdomain.poster =  "https://files.prokerala.com/movies/assets/img/no-poster-available.jpg";
+          }
+          console.log(`Subdomain has1 ${subdomain.name} poster url: ${subdomain.poster}`);
+          resolve(subdomain);
+        }).catch((err) => {
+          console.log(`Error: ${err}`);
+          reject(err);
+        });
+    });
+  }));
+
   subdomainsClone.folders.map((subdomain) => {
-    subdomain.poster = cloudinary.url(`noteups/${domain}/${subdomain.name}/poster.jpg`,
-      // {
-      //   width: 250,
-      //   height: 350,
-      //   crop: 'fill',
-      // }
-    );
+    console.log(`Subdomain has2 ${subdomain.name} poster url: ${subdomain.poster}`);
   });
 
   return subdomainsClone;

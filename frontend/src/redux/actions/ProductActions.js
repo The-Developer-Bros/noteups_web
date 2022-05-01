@@ -116,6 +116,7 @@ export const detailsSubjectActionCreator = (domain, subdomain, subject) => async
     dispatch({ type: SUBJECT_DETAILS_REQUEST, payload: { domain, subdomain, subject } });
 
     try {
+        // regex not necessary for cloudinary
         const { data } = await axios.get(`/api/${domain}/${subdomain}/${subject}/details.json`);
         dispatch({ type: SUBJECT_DETAILS_SUCCESS, payload: data });
     } catch (error) {

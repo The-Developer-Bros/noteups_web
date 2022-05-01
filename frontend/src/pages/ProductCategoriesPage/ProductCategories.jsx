@@ -31,52 +31,54 @@ function SamplePrevArrow(props) {
 const ProductCategories = () => {
 
 
-    const settings = {
-        dots: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 5,
-        slidesToScroll: 1,
-        nextArrow: <SampleNextArrow />,
-        prevArrow: <SamplePrevArrow />,
-        responsive: [
-            {
-                breakpoint: 1500,
-                settings: {
-                    slidesToShow: 4,
-                    slidesToScroll: 1,
+    const settings = (items) => {
+        return {
+            dots: true,
+            infinite: true,
+            speed: 500,
+            slidesToShow: items.length > 5 ? 5 : items.length,
+            slidesToScroll: 1,
+            nextArrow: <SampleNextArrow />,
+            prevArrow: <SamplePrevArrow />,
+            responsive: [
+                {
+                    breakpoint: 1500,
+                    settings: {
+                        slidesToShow: items.length > 4 ? 4 : items.length,
+                        slidesToScroll: 1,
+                    }
+                },
+                {
+                    breakpoint: 1300,
+                    settings: {
+                        slidesToShow: items.length > 3 ? 3 : items.length,
+                        slidesToScroll: 1,
+                    }
+                },
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: items.length > 2 ? 2 : items.length,
+                        slidesToScroll: 1,
+                    }
+                },
+                {
+                    breakpoint: 600,
+                    settings: {
+                        slidesToShow: items.length > 1 ? 1 : items.length,
+                        slidesToScroll: 1,
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: items.length > 1 ? 1 : items.length,
+                        slidesToScroll: 1
+                    }
                 }
-            },
-            {
-                breakpoint: 1300,
-                settings: {
-                    slidesToShow: 3,
-                    slidesToScroll: 1,
-                }
-            },
-            {
-                breakpoint: 1024,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 1,
-                }
-            },
-            {
-                breakpoint: 600,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                }
-            },
-            {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            }
-        ]
-    };
+            ]
+        }
+    }
 
     const engineeringSubjects = useSelector(getAllEngineeringSubdomains);
     const artsSubjects = useSelector(getAllArtsSubdomains);
@@ -134,7 +136,7 @@ const ProductCategories = () => {
                     transition={{ duration: 0.5 }}
                 >
                     <AnimatePresence>
-                        <Slider {...settings} >
+                        <Slider {...settings(renderEngineeringSubjects)}>
                             {renderEngineeringSubjects}
                         </Slider>
                     </AnimatePresence>
@@ -150,7 +152,7 @@ const ProductCategories = () => {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.5 }}>
                     <AnimatePresence>
-                        <Slider {...settings} >
+                        <Slider {...settings(renderArtsSubjects)}>
                             {renderArtsSubjects}
                         </Slider>
                     </AnimatePresence>
@@ -167,7 +169,7 @@ const ProductCategories = () => {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.5 }}>
                     <AnimatePresence>
-                        <Slider {...settings} >
+                        <Slider {...settings(renderCommerceSubjects)}>
                             {renderCommerceSubjects}
                         </Slider>
                     </AnimatePresence>

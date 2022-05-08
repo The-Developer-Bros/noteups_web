@@ -78,6 +78,9 @@ const addSubjectPosterUrl = (domain, subdomain, subjects) => {
         // }
       );
     });
+
+    return subjectsClone;
+
   } catch (error) {
     console.error(error)
     Sentry.captureException(error);
@@ -86,7 +89,6 @@ const addSubjectPosterUrl = (domain, subdomain, subjects) => {
     addSubjectPosterUrlTransaction.finish();
   }
 
-  return subjectsClone;
 };
 
 

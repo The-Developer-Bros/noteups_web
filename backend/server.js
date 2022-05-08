@@ -4,13 +4,29 @@ const createError = require('http-errors');
 const morgan = require('morgan');
 const mongoose = require("mongoose");
 
-// connect to the database
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/noteups").then(() => {
-  console.log("Connected to database!");
-}).catch(err => {
-  console.log("Error connecting to database", err);
-});
+const Sentry = require("@sentry/node");
+const Tracing = require("@sentry/tracing");
 
+require("./services/SentryService");
+
+// connect to the database
+
+const connectMonooseTransaction = Sentry.startTransaction({
+  op: "connectMonoose",
+  name: "Connect Mongoose",
+});
+try {
+  mongoose.connect((process.env.MONGODB_URI || "mongodb://localhost/noteups"), {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    // useCreateIndex: true,
+    // useFindAndModify: false,
+  });
+} catch (error) {
+  Sentry.captureException(error);
+} finally {
+  connectMonooseTransaction.finish();
+}
 
 // const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
@@ -35,38 +51,61 @@ app.get('/', async (req, res, next) => {
 // Function to add poster url to each subdomain from cloudinary
 const addSubdomainPosterUrl = (domain, subdomains) => {
 
-  // Create a clone of subdomains
-  const subdomainsClone = JSON.parse(JSON.stringify(subdomains));
-
-  // Correct way to add JSON fields to an object 
-  subdomainsClone.folders.map((subdomain) => {
-    subdomain.poster = cloudinary.url(`noteups/${domain}/${subdomain.name}/poster.jpg`,
-      // {
-      //   width: 250,
-      //   height: 350,
-      //   crop: 'fill',
-      // }
-    );
+  const addSubdomainPosterUrlTransaction = Sentry.startTransaction({
+    op: "addSubdomainPosterUrl",
+    name: "Add Subdomain Poster Url",
   });
 
-  return subdomainsClone;
+  try {
+    // Create a clone of subdomains
+    const subdomainsClone = JSON.parse(JSON.stringify(subdomains));
+
+    // Correct way to add JSON fields to an object 
+    subdomainsClone.folders.map((subdomain) => {
+      subdomain.poster = cloudinary.url(`noteups/${domain}/${subdomain.name}/poster.jpg`,
+        // {
+        //   width: 250,
+        //   height: 350,
+        //   crop: 'fill',
+        // }
+      );
+    });
+
+    return subdomainsClone;
+  } catch (error) {
+    Sentry.captureException(error);
+  } finally {
+    addSubdomainPosterUrlTransaction.finish();
+  }
 };
 
 const addSubjectPosterUrl = (domain, subdomain, subjects) => {
 
-  // Create a clone of subjects
-  const subjectsClone = JSON.parse(JSON.stringify(subjects));
-
-  // Correct way to add JSON fields to an object
-  subjectsClone.folders.map((subject) => {
-    subject.poster = cloudinary.url(`noteups/${domain}/${subdomain}/${subject.name}/poster.jpg`,
-      // {
-      //   width: 250,
-      //   height: 350,
-      //   crop: 'fill',
-      // }
-    );
+  const addSubjectPosterUrlTransaction = Sentry.startTransaction({
+    op: "addSubjectPosterUrl",
+    name: "Add Subject Poster Url",
   });
+
+  try {
+    // Create a clone of subjects
+    const subjectsClone = JSON.parse(JSON.stringify(subjects));
+
+    // Correct way to add JSON fields to an object
+    subjectsClone.folders.map((subject) => {
+      subject.poster = cloudinary.url(`noteups/${domain}/${subdomain}/${subject.name}/poster.jpg`,
+        // {
+        //   width: 250,
+        //   height: 350,
+        //   crop: 'fill',
+        // }
+      );
+    });
+  } catch (error) {
+    Sentry.captureException(error);
+  }
+  finally {
+    addSubjectPosterUrlTransaction.finish();
+  }
 
   return subjectsClone;
 };
@@ -74,16 +113,30 @@ const addSubjectPosterUrl = (domain, subdomain, subjects) => {
 
 // Function to get all domain folders from cloudinary
 app.get("/api/domains", async (req, res) => {
+
+  const getDomainsTransaction = Sentry.startTransaction({
+    op: "getDomains",
+    name: "Get Domains",
+  });
+
   try {
     const result = await cloudinary.api.sub_folders("noteups");
     res.send(result);
   } catch (error) {
-    next(error);
+    Sentry.captureException(error);
+  } finally {
+    getDomainsTransaction.finish();
   }
 });
 
 // Function to get all subdomain within a domain folder from cloudinary
 app.get("/api/:domain/subdomains", async (req, res) => {
+
+  const getSubdomainsTransaction = Sentry.startTransaction({
+    op: "getSubdomains",
+    name: "Get Subdomains",
+  });
+
   try {
     const subdomains = await cloudinary.api.sub_folders(`noteups/${req.params.domain}`);
 
@@ -91,12 +144,21 @@ app.get("/api/:domain/subdomains", async (req, res) => {
     res.send(subdomainsWithPosters);
 
   } catch (error) {
-    next(error);
+    Sentry.captureException(error);
+  } finally {
+    getSubdomainsTransaction.finish();
   }
+
 });
 
 // Function to get all subjects within a subdomain folder from cloudinary
 app.get("/api/:domain/:subdomain/subjects", async (req, res) => {
+
+  const getSubjectsTransaction = Sentry.startTransaction({
+    op: "getSubjects",
+    name: "Get Subjects",
+  });
+
   try {
     const subjects = await cloudinary.api.sub_folders(`noteups/${req.params.domain}/${req.params.subdomain}`);
 
@@ -104,36 +166,64 @@ app.get("/api/:domain/:subdomain/subjects", async (req, res) => {
     res.send(subjectsWithPosters);
 
   } catch (error) {
-    next(error);
+    Sentry.captureException(error);
+  } finally {
+    getSubjectsTransaction.finish();
   }
 });
 
 
 // Function to get all pdfs within a subject within a domain folder from cloudinary
 app.get("/api/:domain/:subdomain/:subject", async (req, res) => {
+
+  const getPdfsTransaction = Sentry.startTransaction({
+    op: "getPdfs",
+    name: "Get Pdfs",
+  });
+
   try {
     const result = await cloudinary.api.resources(`noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject}`);
     res.send(result);
   } catch (error) {
-    next(error);
+    Sentry.captureException(error);
+  } finally {
+    getPdfsTransaction.finish();
   }
 });
 
 
 app.get('/api/download/:domain/:subdomain/:subject', async (req, res, next) => {
-  const { resources } = await cloudinary.search
-    .expression(`folder:noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject}`)
-    .sort_by('created_at', 'desc')
-    .max_results(10)
-    .execute();
 
-  console.log(req.params.domain, req.params.subject);
-  const publicIds = resources.map(file => file.public_id);
-  console.log(publicIds);
-  res.send(publicIds);
+  const downloadTransaction = Sentry.startTransaction({
+    op: "download",
+    name: "Download",
+  });
+  try {
+    const { resources } = await cloudinary.search
+      .expression(`folder:noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject}`)
+      .sort_by('created_at', 'desc')
+      .max_results(10)
+      .execute();
+
+    console.log(req.params.domain, req.params.subject);
+    const publicIds = resources.map(file => file.public_id);
+    console.log(publicIds);
+    res.send(publicIds);
+  } catch (error) {
+    Sentry.captureException(error);
+  } finally {
+    downloadTransaction.finish();
+  }
+
 });
 
 app.post('/api/upload/:domain/:subdomain/:subject', async (req, res, next) => {
+
+  const uploadTransaction = Sentry.startTransaction({
+    op: "upload",
+    name: "Upload",
+  });
+
   try {
     const fileStr = req.body.PDFs;
     console.log(`fileStr ${fileStr}`);
@@ -158,8 +248,9 @@ app.post('/api/upload/:domain/:subdomain/:subject', async (req, res, next) => {
     });
 
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ msg: 'error', data: error });
+    Sentry.captureException(error);
+  } finally {
+    uploadTransaction.finish();
   }
 });
 

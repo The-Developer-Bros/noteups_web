@@ -14,6 +14,8 @@ import ProductCategoriesPage from './pages/ProductCategoriesPage/ProductCategori
 import ProductDetailPage from './pages/ProductDetailPage/ProductDetailPage';
 import ProductListingPage from './pages/ProductListingPage/ProductListingPage';
 
+import * as Sentry from "@sentry/react";
+
 
 function App() {
   return (
@@ -42,4 +44,4 @@ function App() {
   );
 }
 
-export default App;
+export default Sentry.withProfiler(App);

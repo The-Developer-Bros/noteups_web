@@ -1,14 +1,16 @@
 require('dotenv').config();
+require("./services/SentryService");
+require("./database/connectDBs");
+
 const express = require('express');
 const createError = require('http-errors');
 const morgan = require('morgan');
 const mongoose = require("mongoose");
+const cloudinary = require('cloudinary').v2;
 
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
 
-require("./services/SentryService");
-require("./database/connectDBs");
 // const multer = require('multer');
 
 const cors = require('cors');

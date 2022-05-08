@@ -8,33 +8,8 @@ const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
 
 require("./services/SentryService");
-
-// connect to the database
-
-const connectMonooseTransaction = Sentry.startTransaction({
-  op: "connectMonoose",
-  name: "Connect Mongoose",
-});
-try {
-  mongoose.connect((process.env.MONGODB_URI || "mongodb://localhost/noteups"), {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    // useCreateIndex: true,
-    // useFindAndModify: false,
-  });
-} catch (error) {
-  Sentry.captureException(error);
-} finally {
-  connectMonooseTransaction.finish();
-}
-
+require("./database/connectDBs");
 // const multer = require('multer');
-const cloudinary = require('cloudinary').v2;
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 const cors = require('cors');
 
@@ -73,6 +48,7 @@ const addSubdomainPosterUrl = (domain, subdomains) => {
 
     return subdomainsClone;
   } catch (error) {
+    console.error(error)
     Sentry.captureException(error);
   } finally {
     addSubdomainPosterUrlTransaction.finish();
@@ -101,6 +77,7 @@ const addSubjectPosterUrl = (domain, subdomain, subjects) => {
       );
     });
   } catch (error) {
+    console.error(error)
     Sentry.captureException(error);
   }
   finally {
@@ -123,6 +100,7 @@ app.get("/api/domains", async (req, res) => {
     const result = await cloudinary.api.sub_folders("noteups");
     res.send(result);
   } catch (error) {
+    console.error(error)
     Sentry.captureException(error);
   } finally {
     getDomainsTransaction.finish();
@@ -144,6 +122,7 @@ app.get("/api/:domain/subdomains", async (req, res) => {
     res.send(subdomainsWithPosters);
 
   } catch (error) {
+    console.error(error)
     Sentry.captureException(error);
   } finally {
     getSubdomainsTransaction.finish();
@@ -166,6 +145,7 @@ app.get("/api/:domain/:subdomain/subjects", async (req, res) => {
     res.send(subjectsWithPosters);
 
   } catch (error) {
+    console.error(error)
     Sentry.captureException(error);
   } finally {
     getSubjectsTransaction.finish();
@@ -185,6 +165,7 @@ app.get("/api/:domain/:subdomain/:subject", async (req, res) => {
     const result = await cloudinary.api.resources(`noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject}`);
     res.send(result);
   } catch (error) {
+    console.error(error)
     Sentry.captureException(error);
   } finally {
     getPdfsTransaction.finish();
@@ -210,6 +191,7 @@ app.get('/api/download/:domain/:subdomain/:subject', async (req, res, next) => {
     console.log(publicIds);
     res.send(publicIds);
   } catch (error) {
+    console.error(error)
     Sentry.captureException(error);
   } finally {
     downloadTransaction.finish();
@@ -248,6 +230,7 @@ app.post('/api/upload/:domain/:subdomain/:subject', async (req, res, next) => {
     });
 
   } catch (error) {
+    console.error(error)
     Sentry.captureException(error);
   } finally {
     uploadTransaction.finish();

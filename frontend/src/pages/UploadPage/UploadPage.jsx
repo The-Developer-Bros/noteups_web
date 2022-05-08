@@ -43,7 +43,7 @@ const Upload = () => {
                 }
             });
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -87,7 +87,7 @@ const Upload = () => {
                 }
             });
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -105,7 +105,7 @@ const Upload = () => {
             return domainJson;
 
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 
@@ -118,7 +118,7 @@ const Upload = () => {
             console.log(subjectJson);
             return subjectJson;
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
     }
 

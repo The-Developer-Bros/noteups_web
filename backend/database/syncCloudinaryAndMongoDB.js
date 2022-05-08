@@ -1,21 +1,11 @@
 require('dotenv').config();
+require("./database/connectDBs");
+
+const Sentry = require("@sentry/node");
+const Tracing = require("@sentry/tracing");
+
 const mongoose = require('mongoose');
 const { Domain, Subdomain, Subject } = require('../models/ProductsSchema');
-
-// connect to the database
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/noteups").then(() => {
-    console.log("Connected to database!");
-}).catch(err => {
-    console.log("Error connecting to database", err);
-});
-
-
-const cloudinary = require('cloudinary').v2;
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 // Fetch all subjects from cloudinary and 
 // 1. if there are domains missing, then add them to the Domain Collection with a randomly generated id
@@ -30,6 +20,13 @@ let finalSubdomains = [];
 let finalSubjects = [];
 
 const fetchAllDomainsFromCloudinaryAndAddToDatabase = async () => {
+
+    const fetchAllDomainsFromCloudinaryAndAddToDatabaseTransaction = Sentry.startTransaction({
+        op: "fetchAllDomainsFromCloudinaryAndAddToDatabase",
+        name: "Fetch All Domains From Cloudinary And Add To Database",
+        description: "Fetch all domains from cloudinary and add to database",
+    });
+
     try {
         const domains = await cloudinary.api.sub_folders("noteups");
         const domainsInDatabase = await Domain.find({});
@@ -66,11 +63,21 @@ const fetchAllDomainsFromCloudinaryAndAddToDatabase = async () => {
         console.log(`finalDomains: `, finalDomains);
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        Sentry.captureException(error);
+    } finally {
+        fetchAllDomainsFromCloudinaryAndAddToDatabaseTransaction.finish();
     }
 }
 
 const fetchAllSubdomainsFromCloudinaryAndAddToDatabase = async () => {
+
+    const fetchAllSubdomainsFromCloudinaryAndAddToDatabaseTransaction = Sentry.startTransaction({
+        op: "fetchAllSubdomainsFromCloudinaryAndAddToDatabase",
+        name: "Fetch All Subdomains From Cloudinary And Add To Database",
+        description: "Fetch all subdomains from cloudinary and add to database",
+    });
+
     try {
         const domains = await cloudinary.api.sub_folders("noteups");
         const subdomains = {}
@@ -126,11 +133,22 @@ const fetchAllSubdomainsFromCloudinaryAndAddToDatabase = async () => {
         console.log(`finalSubdomains:`, finalSubdomains);
 
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        Sentry.captureException(error);
+    } finally {
+        fetchAllSubdomainsFromCloudinaryAndAddToDatabaseTransaction.finish();
     }
 }
 
 const fetchAllSubjectsFromCloudinaryAndAddToDatabase = async () => {
+
+    const fetchAllSubjectsFromCloudinaryAndAddToDatabaseTransaction = Sentry.startTransaction({
+        op: "fetchAllSubjectsFromCloudinaryAndAddToDatabase",
+        name: "Fetch All Subjects From Cloudinary And Add To Database",
+        description: "Fetch all subjects from cloudinary and add to database",
+    });
+
+
     try {
         const domains = await cloudinary.api.sub_folders("noteups");
         const subdomains = {}
@@ -204,7 +222,10 @@ const fetchAllSubjectsFromCloudinaryAndAddToDatabase = async () => {
 
         console.log(`finalSubjects:`, finalSubjects);
     } catch (error) {
-        console.log(error);
+        console.error(error);
+        Sentry.captureException(error);
+    } finally {
+        fetchAllSubjectsFromCloudinaryAndAddToDatabaseTransaction.finish();
     }
 }
 

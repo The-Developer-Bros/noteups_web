@@ -2,22 +2,23 @@ require("dotenv").config();
 require("./services/SentryService");
 require("./database/connectDBs");
 
+const cors = require("cors");
 const express = require("express");
 const createError = require("http-errors");
 const morgan = require("morgan");
+// const multer = require('multer');
 const mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 
 // NodeJS Strategies
 const compression = require("compression");
 const rateLimitter = require("express-rate-limit");
+const responseTime = require("response-time");
 
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
 
-// const multer = require('multer');
-
-const cors = require("cors");
+///////////////////////////////////////////////////////////// APP /////////////////////////////////////////////////////////////////
 
 const app = express();
 app.use(express.json({ limit: "50mb" }));
@@ -50,6 +51,9 @@ app.use(
   })
 );
 
+app.use(responseTime({ digits: 2 }));
+
+///////////////////////////////////////////////////////////// ROUTES /////////////////////////////////////////////////////////////////
 app.get("/", async (req, res, next) => {
   res.send({ message: "Awesome it works 🐻" });
 });

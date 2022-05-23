@@ -43,7 +43,7 @@ function ContributePage() {
     useEffect(() => {
         const getDomains = async () => {
             // const req = await fetch("http://localhost/devopsdeveloper/country");
-            const req = await fetch("/api/domains");
+            const req = await fetch("/productApi/domains");
             const res = await req.json();
             console.log(res.folders);
 
@@ -64,7 +64,7 @@ function ContributePage() {
 
     useEffect(() => {
         const getSubdomains = async () => {
-            const req = await fetch(`/api/${domainId}/subdomains`);
+            const req = await fetch(`/productApi/${domainId}/subdomains`);
             const res = await req.json();
             // for each folder in the response, add it to the subdomains array
             const subdomains = res.folders?.map(folder => {
@@ -86,7 +86,7 @@ function ContributePage() {
     useEffect(() => {
 
         const getSubjects = async () => {
-            const req = await fetch(`/api/${domainId}/${subdomainId}/subjects`);
+            const req = await fetch(`/productApi/${domainId}/${subdomainId}/subjects`);
             const res = await req.json();
 
             // for each folder in the response, add it to the subjects array
@@ -146,7 +146,7 @@ function ContributePage() {
         console.log("Uploading PDF to Cloudinary...");
 
         // TODO: Axios is posting to frontend and not backend 
-        axios.post(`/api/upload/${domain}/${subdomain}/${subject}`, { PDFs })
+        axios.post(`/productApi/upload/${domain}/${subdomain}/${subject}`, { PDFs })
             .then(res => {
                 console.log("Response from server ", res);
             })

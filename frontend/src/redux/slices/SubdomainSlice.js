@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export const fetchAsyncEngineeringSubdomains = createAsyncThunk(
     'subdomains/fetchAsyncEngineeringSubdomains',
     async (term) => {
-        const response = await fetch(`/api/engineering/subdomains`)
+        const response = await fetch(`/productApi/engineering/subdomains`)
         const subdomains = await response.json()
         console.log(`fetched Engineering subdomains: ${subdomains}`)
         subdomains.folders = subdomains.folders.filter(subdomain => subdomain.name.includes(term))
@@ -14,7 +14,7 @@ export const fetchAsyncEngineeringSubdomains = createAsyncThunk(
 export const fetchAsyncArtsSubdomains = createAsyncThunk(
     'subdomains/fetchAsyncArtsSubdomains',
     async (term) => {
-        const response = await fetch(`/api/arts/subdomains`)
+        const response = await fetch(`/productApi/arts/subdomains`)
         const subdomains = await response.json()
         console.log(`fetched Arts subdomains: ${subdomains}`)
         subdomains.folders = subdomains.folders.filter(subdomain => subdomain.name.includes(term))
@@ -25,7 +25,7 @@ export const fetchAsyncArtsSubdomains = createAsyncThunk(
 export const fetchAsyncCommerceSubdomains = createAsyncThunk(
     'subdomains/fetchAsyncCommerceSubdomains',
     async (term) => {
-        const response = await fetch(`/api/commerce/subdomains`)
+        const response = await fetch(`/productApi/commerce/subdomains`)
         const subdomains = await response.json()
         console.log(`fetched Commerce subdomains: ${subdomains}`)
         subdomains.folders = subdomains.folders.filter(subdomain => subdomain.name.includes(term))
@@ -37,7 +37,7 @@ export const fetchAsyncCommerceSubdomains = createAsyncThunk(
 export const fetchAsyncSubjectDetail = createAsyncThunk(
     'subdomains/fetchAsyncSubjectDetail',
     async (domain, subdomain, subject) => {
-        const response = await fetch(`/api/${domain}/${subdomain}/${subject}`)
+        const response = await fetch(`/productApi/${domain}/${subdomain}/${subject}`)
         const detail = await response.json()
         console.log(`fetched ${domain} ${subdomain} ${subject} detail: ${detail}`)
         return detail

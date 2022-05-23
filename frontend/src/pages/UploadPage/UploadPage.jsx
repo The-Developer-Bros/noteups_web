@@ -33,7 +33,7 @@ const Upload = () => {
         console.log("uploading image");
         console.log(base64EncodedImage);
         try {
-            await fetch("/api/upload", {
+            await fetch("/productApi/upload", {
                 method: "POST",
                 body: JSON.stringify({
                     data: base64EncodedImage
@@ -77,7 +77,7 @@ const Upload = () => {
         console.log("uploading pdf");
         console.log(base64EncodedPdf);
         try {
-            await fetch("/api/upload", {
+            await fetch("/productApi/upload", {
                 method: "POST",
                 body: JSON.stringify({
                     data: base64EncodedPdf
@@ -99,7 +99,7 @@ const Upload = () => {
     // Function to get all domains
     const getDomains = async () => {
         try {
-            const domainResponse = await fetch("/api/domains");
+            const domainResponse = await fetch("/productApi/domains");
             const domainJson = await domainResponse.json();
             console.log(domainJson);
             return domainJson;
@@ -113,7 +113,7 @@ const Upload = () => {
     // Function to get all subjects within a domain
     const getSubjects = async (domain) => {
         try {
-            const subjectResponse = await fetch(`/api/domains/${domain}`);
+            const subjectResponse = await fetch(`/productApi/domains/${domain}`);
             const subjectJson = await subjectResponse.json();
             console.log(subjectJson);
             return subjectJson;

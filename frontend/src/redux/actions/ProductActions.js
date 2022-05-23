@@ -26,15 +26,15 @@ export const listSubdomainsActionCreater = (domain) => async (dispatch) => {
         let subdomains = {};
         switch (domain) {
             case "engineering":
-                const engineeringSubdomains = await axios.get(`/api/engineering/subdomains`);
+                const engineeringSubdomains = await axios.get(`/productApi/engineering/subdomains`);
                 subdomains = engineeringSubdomains.data.folders;
                 break;
             case "arts":
-                const artsSubdomains = await axios.get(`/api/arts/subdomains`);
+                const artsSubdomains = await axios.get(`/productApi/arts/subdomains`);
                 subdomains = artsSubdomains.data.folders;
                 break;
             case "commerce":
-                const commerceSubdomains = await axios.get(`/api/commerce/subdomains`);
+                const commerceSubdomains = await axios.get(`/productApi/commerce/subdomains`);
                 subdomains = commerceSubdomains.data.folders;
                 break;
             default:
@@ -51,7 +51,7 @@ export const detailsSubdomainActionCreator = (domain, subdomain) => async (dispa
     dispatch({ type: SUBDOMAIN_DETAILS_REQUEST, payload: { domain, subdomain } });
 
     try {
-        const { data } = await axios.get(`/api/${domain}/${subdomain}/details.json`);
+        const { data } = await axios.get(`/productApi/${domain}/${subdomain}/details.json`);
         dispatch({ type: SUBDOMAIN_DETAILS_SUCCESS, payload: data })
     } catch (error) {
         dispatch({
@@ -73,16 +73,16 @@ export const listSubjectsActionCreator = (domain, subdomain) => async (dispatch)
 
     try {
         if (subdomain !== "all") {
-            response = await axios.get(`/api/${domain}/${subdomain}/subjects`)
+            response = await axios.get(`/productApi/${domain}/${subdomain}/subjects`)
             subjects = response.data.folders;
             dispatch({ type: SUBJECT_LIST_SUCCESS, payload: subjects });
         } else {
-            response = await axios.get(`/api/${domain}/subdomains`)
+            response = await axios.get(`/productApi/${domain}/subdomains`)
             subdomains = response.data.folders;
             console.log(`subdomains:`, subdomains);
 
             // for (subdomain of subdomains) {
-            //     response = await axios.get(`/api/${domain}/${subdomain.path.split('/')[2]}/subjects`)
+            //     response = await axios.get(`/productApi/${domain}/${subdomain.path.split('/')[2]}/subjects`)
 
             // if (response.data.folders.length > 0) {
             //     console.log(`response.data.folders:`, response.data.folders);
@@ -93,7 +93,7 @@ export const listSubjectsActionCreator = (domain, subdomain) => async (dispatch)
             // }
 
             const subjectsPromises = subdomains.map(async (subdomain) => {
-                response = await axios.get(`/api/${domain}/${subdomain.path.split('/')[2]}/subjects`)
+                response = await axios.get(`/productApi/${domain}/${subdomain.path.split('/')[2]}/subjects`)
                 return response.data.folders;
             });
 
@@ -116,7 +116,7 @@ export const detailsSubjectActionCreator = (domain, subdomain, subject) => async
     dispatch({ type: SUBJECT_DETAILS_REQUEST, payload: { domain, subdomain, subject } });
 
     try {
-        const { data } = await axios.get(`/api/${domain}/${subdomain}/${subject}/details.json`);
+        const { data } = await axios.get(`/productApi/${domain}/${subdomain}/${subject}/details.json`);
         dispatch({ type: SUBJECT_DETAILS_SUCCESS, payload: data });
     } catch (error) {
         dispatch({

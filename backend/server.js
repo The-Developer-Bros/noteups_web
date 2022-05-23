@@ -7,7 +7,10 @@ const createError = require("http-errors");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
+
+// NodeJS Strategies
 const compression = require("compression");
+const rateLimitter = require("express-rate-limit");
 
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
@@ -19,6 +22,7 @@ const cors = require("cors");
 const app = express();
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
 app.use(morgan("dev"));
 app.use(cors());
 
@@ -31,6 +35,17 @@ app.use(
         return false;
       }
       return compression.filter(req, res);
+    },
+  })
+);
+
+app.use(
+  rateLimitter({
+    windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10), // user should be able to make RATE_LIMIT_MAX requests every RATE_LIMIT_WINDOW_MS seconds
+    max: parseInt(process.env.RATE_LIMIT_MAX, 10), // limit each IP to RATE_LIMIT_MAX requests per windowMs
+    message: {
+      code: 429,
+      message: "Too many requests, please try again later",
     },
   })
 );

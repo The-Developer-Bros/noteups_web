@@ -1,0 +1,7 @@
+GET http://localhost:4000/api/engineering/subdomains
+###
+
+GET http://localhost:4000/api/commerce/subdomains
+###
+
+GET http://localhost:4000/api/arts/subdomains

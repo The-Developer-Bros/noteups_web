@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import Slider from 'react-slick'
-import { getAllArtsSubdomains, getAllCommerceSubdomains, getAllEngineeringSubdomains } from '../../redux/slices/SubdomainSlice'
+import { getAllArtsSubdomains, getAllCommerceSubdomains, getAllEngineeringSubdomains } from '../../../redux/slices/SubdomainSlice'
 import ProductCard from './ProductCard'
 import "./ProductCategories.scss"
 import { motion, AnimatePresence } from 'framer-motion'

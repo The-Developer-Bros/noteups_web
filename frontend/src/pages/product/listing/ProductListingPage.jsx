@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { listSubdomainsActionCreater, listSubjectsActionCreator } from '../../redux/actions/ProductActions';
+import { listSubdomainsActionCreater, listSubjectsActionCreator } from '../../../redux/actions/ProductActions';
 import ProductListingCard from './ProductListingCard';
 import ProductListingFilter from './ProductListingFilter';
 import "./ProductListingPage.scss";

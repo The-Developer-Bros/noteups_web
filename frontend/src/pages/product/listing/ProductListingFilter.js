@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { convertToSentenceCase } from '../../utils';
+import { convertToSentenceCase } from '../../../utils';
 
 function ProductListingFilter({ setFiltered, all, activeSubdomain, setActiveSubdomain }) {
 

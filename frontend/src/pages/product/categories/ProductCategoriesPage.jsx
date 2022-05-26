@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { fetchAsyncArtsSubdomains, fetchAsyncCommerceSubdomains, fetchAsyncEngineeringSubdomains } from "../../redux/slices/SubdomainSlice";
+import { fetchAsyncArtsSubdomains, fetchAsyncCommerceSubdomains, fetchAsyncEngineeringSubdomains } from "../../../redux/slices/SubdomainSlice";
 import ProductCategories from './ProductCategories';
 import "./ProductCategoriesPage.scss";
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { convertToSentenceCase } from '../../utils';
+import { convertToSentenceCase } from '../../../utils';
 import "./ProductCard.scss";
 
 

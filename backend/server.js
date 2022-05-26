@@ -7,6 +7,10 @@ const express = require("express");
 const createError = require("http-errors");
 const morgan = require("morgan");
 
+// Passport
+const passport = require("passport");
+require("./middleware/passport");
+
 // NodeJS Strategies
 const compression = require("compression");
 const rateLimitter = require("express-rate-limit");
@@ -50,13 +54,17 @@ app.use(
 
 app.use(responseTime({ digits: 2 }));
 
+app.use(passport.initialize());
+
+
 ///////////////////////////////////////////////////////////// ROUTES /////////////////////////////////////////////////////////////////
 app.get("/", async (req, res, next) => {
   res.send({ message: "Awesome it works 🐻" });
 });
 
-app.use("/api", require("./routes/api.route"));
+app.use("/user", require("./routes/UserRoutes"));
 app.use("/productApi", require("./routes/ProductRoutes"));
+app.use("/api", require("./routes/api.route"));
 
 ///////////////////////////////////////////////////////////// ERROR HANDLING /////////////////////////////////////////////////////////////////
 

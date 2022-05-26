@@ -1,15 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 import {
   subdomainDetailsReducer,
   subdomainListReducer,
   subjectDetailsReducer,
-  subjectListReducer,
+  subjectListReducer
 } from "../reducers/ProductReducers";
+import authReducer from "../slices/AuthSlice";
 import subdomainReducer from "../slices/SubdomainSlice";
-import storage from "redux-persist/lib/storage";
+import { authApi } from "./api/authApi";
+
 
 // import monitorReducersEnhancer from './enhancers/monitorReducers'
 // import loggerMiddleware from './middleware/logger'
@@ -20,6 +23,8 @@ const reducers = {
   subdomainList: subdomainListReducer,
   subjectDetails: subjectDetailsReducer,
   subjectList: subjectListReducer,
+  auth: authReducer,
+  [authApi.reducerPath]: authApi.reducer,
 };
 
 const initialState = {
@@ -45,6 +50,7 @@ const initialState = {
     loading: true,
     subjects: {},
   },
+  // initial state for auth is complex, so we'll use a reducer
 };
 
 const persistConfig = {

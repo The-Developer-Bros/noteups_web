@@ -8,7 +8,7 @@ import AboutPage from "./pages/info/about/AboutPage";
 import ContactPage from "./pages/info/contact/ContactPage";
 import ContributePage from "./pages/info/contribute/ContributePage";
 import FAQPage from "./pages/info/faq/FAQPage";
-import HomePage from "./pages/info/home/HomePage";
+import HomePage from "./pages/home/HomePage";
 import PricingPage from "./pages/info/pricing/PricingPage";
 import ProductCategoriesPage from "./pages/product/categories/ProductCategoriesPage";
 import ProductDetailPage from "./pages/product/details/ProductDetailPage";

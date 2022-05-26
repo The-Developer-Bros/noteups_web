@@ -2,7 +2,7 @@ import { Grid, Heading, Stack } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { InputControl, SubmitButton } from "formik-chakra-ui";
 import React from "react";
-import { useSignupUserMutation } from "../../store/api/authApi";
+import { useSignupUserMutation } from "../../../redux/store/api/authApi";
 
 const Signup = () => {
   const [signupUser, { data, isLoading }] = useSignupUserMutation();

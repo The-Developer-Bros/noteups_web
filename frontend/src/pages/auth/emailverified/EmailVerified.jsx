@@ -1,7 +1,7 @@
 import { Grid, Heading, Text } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import { useVerifyUserMutation } from "../../store/api/authApi";
+import { useVerifyUserMutation } from "../../../redux/store/api/authApi";
 import { Spinner } from "@chakra-ui/spinner";
 import { useEffect } from "react";
 const EmailVerified = () => {

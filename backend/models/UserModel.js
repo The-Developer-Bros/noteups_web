@@ -39,7 +39,6 @@ const UserModel = new mongoose.Schema({
   cart: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Cart",
-    required: true,
   },
 });
 

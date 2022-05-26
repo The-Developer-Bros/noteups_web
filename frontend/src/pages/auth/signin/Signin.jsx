@@ -3,14 +3,14 @@ import { useToast } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { InputControl, SubmitButton } from "formik-chakra-ui";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { useSigninUserMutation } from "../../store/api/authApi";
-import { useAppDispatch } from "../../store/hooks";
-import { setUser } from "../../store/state/authSlice";
+import { useSigninUserMutation } from "../../../redux/store/api/authApi";
+import { setUser } from "../../../redux/slices/AuthSlice";
 
 const Signin = () => {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const toast = useToast();
   const navigate = useNavigate();
@@ -18,6 +18,7 @@ const Signin = () => {
     useSigninUserMutation();
   console.log(data);
   if (isError) {
+    console.log(error);
     toast({
       title: error.data.message,
       status: "error",

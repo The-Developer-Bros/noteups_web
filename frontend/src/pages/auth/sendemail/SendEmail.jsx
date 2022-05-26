@@ -1,7 +1,7 @@
 import { Grid, Heading, Spinner, useToast } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useSendMailForVerificationMutation } from "../../store/api/authApi";
+import { useSendMailForVerificationMutation } from "../../../redux/store/api/authApi";
 
 const SendEmail = () => {
   const toast = useToast();

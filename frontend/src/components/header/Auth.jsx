@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 
 import "./Auth.scss";
 
-export const LoginButton = () => {
+export const Auth0LoginButton = () => {
 
     const { loginWithRedirect, isAuthenticated } = useAuth0();
 
@@ -27,7 +27,7 @@ export const LoginButton = () => {
 
 
 
-export const LogoutButton = () => {
+export const Auth0LogoutButton = () => {
 
     const { logout, isAuthenticated } = useAuth0();
 
@@ -46,7 +46,7 @@ export const LogoutButton = () => {
     )
 }
 
-export const Profile = () => {
+export const Auth0Profile = () => {
 
     const { user, isAuthenticated } = useAuth0();
 

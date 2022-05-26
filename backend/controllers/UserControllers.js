@@ -11,6 +11,9 @@ const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
 const User = require("../models/UserModel");
 
+const Sentry = require("@sentry/node");
+const Tracing = require("@sentry/tracing");
+
 let testAccount = {
   user: "mh24zp4pacbatnfm@ethereal.email",
   pass: "9WeAYqT7qFhX5m9M77",
@@ -27,9 +30,15 @@ let transporter = nodemailer.createTransport({
 });
 
 const signupUser = async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const signupUserTransactions = Sentry.startTransaction({
+    op: "signupUser",
+    name: "Sign up user",
+    description: "Signing up the user",
+  });
 
   try {
+    const { name, email, password } = req.body;
+
     const existingUser = await User.findOne({ email });
     if (existingUser) return next(createHttpError(422, "Email Already Exist!"));
 
@@ -40,14 +49,26 @@ const signupUser = async (req, res, next) => {
 
     res.json({ message: "User Created" });
   } catch (error) {
-    return next(InternalServerError);
+    console.error(error);
+    Sentry.captureException(error);
+    signupUserTransactions.setStatus("failed");
+    signupUserTransactions.finish();
+    return next(createHttpError(500, "Internal Server Error"));
+  } finally {
+    signupUserTransactions.finish();
   }
 };
 
 const signinUser = async (req, res, next) => {
-  const { email, password } = req.body;
+  const signinUserTransactions = Sentry.startTransaction({
+    op: "signinUser",
+    name: "Sign in user",
+    description: "Signing in the user",
+  });
 
   try {
+    const { email, password } = req.body;
+
     const user = await User.findOne({ email });
     if (!user) return next(createHttpError(404, "User not Found!"));
     if (!user.isUserVerified)
@@ -74,13 +95,25 @@ const signinUser = async (req, res, next) => {
 
     res.json({ name: user.name, token });
   } catch (error) {
-    return next(InternalServerError);
+    console.log(error);
+    Sentry.captureException(error);
+    signinUserTransactions.setStatus("failed");
+    signinUserTransactions.finish();
+    return next(createHttpError(500, "Internal Server Error"));
+  } finally {
+    signinUserTransactions.finish();
   }
 };
 
 const sendVerificationMail = async (req, res, next) => {
-  const { email } = req.body;
+  const sendVerificationMailTransactions = Sentry.startTransaction({
+    op: "sendVerificationMail",
+    name: "Send Verification Mail",
+    description: "Sending the verification mail",
+  });
+
   try {
+    const { email } = req.body;
     const user = await User.findOne({ email });
     if (!user) return next(createHttpError(404, "Email Not Valid!"));
 
@@ -112,14 +145,24 @@ const sendVerificationMail = async (req, res, next) => {
     transporter.close();
   } catch (error) {
     console.log(error);
-    return res.json(error);
+    Sentry.captureException(error);
+    sendVerificationMailTransactions.setStatus("failed");
+    sendVerificationMailTransactions.finish();
+    return next(createHttpError(500, "Internal Server Error"));
+  } finally {
+    sendVerificationMailTransactions.finish();
   }
 };
 
 const verifyUserMail = async (req, res, next) => {
-  const { token } = req.body;
+  const verifyUserMailTransactions = Sentry.startTransaction({
+    op: "verifyUserMail",
+    name: "Verify User Mail",
+    description: "Verifying the user mail",
+  });
 
   try {
+    const { token } = req.body;
     const decodedToken = jwt.verify(token, process.env.process.env.JWT_KEY);
 
     const user = await User.findById(decodedToken.userId);
@@ -132,13 +175,25 @@ const verifyUserMail = async (req, res, next) => {
 
     res.json({ message: "Email Verified!" });
   } catch (error) {
-    return next(createHttpError(401, "Token Invalid"));
+    console.log(error);
+    Sentry.captureException(error);
+    verifyUserMailTransactions.setStatus("failed");
+    verifyUserMailTransactions.finish();
+    return next(createHttpError(500, "Internal Server Error"));
+  } finally {
+    verifyUserMailTransactions.finish();
   }
 };
 
 const sendForgotPasswordMail = async (req, res, next) => {
-  const { email } = req.body;
+  const sendForgotPasswordMailTransactions = Sentry.startTransaction({
+    op: "sendForgotPasswordMail",
+    name: "Send Forgot Password Mail",
+    description: "Sending the forgot password mail",
+  });
+
   try {
+    const { email } = req.body;
     const user = await User.findOne({ email });
     if (!user) return next(createHttpError(404, "Email Not Valid!"));
 
@@ -163,13 +218,24 @@ const sendForgotPasswordMail = async (req, res, next) => {
       message: `Preview URL: %s ${nodemailer.getTestMessageUrl(info)}`,
     });
   } catch (error) {
-    return next(InternalServerError);
+    console.log(error);
+    Sentry.captureException(error);
+    sendForgotPasswordMailTransactions.setStatus("failed");
+    sendForgotPasswordMailTransactions.finish();
+    return next(createHttpError(500, "Internal Server Error"));
+  } finally {
+    sendForgotPasswordMailTransactions.finish();
   }
 };
 const verifyForgotMail = async (req, res, next) => {
-  const { token, password } = req.body;
+  const verifyForgotMailTransactions = Sentry.startTransaction({
+    op: "verifyForgotMail",
+    name: "Verify Forgot Mail",
+    description: "Verifying the forgot password mail",
+  });
 
   try {
+    const { token, password } = req.body;
     const decodedToken = jwt.verify(token, process.env.JWT_KEY);
 
     const user = await User.findById(decodedToken.userId);
@@ -184,7 +250,13 @@ const verifyForgotMail = async (req, res, next) => {
 
     res.status(200).json({ message: "Password Changed!" });
   } catch (error) {
-    return next(createHttpError(401, "Token Invalid"));
+    console.log(error);
+    Sentry.captureException(error);
+    verifyForgotMailTransactions.setStatus("failed");
+    verifyForgotMailTransactions.finish();
+    return next(createHttpError(500, "Internal Server Error"));
+  } finally {
+    verifyForgotMailTransactions.finish();
   }
 };
 

@@ -2,9 +2,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Box } from '@material-ui/core';
 import React from 'react';
 import { Link } from 'react-router-dom';
-// import LoginButton from './LoginButton';
-// import LogoutButton from './LogoutButton';
-import { LoginButton, LogoutButton, Profile } from './Auth';
+import { Auth0LoginButton, Auth0LogoutButton, Auth0Profile } from './Auth';
 import { FaTimes, FaBars } from 'react-icons/fa'
 import { useState } from 'react';
 import SearchBar from './SearchBar';
@@ -61,10 +59,10 @@ const NavBar = () => {
                             {isLoading ? <p>Loading...</p> : error ? <p>{error.message}</p> :
                                 <div>
 
-                                    <LoginButton />
+                                    <Auth0LoginButton />
                                     <Box className="login_box">
-                                        <Profile />
-                                        <LogoutButton />
+                                        <Auth0Profile />
+                                        <Auth0LogoutButton />
                                     </Box>
                                 </div>
                             }

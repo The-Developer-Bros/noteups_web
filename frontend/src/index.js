@@ -2,7 +2,7 @@ import { Auth0Provider } from "@auth0/auth0-react";
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import App from "./App";
 import "./index.scss";
@@ -27,8 +27,9 @@ const clientId = process.env.REACT_APP_AUTHO_CLIENT_ID;
 
 let persistor = persistStore(store);
 
-ReactDOM.render(
-  <React.StrictMode>
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <>
     {/* <Auth0Provider
       domain={domain}
       clientId={clientId}
@@ -43,7 +44,7 @@ ReactDOM.render(
       </PersistGate>
     </Provider>
     {/* </Auth0Provider> */}
-  </React.StrictMode>,
+  </>,
   document.getElementById("root")
 );
 

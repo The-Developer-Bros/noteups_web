@@ -12,6 +12,6 @@ const validator = async (schemaName, body, next) => {
   }
 };
 
-module.exports = {
-  validator,
+module.exports = function (schemaName, body, next) {
+  return validator(schemaName, body, next);
 };

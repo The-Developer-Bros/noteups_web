@@ -2,7 +2,7 @@ import { Grid, Heading, Stack, useToast } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { InputControl, SubmitButton } from "formik-chakra-ui";
 import React from "react";
-import { useSendMailForgotPasswordMutation } from "../../store/api/authApi";
+import { useSendMailForgotPasswordMutation } from "../../../redux/store/api/authApi";
 
 const ForgotPassword = () => {
   const [sendMail, { data, isLoading, error, isError }] =

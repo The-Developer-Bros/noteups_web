@@ -3,7 +3,7 @@ import { Form, Formik } from "formik";
 import { InputControl, SubmitButton } from "formik-chakra-ui";
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useResetPasswordMutation } from "../../store/api/authApi";
+import { useResetPasswordMutation } from "../../../redux/store/api/authApi";
 
 const ChangePassword = () => {
   const { token } = useParams();

@@ -1,11 +1,11 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { Box } from '@material-ui/core';
+import Box from '@mui/material/Box';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Auth0LoginButton, Auth0LogoutButton, Auth0Profile } from './Auth';
 import { FaTimes, FaBars } from 'react-icons/fa'
 import { useState } from 'react';
-import SearchBar from './SearchBar';
+// import SearchBar from './SearchBar';
 import "./NavBar.scss";
 
 const NavBar = () => {
@@ -24,7 +24,7 @@ const NavBar = () => {
                     NOTEUPS
                 </Link>
 
-                <SearchBar />
+                {/* <SearchBar /> */}
 
                 <ul className={click ? "nav_menu active" : "nav_menu"}>
 

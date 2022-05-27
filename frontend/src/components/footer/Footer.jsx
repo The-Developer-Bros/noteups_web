@@ -1,10 +1,10 @@
-import React from "react";
-import Box from "@mui/material/Box";
 import { Container, Typography } from "@mui/material";
-import { Link } from "react-router-dom";
-import { ThemeProvider, createTheme } from '@mui/material/styles'
-import { IconContext } from "react-icons/lib";
+import Box from "@mui/material/Box";
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React from "react";
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
+import { IconContext } from "react-icons/lib";
+import { Link } from "react-router-dom";
 import "./Footer.scss";
 
 const THEME = createTheme({

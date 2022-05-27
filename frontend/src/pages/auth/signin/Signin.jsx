@@ -2,12 +2,12 @@ import { Flex, Grid, Heading, Stack, Text } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { InputControl, SubmitButton } from "formik-chakra-ui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-import { useSigninUserMutation } from "../../../redux/store/api/authApi";
 import { setUser } from "../../../redux/slices/AuthSlice";
+import { useSigninUserMutation } from "../../../redux/store/api/authApi";
 
 const Signin = () => {
   const dispatch = useDispatch();
@@ -17,26 +17,41 @@ const Signin = () => {
   const [signinUser, { data, isLoading, error, isError, isSuccess }] =
     useSigninUserMutation();
   console.log(data);
+
   if (isError) {
     console.log(error);
-    toast({
-      title: error.data.message,
-      status: "error",
-      duration: 5000,
-    });
-    if (error.data.message === "User not Verified") {
+    if (error.data.status === 406) {
+      toast({
+        status: "success",
+        duration: 5000,
+        title: "Please check your email to verify your account",
+      });
       navigate("/send-verify-mail", {
         state: { email },
       });
+    } else {
+      toast({
+        status: "error",
+        duration: 5000,
+        title: "Invalid email or password",
+      });
     }
   }
-  if (isSuccess) {
-    dispatch(setUser({ name: data.name, token: data.token }));
-    localStorage.setItem("token", data.token);
-    window.location.reload();
-  }
 
-  console.log(error);
+  useEffect(() => {
+    if (isSuccess) {
+      dispatch(setUser({ name: data.name, token: data.token }));
+      localStorage.setItem("token", data.token);
+      window.location.href = "/";
+    }
+  }, [isSuccess, data, dispatch]);
+
+  //   dispatch(setUser({ name: data.name, token: data.token }));
+  //   localStorage.setItem("token", data.token);
+  //   window.location.reload();
+  // }
+
+  // console.log(error);
 
   return (
     <Formik

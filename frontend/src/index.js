@@ -1,15 +1,14 @@
-import { Auth0Provider } from "@auth0/auth0-react";
+import { ChakraProvider } from "@chakra-ui/react";
 import * as Sentry from "@sentry/react";
 import { BrowserTracing } from "@sentry/tracing";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
-import App from "./App";
-import "./index.scss";
 // import { store } from "./redux/store";
-
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
+import App from "./App";
+import "./index.scss";
 import store from "./redux/store/store";
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
@@ -22,8 +21,8 @@ Sentry.init({
 });
 
 // Dotenv in react
-const domain = process.env.REACT_APP_AUTHO_DOMAIN;
-const clientId = process.env.REACT_APP_AUTHO_CLIENT_ID;
+// const domain = process.env.REACT_APP_AUTHO_DOMAIN;
+// const clientId = process.env.REACT_APP_AUTHO_CLIENT_ID;
 
 let persistor = persistStore(store);
 
@@ -40,26 +39,12 @@ root.render(
     > */}
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <App />
+        <ChakraProvider>
+          <App />
+        </ChakraProvider>
       </PersistGate>
     </Provider>
     {/* </Auth0Provider> */}
   </>,
   document.getElementById("root")
 );
-
-// if (process.env.NODE_ENV !== 'production' && module.hot) {
-//   module.hot.accept('./App', () => {
-//     const NextApp = require('./App').default;
-//     ReactDOM.render(
-//       <React.StrictMode>
-//         <Provider store={store}>
-//           <PersistGate loading={null} persistor={store.persistor}>
-//             <NextApp />
-//           </PersistGate>
-//         </Provider>
-//       </React.StrictMode>,
-//       document.getElementById('root')
-//     );
-//   });
-// }

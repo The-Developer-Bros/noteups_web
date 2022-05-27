@@ -71,13 +71,13 @@ const signinUser = async (req, res, next) => {
 
     const user = await User.findOne({ email });
     if (!user) return next(createHttpError(404, "User not Found!"));
-    if (!user.isUserVerified)
-      return next(createHttpError(406, "User not verified"));
 
     const isValidPassword = await bcrypt.compare(password, user.password);
-
     if (!isValidPassword)
       return next(createHttpError(401, "Not Valid Password!"));
+
+    if (!user.isUserVerified)
+      return next(createHttpError(406, "User not verified"));
 
     const token = jwt.sign(
       {

@@ -1,6 +1,6 @@
 import * as Sentry from "@sentry/react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import "./App.scss";
+// import "./App.scss";
 import Footer from "./components/footer/Footer";
 import Header from "./components/header/Header";
 import NotFoundPage from "./pages/404/NotFoundPage";
@@ -16,6 +16,7 @@ import ContactPage from "./pages/info/contact/ContactPage";
 import ContributePage from "./pages/info/contribute/ContributePage";
 import FAQPage from "./pages/info/faq/FAQPage";
 import PricingPage from "./pages/info/pricing/PricingPage";
+import LandingPage from "./pages/landing/LandingPage";
 import ProductCategoriesPage from "./pages/product/categories/ProductCategoriesPage";
 import ProductDetailPage from "./pages/product/details/ProductDetailPage";
 import ProductListingPage from "./pages/product/listing/ProductListingPage";
@@ -25,7 +26,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header />
+      {/* <Header /> */}
 
       <div className="App">
         <Routes>
@@ -49,10 +50,11 @@ function App() {
           />
 
           {/* Auth Routes */}
-          <Route
+          {/* <Route
             path="/"
-            element={token ? <HomePage /> : <Navigate to="/signin" />}
-          />
+            element={token ? <LandingPage /> : <Navigate to="/signin" />}
+          /> */}
+          <Route path="/" element={<LandingPage />} />
 
           <Route path="/send-verify-mail" element={<SendEmail />} />
           <Route path="/email-verify/:token" element={<EmailVerified />} />
@@ -72,7 +74,7 @@ function App() {
             path="/forgot-password-verify/:token"
             element={<ChangePassword />}
           />
-        <Route path="*" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
 

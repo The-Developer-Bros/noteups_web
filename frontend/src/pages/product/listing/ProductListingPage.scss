@@ -1,14 +1,13 @@
-.product-listing-page{
-    margin: 50px;
+.product-listing-page {
+  margin: 50px;
 }
 
 .product-listing-page-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    grid-column-gap: 2rem;
-    grid-row-gap: 10rem;
-  }
-  
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-column-gap: 2rem;
+  grid-row-gap: 10rem;
+
   img {
     width: 250px;
     height: 350px;
@@ -16,28 +15,28 @@
     border-radius: 1rem;
     margin-bottom: 1rem;
   }
-  
+
   h2 {
     font-size: 0.8rem;
     margin-bottom: 1rem;
   }
-  
-  .filter-container button{
-    margin-right: 2rem;
-    margin-bottom: 5rem;
-    min-width: 5rem;
-    padding: 0.5rem 1rem;
-    border: none;
-    background: #fff;
-    color: rgb(65,98,168);
-    border-radius: 0.5rem;
-    border: 2px solid rgb(65,98,168);
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  
-  button.active {
-    background: rgb(65,98,168);
-    color: #fff;
-  }
+}
+
+.filter-container button {
+  margin-right: 2rem;
+  margin-bottom: 5rem;
+  min-width: 5rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #fff;
+  color: rgb(65, 98, 168);
+  border-radius: 0.5rem;
+  border: 2px solid rgb(65, 98, 168);
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button.active {
+  background: rgb(65, 98, 168);
+  color: #fff;
+}

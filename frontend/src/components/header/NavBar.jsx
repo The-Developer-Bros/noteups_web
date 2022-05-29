@@ -24,11 +24,7 @@ const NavBar = () => {
         setNavVisibility(false);
       }
     } else {
-      if (window.scrollY >= 20) {
         setNavVisibility(true);
-      } else {
-        setNavVisibility(false);
-      }
     }
   };
 

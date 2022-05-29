@@ -1,10 +1,9 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import Box from "@mui/material/Box";
-import React from "react";
+import React, { useState } from "react";
+import { FaBars, FaTimes } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { Auth0LoginButton, Auth0LogoutButton, Auth0Profile } from "./Auth";
-import { FaTimes, FaBars, FaCart } from "react-icons/fa";
-import { useState } from "react";
 // import SearchBar from './SearchBar';
 import "./NavBar.scss";
 
@@ -15,15 +14,34 @@ const NavBar = () => {
   const handleClick = () => {
     setClick(!click);
   };
+  const [navVisibility, setNavVisibility] = useState(false);
+
+  const changeBackground = () => {
+    if (window.location.pathname === "/") {
+      if (window.scrollY >= 700) {
+        setNavVisibility(true);
+      } else {
+        setNavVisibility(false);
+      }
+    } else {
+      if (window.scrollY >= 20) {
+        setNavVisibility(true);
+      } else {
+        setNavVisibility(false);
+      }
+    }
+  };
+
+  window.addEventListener("scroll", changeBackground);
 
   return (
-    <Box className="navbar">
+    <Box className={navVisibility ? "navbar_active" : "navbar"}>
       <nav className="navbar_container">
         <Link to="/" className="navbar_logo">
           NOTEUPS
         </Link>
 
-        <div className="navbar_menu">
+        <div className="nav_menu_container">
           <ul className={click ? "nav_menu active" : "nav_menu"}>
             <li className="nav_item">
               <Link to="/products" className="nav_links">
@@ -51,7 +69,7 @@ const NavBar = () => {
 
             <li className="nav_item">
               <Link to="/cart" className="nav_links">
-                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                <i className="fa fa-shopping-cart" aria-hidden="true"></i>
               </Link>
             </li>
           </ul>
@@ -76,9 +94,9 @@ const NavBar = () => {
 
         <div className="hamburger" onClick={handleClick}>
           {click ? (
-            <FaTimes style={{ color: "#fff" }} size={20} />
+            <FaTimes className="hamburger_bars" size={20} />
           ) : (
-            <FaBars style={{ color: "#fff" }} size={20} />
+            <FaBars className="hamburger_bars" size={20} />
           )}
         </div>
       </nav>

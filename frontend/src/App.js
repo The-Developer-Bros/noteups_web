@@ -1,8 +1,7 @@
 import * as Sentry from "@sentry/react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-// import "./App.scss";
-import Footer from "./components/footer/Footer";
-import Header from "./components/header/Header";
+import styled from "styled-components";
+import NavBar from "./components/header/NavBar";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import ChangePassword from "./pages/auth/changepassword/ChangePassword";
 import EmailVerified from "./pages/auth/emailverified/EmailVerified";
@@ -10,7 +9,6 @@ import ForgotPassword from "./pages/auth/forgotpassword/ForgotPassword";
 import SendEmail from "./pages/auth/sendemail/SendEmail";
 import Signin from "./pages/auth/signin/Signin";
 import Signup from "./pages/auth/signup/Signup";
-import HomePage from "./pages/home/HomePage";
 import AboutPage from "./pages/info/about/AboutPage";
 import ContactPage from "./pages/info/contact/ContactPage";
 import ContributePage from "./pages/info/contribute/ContributePage";
@@ -26,7 +24,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* <Header /> */}
+      <NavBar />
 
       <div className="App">
         <Routes>
@@ -82,5 +80,23 @@ function App() {
     </BrowserRouter>
   );
 }
+
+const HeaderStyled = styled.header`
+  background-position-y: -100%;
+  background-color: rgba(255, 0, 0, 0.1);
+
+  /* .header-content {
+    padding: 0 18rem;
+    @media screen and (max-width: 1347px) {
+      padding: 5rem 14rem;
+    }
+    @media screen and (max-width: 1186px) {
+      padding: 5rem 8rem;
+    }
+    @media screen and (max-width: 990px) {
+      padding: 5rem 4rem;
+    }
+  } */
+`;
 
 export default Sentry.withProfiler(App);

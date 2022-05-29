@@ -26,11 +26,6 @@ function ChartSection() {
               Manage your finances like a pro in no time
             </h2>
             <Roll right>
-              <RubberBand>
-                <AnimatedButton
-                  name={"Get Started"}
-                />
-              </RubberBand>
               <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem
                 officia nemo distinctio dolores necessitatibus odit magni

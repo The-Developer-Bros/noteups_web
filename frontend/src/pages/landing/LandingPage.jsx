@@ -9,11 +9,19 @@ import FAQSection from "./landingcomponents/FAQSection";
 import Footer from "./landingcomponents/Footer";
 import { Fade } from "react-reveal";
 import "./LandingPage.scss";
+import bg from "./img/bg.svg";
+import HeaderContent from "./landingcomponents/HeaderContent";
 
 function LandingPage() {
   return (
     <div className="LandingPage">
-      <Header />
+      
+      <HeaderStyled>
+        <div className="header-content">
+          <HeaderContent />
+        </div>
+      </HeaderStyled>
+      
       <OuterLayout>
         <MainStyled>
           <Fade left>
@@ -39,6 +47,28 @@ function LandingPage() {
     </div>
   );
 }
+
+const HeaderStyled = styled.header`
+  min-height: 100vh;
+  /* margin-top: 5rem; */
+  width: 100%;
+  background-image: url(${bg});
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position-y: 100%;
+  .header-content {
+    padding: 0 18rem;
+    @media screen and (max-width: 1347px) {
+      padding: 5rem 14rem;
+    }
+    @media screen and (max-width: 1186px) {
+      padding: 5rem 8rem;
+    }
+    @media screen and (max-width: 990px) {
+      padding: 5rem 4rem;
+    }
+  }
+`;
 
 const MainStyled = styled.main``;
 

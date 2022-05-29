@@ -37,7 +37,7 @@ function HeaderContent() {
 const HeaderContentStyled = styled.div`
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    padding-top: 3rem;
+    padding-top: 8rem;
     @media screen and (max-width: 700px){
         grid-template-columns: repeat(1, 1fr);
     }

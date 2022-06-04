@@ -1,6 +1,5 @@
 import * as Sentry from "@sentry/react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import styled from "styled-components";
 import NavBar from "./components/header/NavBar";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import ChangePassword from "./pages/auth/changepassword/ChangePassword";
@@ -80,23 +79,5 @@ function App() {
     </BrowserRouter>
   );
 }
-
-const HeaderStyled = styled.header`
-  background-position-y: -100%;
-  background-color: rgba(255, 0, 0, 0.1);
-
-  /* .header-content {
-    padding: 0 18rem;
-    @media screen and (max-width: 1347px) {
-      padding: 5rem 14rem;
-    }
-    @media screen and (max-width: 1186px) {
-      padding: 5rem 8rem;
-    }
-    @media screen and (max-width: 990px) {
-      padding: 5rem 4rem;
-    }
-  } */
-`;
 
 export default Sentry.withProfiler(App);

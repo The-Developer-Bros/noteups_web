@@ -11,17 +11,17 @@ import { Fade } from "react-reveal";
 import "./LandingPage.scss";
 import bg from "./img/bg.svg";
 import HeaderContent from "./landingcomponents/HeaderContent";
+import { NewsLetter } from "./newsLetter";
 
 function LandingPage() {
   return (
     <div className="LandingPage">
-      
       <HeaderStyled>
         <div className="header-content">
           <HeaderContent />
         </div>
       </HeaderStyled>
-      
+
       <OuterLayout>
         <MainStyled>
           <Fade left>
@@ -38,6 +38,9 @@ function LandingPage() {
           </Fade>
           <Fade left>
             <FAQSection />
+          </Fade>
+          <Fade right>
+            <NewsLetter />
           </Fade>
         </MainStyled>
       </OuterLayout>

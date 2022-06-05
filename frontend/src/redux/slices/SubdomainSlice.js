@@ -68,12 +68,28 @@ export const fetchAsyncSubjectDetails = createAsyncThunk(
   }
 );
 
+export const fetchAsyncSubjectsImages = createAsyncThunk(
+  "subdomains/fetchAsyncSubjectsImages",
+  async ({ domain, subdomain, subject }) => {
+    // params can't be separated
+    const response = await fetch(
+      `/productApi/images/${domain}/${subdomain}/${subject}`
+    );
+    // response is array of jsons
+    console.log("response", response);
+    const images = await response.json();
+    console.log(`fetched ${domain} ${subdomain} ${subject} images: ${images}`);
+    return images;
+  }
+);
+
 const initialState = {
   engineering: {},
   arts: {},
   commerce: {},
   selectedSubjectPDFs: {},
   selectedSubjectDetails: {},
+  selectedSubjectImages: []
 };
 
 const subdomainSlice = createSlice({
@@ -130,6 +146,14 @@ const subdomainSlice = createSlice({
       console.log("Fetch of SubjectDetails Rejected ", payload);
       return { ...state, selectedSubjectDetails: {} };
     },
+    [fetchAsyncSubjectsImages.fulfilled]: (state, { payload }) => {
+      console.log("Fetch of SubjectsImages Successful ", payload);
+      return { ...state, selectedSubjectImages: payload };
+    },
+    [fetchAsyncSubjectsImages.rejected]: (state, { payload }) => {
+      console.log("Fetch of SubjectsImages Rejected ", payload);
+      return { ...state, selectedSubjectImages: [] };
+    }
   },
 });
 
@@ -147,5 +171,9 @@ export const getSelectedSubjectPDFs = (state) =>
   state.subdomains.selectedSubjectPDFs;
 export const getSelectedSubjectDetails = (state) =>
   state.subdomains.selectedSubjectDetails;
+
+export const getSelectedSubjectImages = (state) =>
+  state.subdomains.selectedSubjectImages;
+  
 
 export default subdomainSlice.reducer;

@@ -7,6 +7,8 @@ import {
   removeSelectedSubjectPDFs,
   removeSelectedSubjectDetails,
   fetchAsyncSubjectDetails,
+  fetchAsyncSubjectsImages,
+  getSelectedSubjectImages,
 } from "../../../redux/slices/SubdomainSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -20,12 +22,14 @@ function ProductDetailPage() {
   const subject = String(urlArray[urlArray.length - 1]);
 
   const [response, setResponse] = useState({});
-  const [subjectJsonData, setSubjectJsonData] = useState({});
+  const [subjectDetailsJsonData, setSubjectDetailsJsonData] = useState({});
+  const [subjectImagesJsonData, setSubjectImagesJsonData] = useState([]);
 
   const dispatch = useDispatch();
 
   // const subjectPDfs = useSelector(getSelectedSubjectPDFs);
   const subjectDetails = useSelector(getSelectedSubjectDetails);
+  const subjectImages = useSelector(getSelectedSubjectImages);
 
   // console.log("subjectPDfs", subjectPDfs);
   console.log("subjectDetails", subjectDetails.secure_url);
@@ -34,6 +38,7 @@ function ProductDetailPage() {
     try {
       // dispatch(fetchAsyncSubjectPDFs({domain, subdomain, subject}));
       dispatch(fetchAsyncSubjectDetails({ domain, subdomain, subject }));
+      dispatch(fetchAsyncSubjectsImages({ domain, subdomain, subject }));
       // return () => {
       //   // dispatch(removeSelectedSubjectPDFs());
       //   dispatch(removeSelectedSubjectDetails());
@@ -43,13 +48,17 @@ function ProductDetailPage() {
       const openJson = async (subjectDetails) => {
         const subjectDetailsSecureUrl = await fetch(subjectDetails.secure_url);
         const subjectDetailsJson = await subjectDetailsSecureUrl.json();
-        // console.log("Subject Json Data ", subjectJsonData);
+        // console.log("Subject Json Data ", subjectDetailsJsonData);
+
+        // const subjectImagesSecureUrl = await fetch(subjectImages[0].secure_url);
+        // const subjectImagesJson = await subjectImagesSecureUrl.json();
 
         setResponse(subjectDetailsSecureUrl);
-        setSubjectJsonData(subjectDetailsJson);
-
+        setSubjectDetailsJsonData(subjectDetailsJson);
+        // setSubjectImagesJsonData(subjectImagesJson);
       };
       openJson(subjectDetails);
+      setSubjectImagesJsonData(subjectImages[0]);
     } catch (err) {
       console.log(err);
     }
@@ -57,41 +66,47 @@ function ProductDetailPage() {
 
   return (
     <div className="subject-section">
-      {Object.keys(subjectJsonData).length === 0 ? (
+      {Object.keys(subjectDetailsJsonData).length === 0 ? (
         <div className="subject-detail-error">
           <h3>Loading...</h3>
         </div>
       ) : (
         <>
           <div className="section-left">
-            <div className="subject-title">{subjectJsonData.name}</div>
-            <div className="subject-year">{subjectJsonData.Year}</div>
+            <div className="subject-title">{subjectDetailsJsonData.name}</div>
+            <div className="subject-year">{subjectDetailsJsonData.Year}</div>
             <div className="subject-rating">
               <span>
                 Rating: <i className="fa fa-star"></i> :{" "}
-                {subjectJsonData.rating}
+                {subjectDetailsJsonData.rating}
               </span>
               <span>
                 Votes: <i className="fa fa-thumbs-up"></i> :{" "}
-                {subjectJsonData.votes}
+                {subjectDetailsJsonData.votes}
               </span>
             </div>
             <div className="subject-info">
               <div>
-                <span>Domain</span>
-                <span>{subjectJsonData.domain}</span>
+                <span>Domain </span>
+                <span>{subjectDetailsJsonData.domain}</span>
               </div>
               <div>
-                <span>Subdomain</span>
-                <span>{subjectJsonData.subdomain}</span>
+                <span>Subdomain </span>
+                <span>{subjectDetailsJsonData.subdomain}</span>
               </div>
             </div>
-            <div className="subject-plot">{subjectJsonData.description}</div>
+            <div className="subject-description">
+              {subjectDetailsJsonData.description}
+            </div>
           </div>
 
           <div className="section-right">
             <div className="subject-poster">
-              {/* <img src={subjectJsonData.poster} alt={data.Title} /> */}
+              <img
+                src={subjectImagesJsonData.secure_url}
+                alt="poster"
+                className="subject-poster-img"
+              />
             </div>
           </div>
         </>

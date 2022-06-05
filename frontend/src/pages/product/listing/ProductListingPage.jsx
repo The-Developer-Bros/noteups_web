@@ -99,7 +99,7 @@ function ProductListingPage() {
         >
           <AnimatePresence>
             {Object.keys(filtered).map((key) => {
-              return <ProductListingCard key={key} subject={filtered[key]} />
+              return <ProductListingCard key={key} subject={filtered[key]} domain={domain} subdomain={subdomain} />
             })}
           </AnimatePresence>
         </motion.div>

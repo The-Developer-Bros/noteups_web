@@ -5,7 +5,6 @@ const cloudinary = require("cloudinary").v2;
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
 
-
 ///////////////////////////////////////////////////////////// Util Functions /////////////////////////////////////////////////////////////////
 
 // Function to add poster url to each subdomain from cloudinary
@@ -160,29 +159,30 @@ const getAllPDFsForSubject = async (req, res) => {
   }
 };
 
-const downloadSubject = async (req, res, next) => {
-  const downloadTransaction = Sentry.startTransaction({
-    op: "download",
-    name: "Download",
+const getSubjectInfo = async (req, res, next) => {
+  const getSubjectInfoTransaction = Sentry.startTransaction({
+    op: "getSubjectInfo",
+    name: "Get Subject Info",
   });
   try {
+    // search for deatils.json in cloudinary folder
     const { resources } = await cloudinary.search
       .expression(
-        `folder:noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject}`
+        `folder:noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject} AND  
+        resource_type:raw AND
+        filename:details.json` 
       )
       .sort_by("created_at", "desc")
       .max_results(10)
       .execute();
 
-    console.log(req.params.domain, req.params.subject);
-    const publicIds = resources.map((file) => file.public_id);
-    console.log(publicIds);
-    res.send(publicIds);
+    // console.log(resources);
+    res.send(resources[0]);
   } catch (error) {
     console.error(error);
     Sentry.captureException(error);
   } finally {
-    downloadTransaction.finish();
+    getSubjectInfoTransaction.finish();
   }
 };
 
@@ -229,6 +229,7 @@ module.exports = {
   getAllSubdomainsForDomain,
   getAllSubjectsForSubdomain,
   getAllPDFsForSubject,
-  downloadSubject,
+  // getSubjectPDFs,
+  getSubjectInfo,
   uploadSubject,
 };

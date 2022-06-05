@@ -1,6 +1,7 @@
 import * as Sentry from "@sentry/react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import NavBar from "./components/header/NavBar";
+import BottomBar from "./components/footer/BottomBar";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import ChangePassword from "./pages/auth2/changepassword/ChangePassword";
 import EmailVerified from "./pages/auth2/emailverified/EmailVerified";
@@ -13,6 +14,7 @@ import ContactPage from "./pages/info/contact/ContactPage";
 import ContributePage from "./pages/info/contribute/ContributePage";
 import FAQPage from "./pages/info/faq/FAQPage";
 import PricingPage from "./pages/info/pricing/PricingPage";
+import Footer from "./pages/landing/landingcomponents/Footer";
 import LandingPage from "./pages/landing/LandingPage";
 import ProductCategoriesPage from "./pages/product/categories/ProductCategoriesPage";
 import ProductDetailPage from "./pages/product/details/ProductDetailPage";
@@ -75,7 +77,8 @@ function App() {
         </Routes>
       </div>
 
-      {/* <Footer /> */}
+      <Footer />
+      {/* <BottomBar /> */}
     </BrowserRouter>
   );
 }

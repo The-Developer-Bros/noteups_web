@@ -8,7 +8,8 @@ const {
   getAllSubdomainsForDomain,
   getAllSubjectsForSubdomain,
   getAllPDFsForSubject,
-  downloadSubject,
+  getSubjectPDFs,
+  getSubjectInfo,
   uploadSubject,
 } = require("../controllers/ProductController");
 
@@ -17,7 +18,8 @@ router.get("/:domain/subdomains", getAllSubdomainsForDomain);
 router.get("/:domain/:subdomain/subjects", getAllSubjectsForSubdomain);
 
 router.get("/:domain/:subdomain/:subject", getAllPDFsForSubject);
-router.get("/download/:domain/:subdomain/:subject", downloadSubject);
+router.get("/info/:domain/:subdomain/:subject", getSubjectInfo);
+// router.get("/pdfs/:domain/:subdomain/:subject", getSubjectPDFs);
 router.post("/upload/:domain/:subdomain/:subject", uploadSubject);
 
 // Export the router

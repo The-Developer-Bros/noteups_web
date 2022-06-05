@@ -5,7 +5,7 @@ import React from "react";
 import { FaFacebook, FaGithub, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { IconContext } from "react-icons/lib";
 import { Link } from "react-router-dom";
-import "./Footer.scss";
+import "./BottomBar.scss";
 
 const THEME = createTheme({
   typography: {
@@ -15,6 +15,9 @@ const THEME = createTheme({
       ","
     ),
   },
+  spacing: {
+    unit: 8,
+  }
 });
 
 function Footer() {

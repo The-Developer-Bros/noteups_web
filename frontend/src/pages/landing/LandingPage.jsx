@@ -44,9 +44,6 @@ function LandingPage() {
           </Fade>
         </MainStyled>
       </OuterLayout>
-      <Fade bottom>
-        <Footer />
-      </Fade>
     </div>
   );
 }

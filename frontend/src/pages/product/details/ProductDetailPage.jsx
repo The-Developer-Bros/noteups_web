@@ -108,6 +108,24 @@ function ProductDetailPage() {
                 className="subject-poster-img"
               />
             </div>
+            {!itemInCart && (
+              <button
+                className="button is-black nomad-btn"
+                onClick={() => addProduct(product)}
+              >
+                ADD TO CART
+              </button>
+            )}
+            {itemInCart && (
+              <button
+                className="button is-white nomad-btn"
+                id="btn-white-outline"
+                onClick={() => increase(product)}
+              >
+                ADD MORE
+              </button>
+            )}
+            u
           </div>
         </>
       )}

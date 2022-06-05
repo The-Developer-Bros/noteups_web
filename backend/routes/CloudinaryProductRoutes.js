@@ -12,7 +12,7 @@ const {
   getSubjectInfo,
   uploadSubject,
   getSubjectImages,
-} = require("../controllers/ProductController");
+} = require("../controllers/CloudinaryProductController");
 
 router.get("/domains", getAllDomains);
 router.get("/:domain/subdomains", getAllSubdomainsForDomain);

@@ -20,8 +20,14 @@ const SubdomainSchema = new mongoose.Schema({
         required: true
     },
     domain: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Domain"
+        type: String,
+        required: true
+    },
+    createdAt: {
+        type: Date,
+    },
+    updatedAt: {
+        type: Date,
     }
 });
 
@@ -32,12 +38,18 @@ const SubjectSchema = new mongoose.Schema({
         required: true
     },
     subdomain: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Subdomain"
+        type: String,
+        required: true
     },
     domain: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Domain"
+        type: String,
+        required: true
+    },
+    createdAt: {
+        type: Date,
+    },
+    updatedAt: {
+        type: Date,
     },
     pdfUrl: {
         type: String

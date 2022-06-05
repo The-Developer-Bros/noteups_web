@@ -2,14 +2,19 @@ import { useAuth0 } from "@auth0/auth0-react";
 import Box from "@mui/material/Box";
 import React, { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
-import { Link } from "react-router-dom";
-import { Auth0LoginButton, Auth0LogoutButton, Auth0Profile } from "./Auth";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+// import { Auth0LoginButton, Auth0LogoutButton, Auth0Profile } from "./Auth";
 // import SearchBar from './SearchBar';
+import { defaultState } from "../../redux/slices/AuthSlice";
+import { Button } from "@chakra-ui/button";
+
 import "./NavBar.scss";
 
 const NavBar = () => {
-  const { isLoading, error } = useAuth0();
+  // const { isLoading, error } = useAuth0();
 
+  // Navbar Visibility
   const [click, setClick] = useState(false);
   const handleClick = () => {
     setClick(!click);
@@ -24,11 +29,25 @@ const NavBar = () => {
         setNavVisibility(false);
       }
     } else {
-        setNavVisibility(true);
+      setNavVisibility(true);
     }
   };
 
   window.addEventListener("scroll", changeBackground);
+
+  // Sign in/out
+  const { name, token } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const signout = () => {
+    localStorage.removeItem("token");
+    // localStorage.removeItem("auth");
+    localStorage.removeItem("persist:root"); 
+    dispatch(defaultState());
+    navigate("/", { replace: true });
+    window.location.reload();
+  };
 
   return (
     <Box className={navVisibility ? "navbar_active" : "navbar"}>
@@ -71,8 +90,34 @@ const NavBar = () => {
           </ul>
         </div>
 
-        {/* Login/Register Button */}
+        {/* Login/Register Button for Chakra*/}
         <div className="login_box nav_item">
+          {token && name ? (
+            <div className="login_container">
+              <div className="login_text">
+                <p>{name}</p>
+              </div>
+              <div className="login_button">
+                <Button onClick={signout}>Signout</Button>
+              </div>
+            </div>
+          ) : (
+            <div className="login_container">
+              <div className="login_button">
+                <Button
+                  onClick={() => {
+                    navigate("/signin");
+                  }}
+                >
+                  Login
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Login/Register Button for Auth0*/}
+        {/* <div className="login_box nav_item">
           {isLoading ? (
             <p>Loading...</p>
           ) : error ? (
@@ -86,7 +131,7 @@ const NavBar = () => {
               </Box>
             </div>
           )}
-        </div>
+        </div> */}
 
         <div className="hamburger" onClick={handleClick}>
           {click ? (

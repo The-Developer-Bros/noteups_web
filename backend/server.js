@@ -63,7 +63,7 @@ app.get("/", async (req, res, next) => {
 });
 
 app.use("/user", require("./routes/UserRoutes"));
-app.use("/productApi", require("./routes/ProductRoutes"));
+app.use("/productApi", require("./routes/CloudinaryProductRoutes"));
 app.use("/paymentApi", require("./routes/PaymentRoutes"));
 app.use("/api", require("./routes/api.route"));
 

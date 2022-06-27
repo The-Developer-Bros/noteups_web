@@ -14,7 +14,8 @@ const ProductCard = (props) => {
 
     return (
         <div className="card-item">
-            <Link to={`/products/${pathArray[pathArray.length - 2]}/${pathArray[pathArray.length - 1]}`}>
+            {/* <Link to={`/products/${pathArray[pathArray.length - 2]}/${pathArray[pathArray.length - 1]}`}> */}
+            <Link to={`/products/${data.path.split("noteups/")[1]}`}>
                 <div className="card-inner">
                     <div className="card-top">
                         <img src={data.poster} alt="movie-poster" />

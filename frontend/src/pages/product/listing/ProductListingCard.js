@@ -13,7 +13,11 @@ const ProductListingCard = ({ domain, subdomain, subject }) => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
       onClick={() => {
-        navigate(`/products/${domain}/${subdomain}/${subject.name}`);
+        // Use dynamic routing to get the url from the subject.path
+        // console.log(`subject.path:`, subject.path);
+        window.location.href = `${window.location.origin}/products/${
+          subject.path.split("noteups/")[1]
+        }`;
       }}
     >
       <h2>{subject.name}</h2>

@@ -7,13 +7,13 @@
 //   ? JSON.parse(localStorage.getItem("cart"))
 //   : [];
 
-// const initialState = {
+// const initialCartState = {
 //   cartItems: cartFromStorage,
 //   ...sumItems(cartFromStorage),
 // };
 
 // const CartContextProvider = ({ children }) => {
-//   const [state, dispatch] = useReducer(cartReducer, initialState);
+//   const [state, dispatch] = useReducer(cartReducer, initialCartState);
 //   const addProduct = (product) =>
 //     dispatch({ type: "ADD_ITEM", payload: product });
 //   const increase = (product) =>
@@ -124,12 +124,12 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 
-const storeCartItems = (cartItems) => {
+export const storeCartItems = (cartItems) => {
   const cart = cartItems.length > 0 ? cartItems : [];
   localStorage.setItem("cart", JSON.stringify(cart));
 };
 
-const sumItems = (cartItems) => {
+export const sumItems = (cartItems) => {
   storeCartItems(cartItems); // very frequent operation
   return {
     itemCount: cartItems.reduce((total, prod) => total + prod.quantity, 0),
@@ -140,18 +140,22 @@ const sumItems = (cartItems) => {
   };
 };
 
-const cartFromStorage = localStorage.getItem("cart")
+export const cartFromStorage = localStorage.getItem("cart")
   ? JSON.parse(localStorage.getItem("cart"))
   : [];
 
-const initialState = {
+export const isInCart = (product, cartItems) => {
+  return cartItems.find((item) => item.id === product.id);
+};
+
+export const initialCartState = {
   cartItems: cartFromStorage,
   ...sumItems(cartFromStorage),
 };
 
 export const cartSlice = createSlice({
   name: "cart",
-  initialState,
+  initialCartState,
   reducers: {
     addProduct: (state, action) => {
       // check if item is in cart

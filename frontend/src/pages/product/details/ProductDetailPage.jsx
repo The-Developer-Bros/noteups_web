@@ -11,15 +11,21 @@ import {
   getSelectedSubjectImages,
 } from "../../../redux/slices/SubdomainSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 function ProductDetailPage() {
-  // Get full url of current page
-  const url = window.location.href;
-  const urlArray = url.split("/");
+  // Clear cache
 
-  const domain = String(urlArray[urlArray.length - 3]);
-  const subdomain = String(urlArray[urlArray.length - 2]);
-  const subject = String(urlArray[urlArray.length - 1]);
+  // Get full url of current page
+  // const url = window.location.href;
+  // const urlArray = url.split("/");
+
+  // const domain = String(urlArray[urlArray.length - 3]);
+  // const subdomain = String(urlArray[urlArray.length - 2]);
+  // const subject = String(urlArray[urlArray.length - 1]);
+
+  const { domain, subdomain, subject } = useParams();
+  console.log(domain, subdomain, subject);
 
   const [response, setResponse] = useState({});
   const [subjectDetailsJsonData, setSubjectDetailsJsonData] = useState({});
@@ -39,10 +45,6 @@ function ProductDetailPage() {
       // dispatch(fetchAsyncSubjectPDFs({domain, subdomain, subject}));
       dispatch(fetchAsyncSubjectDetails({ domain, subdomain, subject }));
       dispatch(fetchAsyncSubjectsImages({ domain, subdomain, subject }));
-      // return () => {
-      //   // dispatch(removeSelectedSubjectPDFs());
-      //   dispatch(removeSelectedSubjectDetails());
-      // };
 
       // Open the Json details
       const openJson = async (subjectDetails) => {
@@ -59,6 +61,11 @@ function ProductDetailPage() {
       };
       openJson(subjectDetails);
       setSubjectImagesJsonData(subjectImages[0]);
+
+      return () => {
+        // dispatch(removeSelectedSubjectPDFs());
+        dispatch(removeSelectedSubjectDetails());
+      };
     } catch (err) {
       console.log(err);
     }
@@ -108,7 +115,7 @@ function ProductDetailPage() {
                 className="subject-poster-img"
               />
             </div>
-            {!itemInCart && (
+            {/* {!itemInCart && (
               <button
                 className="button is-black nomad-btn"
                 onClick={() => addProduct(product)}
@@ -124,8 +131,7 @@ function ProductDetailPage() {
               >
                 ADD MORE
               </button>
-            )}
-            u
+            )} */}
           </div>
         </>
       )}

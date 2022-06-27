@@ -8,8 +8,9 @@ const {
   webhook,
 } = require("../controllers/payment/StripeController");
 
-app.post("/create-checkout-session", createCheckoutSession);
-app.post("/webhook", webhook);
+
+router.post("/create-checkout-session", createCheckoutSession);
+router.post("/webhook", webhook);
 
 // Export the router
 module.exports = router;

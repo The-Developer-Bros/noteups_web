@@ -1,23 +1,20 @@
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import "./checkout.styles.scss";
 import StripeCheckout from "./stripe-checkout/StripeCheckout";
 
 const Checkout = () => {
-  // const { itemCount, total, cartItems } = useContext(CartContext);
   const itemCount = useSelector((state) => state.cart.itemCount);
   const total = useSelector((state) => state.cart.total);
-  const cartItems = useSelector((state) => state.cart.cartItems);
 
-  const [shipping, setShipping] = useState(null);
+  // const [shipping, setShipping] = useState(null);
   
-  const addressShown = {
-    display: shipping ? "none" : "block",
-  };
+  // const addressShown = {
+  //   display: shipping ? "none" : "block",
+  // };
   
-  const cardShown = {
-    display: shipping ? "block" : "none",
-  };
+  // const cardShown = {
+  //   display: shipping ? "block" : "none",
+  // };
   
   return (
     <div className="checkout">

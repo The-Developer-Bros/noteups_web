@@ -20,6 +20,7 @@ import {
   clearCart,
   isInCart,
 } from "../../../redux/slices/CartSlice";
+
 function ProductDetailPage() {
   // Clear cache
 
@@ -57,7 +58,9 @@ function ProductDetailPage() {
       const openJson = async (subjectDetails) => {
         const subjectDetailsSecureUrl = await fetch(subjectDetails.secure_url);
         const subjectDetailsJson = await subjectDetailsSecureUrl.json();
-        // console.log("Subject Json Data ", subjectDetailsJsonData);
+
+        console.log("subjectDetailsSecureUrl", subjectDetailsSecureUrl);
+        console.log("subjectDetailsJson", subjectDetailsJson);
 
         // const subjectImagesSecureUrl = await fetch(subjectImages[0].secure_url);
         // const subjectImagesJson = await subjectImagesSecureUrl.json();
@@ -66,6 +69,7 @@ function ProductDetailPage() {
         setSubjectDetailsJsonData(subjectDetailsJson);
         // setSubjectImagesJsonData(subjectImagesJson);
       };
+
       openJson(subjectDetails);
       setSubjectImagesJsonData(subjectImages[0]);
 
@@ -131,7 +135,10 @@ function ProductDetailPage() {
               {!itemInCart && (
                 <button
                   className="button is-black nomad-btn"
-                  onClick={() => dispatch(addProduct(subjectDetails))}
+                  onClick={() => {
+                    console.log("addproduct ", subjectDetailsJsonData);
+                    dispatch(addProduct(subjectDetails));
+                  }}
                 >
                   ADD TO CART
                 </button>
@@ -140,7 +147,10 @@ function ProductDetailPage() {
                 <button
                   className="button is-white nomad-btn"
                   id="btn-white-outline"
-                  onClick={() => dispatch(increase(subjectDetails))}
+                  onClick={() => {
+                    console.log("increase ", subjectDetailsJsonData);
+                    dispatch(increase(subjectDetails));
+                  }}
                 >
                   ADD MORE
                 </button>

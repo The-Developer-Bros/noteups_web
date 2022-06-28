@@ -1,19 +1,28 @@
 const stripeAPI = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
+const Sentry = require("@sentry/node");
+const Tracing = require("@sentry/tracing");
+
 async function createCheckoutSession(req, res) {
-  const domainUrl = process.env.WEB_APP_URL;
-  const { line_items, customer_email } = req.body;
+  const createCheckoutSessionTransaction = Sentry.startTransaction({
+    op: "createCheckoutSession",
+    name: "Create Checkout Session",
+  });
 
-  // check req body has line items and email
-  if (!line_items || !customer_email) {
-    return res.status(400).send({
-      message:
-        "Missing line items or customer email(Required Session Parameters)",
-    });
-  }
-
-  let session;
   try {
+    const domainUrl = process.env.WEB_APP_URL;
+    const { line_items, customer_email } = req.body;
+
+    // check req body has line items and email
+    if (!line_items || !customer_email) {
+      return res.status(400).send({
+        message:
+          "Missing line items or customer email(Required Session Parameters)",
+      });
+    }
+
+    let session;
+
     session = await stripeAPI.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items,
@@ -33,19 +42,27 @@ async function createCheckoutSession(req, res) {
     });
   } catch (error) {
     console.log(error);
+    Sentry.captureException(error);
     res.status(400).send({
       message: "Error creating checkout session",
       error,
     });
+  } finally {
+    createCheckoutSessionTransaction.finish();
   }
 }
 
 function webhook(req, res) {
-  const signature = req.headers["stripe-signature"];
-
-  let event;
+  const webhookTransaction = Sentry.startTransaction({
+    op: "webhook",
+    name: "Webhook",
+  });
 
   try {
+    const signature = req.headers["stripe-signature"];
+
+    let event;
+
     event = stripeAPI.webhooks.constructEvent(
       req["rawBody"],
       signature,
@@ -53,13 +70,29 @@ function webhook(req, res) {
     );
   } catch (error) {
     console.log(error);
+    Sentry.captureException(error);
     res.status(400).send(`Webhook Error: ${error.message}`);
   }
 
-  if (event.type === "checkout.session.completed") {
-    const session = event.data.object;
-    console.log(session);
+  try {
+    if (event.type === "checkout.session.completed") {
+      const session = event.data.object;
+      console.log(`Session ${session.id} completed`);
+    } else if (event.type === "checkout.session.canceled") {
+      console.log("Checkout Session Canceled");
+    } else if (event.type === "checkout.session.payment_failed") {
+      console.log("Checkout Session Payment Failed");
+    } else {
+      console.log("Unknown Webhook Event Type");
+    }
+  } catch (error) {
+    console.log(error);
+    Sentry.captureException(error);
+    res.status(400).send(`Webhook Error: ${error.message}`);
   }
+
+  webhookTransaction.finish();
+  res.status(200).send("Success");
 }
 
 module.exports = {

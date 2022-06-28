@@ -58,13 +58,23 @@ export const fetchAsyncSubjectDetails = createAsyncThunk(
   async ({ domain, subdomain, subject }) => {
     // params can't be separated
     const response = await fetch(
-      `/productApi/info/${domain}/${subdomain}/${subject}`
+      `/productApi/details/${domain}/${subdomain}/${subject}`
     );
+
     const details = await response.json();
+    const subjectMetaDataSecureUrl = await fetch(details.secure_url);
+    const subjectMetaData = await subjectMetaDataSecureUrl.json();
+
+    // concatenate details and subjectMetaData
+    const subjectDetailsWithMetaData = {
+      ...details,
+      subject_meta_data: subjectMetaData,
+    };
+
     console.log(
-      `fetched ${domain} ${subdomain} ${subject} details: ${details}`
+      `fetched ${domain} ${subdomain} ${subject} details: ${subjectDetailsWithMetaData}`
     );
-    return details;
+    return subjectDetailsWithMetaData;
   }
 );
 
@@ -89,7 +99,7 @@ const initialState = {
   commerce: {},
   selectedSubjectPDFs: {},
   selectedSubjectDetails: {},
-  selectedSubjectImages: []
+  selectedSubjectImages: [],
 };
 
 const subdomainSlice = createSlice({
@@ -109,6 +119,7 @@ const subdomainSlice = createSlice({
     },
   },
   extraReducers: {
+    // Categories and Listings
     [fetchAsyncEngineeringSubdomains.fulfilled]: (state, { payload }) => {
       console.log("Fetch of EngineeringSubdomains Successful ", payload);
       return { ...state, engineering: payload };
@@ -130,6 +141,7 @@ const subdomainSlice = createSlice({
     [fetchAsyncCommerceSubdomains.rejected]: (state, { payload }) => {
       console.log("Fetch of CommerceSubdomains Rejected ", payload);
     },
+    // Details
     [fetchAsyncSubjectPDFs.fulfilled]: (state, { payload }) => {
       console.log("Fetch of SubjectPDFs Successful ", payload);
       return { ...state, selectedSubjectPDFs: payload };
@@ -153,7 +165,7 @@ const subdomainSlice = createSlice({
     [fetchAsyncSubjectsImages.rejected]: (state, { payload }) => {
       console.log("Fetch of SubjectsImages Rejected ", payload);
       return { ...state, selectedSubjectImages: [] };
-    }
+    },
   },
 });
 
@@ -174,6 +186,5 @@ export const getSelectedSubjectDetails = (state) =>
 
 export const getSelectedSubjectImages = (state) =>
   state.subdomains.selectedSubjectImages;
-  
 
 export default subdomainSlice.reducer;

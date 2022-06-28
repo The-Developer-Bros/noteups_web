@@ -158,13 +158,11 @@ const getAllPDFsForSubject = async (req, res) => {
     getPdfsTransaction.finish();
   }
 };
-// const getSubjectPDFs = async (req, res) => {
-// }
 
-const getSubjectInfo = async (req, res, next) => {
-  const getSubjectInfoTransaction = Sentry.startTransaction({
-    op: "getSubjectInfo",
-    name: "Get Subject Info",
+const getSubjectDetails = async (req, res, next) => {
+  const getSubjectDetailsTransaction = Sentry.startTransaction({
+    op: "getSubjectDetails",
+    name: "Get Subject Details",
   });
   try {
     // search for deatils.json in cloudinary folder
@@ -184,7 +182,7 @@ const getSubjectInfo = async (req, res, next) => {
     console.error(error);
     Sentry.captureException(error);
   } finally {
-    getSubjectInfoTransaction.finish();
+    getSubjectDetailsTransaction.finish();
   }
 };
 
@@ -211,6 +209,83 @@ const getSubjectImages = async (req, res, next) => {
     Sentry.captureException(error);
   } finally {
     getSubjectImagesTransaction.finish();
+  }
+};
+
+const getSubjectPDFs = async (req, res) => {
+  const getSubjectPDFsTransaction = Sentry.startTransaction({
+    op: "getSubjectPDFs",
+    name: "Get Subject PDFs",
+  });
+
+  try {
+    // search for pdfs in cloudinary folder
+    const { resources } = await cloudinary.search
+      .expression(
+        `folder:noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject} AND
+        format:pdf`
+      )
+      .sort_by("created_at", "desc")
+      .max_results(10)
+      .execute();
+
+    res.send(resources);
+  } catch (error) {
+    console.error(error);
+    Sentry.captureException(error);
+  } finally {
+    getSubjectPDFsTransaction.finish();
+  }
+};
+
+const getSubjectEverything = async (req, res, next) => {
+  const getSubjectEverythingTransaction = Sentry.startTransaction({
+    op: "getSubjectEverything",
+    name: "Get Subject Everything",
+  });
+
+  try {
+    // search for images in cloudinary folder
+    const { resources: imageResources } = await cloudinary.search
+      .expression(
+        `folder:noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject} AND 
+        (format:jpg OR format:png)`
+      )
+      .sort_by("created_at", "desc")
+      .max_results(10)
+      .execute();
+
+    const { resources: detailsResources } = await cloudinary.search
+      .expression(
+        `folder:noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject} AND
+        resource_type:raw AND
+        filename:details.json`
+      )
+      .sort_by("created_at", "desc")
+      .max_results(10)
+      .execute();
+
+    const { resources: pdfResources } = await cloudinary.search
+      .expression(
+        `folder:noteups/${req.params.domain}/${req.params.subdomain}/${req.params.subject} AND
+        format:pdf`
+      )
+      .sort_by("created_at", "desc")
+      .max_results(10)
+      .execute();
+
+    const subjectEverything = {
+      images: imageResources,
+      details: detailsResources[0],
+      pdfs: pdfResources,
+    };
+
+    res.send(subjectEverything);
+  } catch (error) {
+    console.error(error);
+    Sentry.captureException(error);
+  } finally {
+    getSubjectEverythingTransaction.finish();
   }
 };
 
@@ -251,14 +326,15 @@ const uploadSubject = async (req, res, next) => {
   }
 };
 
-// export all functions
+// export all above functions
 module.exports = {
+  getSubjectDetails,
+  getSubjectImages,
+  getSubjectPDFs,
+  getSubjectEverything,
+  uploadSubject,
   getAllDomains,
   getAllSubdomainsForDomain,
   getAllSubjectsForSubdomain,
   getAllPDFsForSubject,
-  // getSubjectPDFs,
-  getSubjectInfo,
-  getSubjectImages,
-  uploadSubject,
 };

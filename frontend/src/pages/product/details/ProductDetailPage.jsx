@@ -35,43 +35,21 @@ function ProductDetailPage() {
   const { domain, subdomain, subject } = useParams();
   console.log(domain, subdomain, subject);
 
-  const [response, setResponse] = useState({});
-  const [subjectDetailsJsonData, setSubjectDetailsJsonData] = useState({});
-  const [subjectImagesJsonData, setSubjectImagesJsonData] = useState([]);
-
   const dispatch = useDispatch();
 
-  // const subjectPDfs = useSelector(getSelectedSubjectPDFs);
   const subjectDetails = useSelector(getSelectedSubjectDetails);
   const subjectImages = useSelector(getSelectedSubjectImages);
+  // const subjectPDfs = useSelector(getSelectedSubjectPDFs);
 
-  // console.log("subjectPDfs", subjectPDfs);
   console.log("subjectDetails", subjectDetails);
+  console.log("subjectImages", subjectImages);
+  // console.log("subjectPDfs", subjectPDfs);
 
   useEffect(() => {
     try {
-      // dispatch(fetchAsyncSubjectPDFs({domain, subdomain, subject}));
       dispatch(fetchAsyncSubjectDetails({ domain, subdomain, subject }));
       dispatch(fetchAsyncSubjectsImages({ domain, subdomain, subject }));
-
-      // Open the Json details
-      const openJson = async (subjectDetails) => {
-        const subjectDetailsSecureUrl = await fetch(subjectDetails.secure_url);
-        const subjectDetailsJson = await subjectDetailsSecureUrl.json();
-
-        console.log("subjectDetailsSecureUrl", subjectDetailsSecureUrl);
-        console.log("subjectDetailsJson", subjectDetailsJson);
-
-        // const subjectImagesSecureUrl = await fetch(subjectImages[0].secure_url);
-        // const subjectImagesJson = await subjectImagesSecureUrl.json();
-
-        setResponse(subjectDetailsSecureUrl);
-        setSubjectDetailsJsonData(subjectDetailsJson);
-        // setSubjectImagesJsonData(subjectImagesJson);
-      };
-
-      openJson(subjectDetails);
-      setSubjectImagesJsonData(subjectImages[0]);
+      // dispatch(fetchAsyncSubjectPDFs({domain, subdomain, subject}));
 
       return () => {
         // dispatch(removeSelectedSubjectPDFs());
@@ -89,44 +67,44 @@ function ProductDetailPage() {
 
   return (
     <div className="subject-section">
-      {Object.keys(subjectDetailsJsonData).length === 0 ? (
-        <div className="subject-detail-error">
-          <h3>Loading...</h3>
-        </div>
-      ) : (
+      {subjectDetails && subjectDetails.subject_meta_data ? (
         <>
           <div className="section-left">
-            <div className="subject-title">{subjectDetailsJsonData.name}</div>
-            <div className="subject-year">{subjectDetailsJsonData.Year}</div>
+            <div className="subject-title">
+              {subjectDetails.subject_meta_data.name}
+            </div>
+            <div className="subject-year">
+              {subjectDetails.subject_meta_data.Year}
+            </div>
             <div className="subject-rating">
               <span>
                 Rating: <i className="fa fa-star"></i> :{" "}
-                {subjectDetailsJsonData.rating}
+                {subjectDetails.subject_meta_data.rating}
               </span>
               <span>
                 Votes: <i className="fa fa-thumbs-up"></i> :{" "}
-                {subjectDetailsJsonData.votes}
+                {subjectDetails.subject_meta_data.votes}
               </span>
             </div>
             <div className="subject-info">
               <div>
                 <span>Domain </span>
-                <span>{subjectDetailsJsonData.domain}</span>
+                <span>{subjectDetails.subject_meta_data.domain}</span>
               </div>
               <div>
                 <span>Subdomain </span>
-                <span>{subjectDetailsJsonData.subdomain}</span>
+                <span>{subjectDetails.subject_meta_data.subdomain}</span>
               </div>
             </div>
             <div className="subject-description">
-              {subjectDetailsJsonData.description}
+              {subjectDetails.subject_meta_data.description}
             </div>
           </div>
 
           <div className="section-right">
             <div className="subject-poster">
               <img
-                src={subjectImagesJsonData.secure_url}
+                src={subjectImages[0].secure_url}
                 alt="poster"
                 className="subject-poster-img"
               />
@@ -136,7 +114,10 @@ function ProductDetailPage() {
                 <button
                   className="button is-black nomad-btn"
                   onClick={() => {
-                    console.log("addproduct ", subjectDetailsJsonData);
+                    console.log(
+                      "addproduct ",
+                      subjectDetails.subject_meta_data
+                    );
                     dispatch(addProduct(subjectDetails));
                   }}
                 >
@@ -148,7 +129,7 @@ function ProductDetailPage() {
                   className="button is-white nomad-btn"
                   id="btn-white-outline"
                   onClick={() => {
-                    console.log("increase ", subjectDetailsJsonData);
+                    console.log("increase ", subjectDetails.subject_meta_data);
                     dispatch(increase(subjectDetails));
                   }}
                 >
@@ -160,7 +141,7 @@ function ProductDetailPage() {
               <button
                 className="button subject-pdf-viewer is-black nomad-btn"
                 onClick={() => {
-                  window.open(subjectDetailsJsonData.pdf_url);
+                  window.open(subjectDetails.subject_meta_data.pdf_url);
                 }}
               >
                 PDF VIEWER
@@ -168,6 +149,10 @@ function ProductDetailPage() {
             </div>
           </div>
         </>
+      ) : (
+        <div className="subject-detail-error">
+          <h3>Loading...</h3>
+        </div>
       )}
     </div>
   );

@@ -142,14 +142,6 @@ const subdomainSlice = createSlice({
       console.log("Fetch of CommerceSubdomains Rejected ", payload);
     },
     // Details
-    [fetchAsyncSubjectPDFs.fulfilled]: (state, { payload }) => {
-      console.log("Fetch of SubjectPDFs Successful ", payload);
-      return { ...state, selectedSubjectPDFs: payload };
-    },
-    [fetchAsyncSubjectPDFs.rejected]: (state, { payload }) => {
-      console.log("Fetch of SubjectPDFs Rejected ", payload);
-      return { ...state, selectedSubjectPDFs: {} };
-    },
     [fetchAsyncSubjectDetails.fulfilled]: (state, { payload }) => {
       console.log("Fetch of SubjectDetails Successful ", payload);
       return { ...state, selectedSubjectDetails: payload };
@@ -165,6 +157,14 @@ const subdomainSlice = createSlice({
     [fetchAsyncSubjectsImages.rejected]: (state, { payload }) => {
       console.log("Fetch of SubjectsImages Rejected ", payload);
       return { ...state, selectedSubjectImages: [] };
+    },
+    [fetchAsyncSubjectPDFs.fulfilled]: (state, { payload }) => {
+      console.log("Fetch of SubjectPDFs Successful ", payload);
+      return { ...state, selectedSubjectPDFs: payload };
+    },
+    [fetchAsyncSubjectPDFs.rejected]: (state, { payload }) => {
+      console.log("Fetch of SubjectPDFs Rejected ", payload);
+      return { ...state, selectedSubjectPDFs: {} };
     },
   },
 });

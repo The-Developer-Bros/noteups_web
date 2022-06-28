@@ -19,6 +19,7 @@ import LandingPage from "./pages/landing/LandingPage";
 import ProductCategoriesPage from "./pages/product/categories/ProductCategoriesPage";
 import ProductDetailPage from "./pages/product/details/ProductDetailPage";
 import ProductListingPage from "./pages/product/listing/ProductListingPage";
+import CartPage from "./pages/cart/CartPage";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -47,6 +48,9 @@ function App() {
             path="products/:domain/:subdomain/:subject"
             element={<ProductDetailPage />}
           />
+
+          {/* Cart Routes */}
+          <Route path="cart" element={<CartPage />} />
 
           {/* Auth Routes */}
           {/* <Route

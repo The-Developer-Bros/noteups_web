@@ -12,7 +12,14 @@ import {
 } from "../../../redux/slices/SubdomainSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-
+import {
+  addProduct,
+  increase,
+  decrease,
+  removeProduct,
+  clearCart,
+  isInCart,
+} from "../../../redux/slices/CartSlice";
 function ProductDetailPage() {
   // Clear cache
 
@@ -38,7 +45,7 @@ function ProductDetailPage() {
   const subjectImages = useSelector(getSelectedSubjectImages);
 
   // console.log("subjectPDfs", subjectPDfs);
-  console.log("subjectDetails", subjectDetails.secure_url);
+  console.log("subjectDetails", subjectDetails);
 
   useEffect(() => {
     try {
@@ -70,6 +77,11 @@ function ProductDetailPage() {
       console.log(err);
     }
   }, [dispatch, domain, subdomain, subject]);
+
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const itemInCart = isInCart(subjectDetails, cartItems);
+  console.log("cartItems", cartItems);
+  console.log("itemInCart", itemInCart);
 
   return (
     <div className="subject-section">
@@ -115,23 +127,35 @@ function ProductDetailPage() {
                 className="subject-poster-img"
               />
             </div>
-            {/* {!itemInCart && (
+            <div className="subject-interact-buttons">
+              {!itemInCart && (
+                <button
+                  className="button is-black nomad-btn"
+                  onClick={() => dispatch(addProduct(subjectDetails))}
+                >
+                  ADD TO CART
+                </button>
+              )}
+              {itemInCart && (
+                <button
+                  className="button is-white nomad-btn"
+                  id="btn-white-outline"
+                  onClick={() => dispatch(increase(subjectDetails))}
+                >
+                  ADD MORE
+                </button>
+              )}
+
+              {/* Go to pdf viewer button */}
               <button
-                className="button is-black nomad-btn"
-                onClick={() => addProduct(product)}
+                className="button subject-pdf-viewer is-black nomad-btn"
+                onClick={() => {
+                  window.open(subjectDetailsJsonData.pdf_url);
+                }}
               >
-                ADD TO CART
+                PDF VIEWER
               </button>
-            )}
-            {itemInCart && (
-              <button
-                className="button is-white nomad-btn"
-                id="btn-white-outline"
-                onClick={() => increase(product)}
-              >
-                ADD MORE
-              </button>
-            )} */}
+            </div>
           </div>
         </>
       )}

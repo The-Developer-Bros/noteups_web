@@ -10,6 +10,7 @@ import {
   subjectListReducer
 } from "../reducers/ProductReducers";
 import authReducer from "../slices/AuthSlice";
+import cartRedcuer from "../slices/CartSlice";
 import subdomainReducer from "../slices/SubdomainSlice";
 import { authApi } from "./api/authApi";
 
@@ -25,6 +26,7 @@ const reducers = {
   subjectList: subjectListReducer,
   auth: authReducer,
   [authApi.reducerPath]: authApi.reducer,
+  cart: cartRedcuer,
 };
 
 const initialState = {
@@ -51,6 +53,12 @@ const initialState = {
     subjects: {},
   },
   // initial state for auth is complex, so we'll use a reducer
+  // cart
+  cart: {
+    cartItems: [],
+    itemCount: 0,
+    total: 0,
+  }
 };
 
 const persistConfig = {

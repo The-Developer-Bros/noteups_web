@@ -20,6 +20,9 @@ import ProductCategoriesPage from "./pages/product/categories/ProductCategoriesP
 import ProductDetailPage from "./pages/product/details/ProductDetailPage";
 import ProductListingPage from "./pages/product/listing/ProductListingPage";
 import CartPage from "./pages/cart/CartPage";
+import Checkout from "./pages/checkout/Checkout";
+import Success from "./pages/checkout/stripe-checkout/Success";
+import Canceled from "./pages/checkout/stripe-checkout/Canceled";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -51,6 +54,11 @@ function App() {
 
           {/* Cart Routes */}
           <Route path="cart" element={<CartPage />} />
+
+          {/* Checkout Routes */}
+          <Route path="checkout" element={<Checkout />} />
+          <Route path="success" element={<Success />} />
+          <Route path="canceled" element={<Canceled />} />
 
           {/* Auth Routes */}
           {/* <Route

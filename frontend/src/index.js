@@ -10,6 +10,12 @@ import { PersistGate } from "redux-persist/integration/react";
 import App from "./App";
 import "./index.scss";
 import store from "./redux/store/store";
+
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe(process.env.REACT_APP_PUBLISHABLE_KEY);
+
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
   integrations: [new BrowserTracing()],
@@ -63,7 +69,9 @@ root.render(
           }}
         >
           {/* <GlobalStyle /> */}
-          <App />
+          <Elements stripe={stripePromise}>
+            <App />
+          </Elements>
         </ChakraProvider>
       </PersistGate>
     </Provider>

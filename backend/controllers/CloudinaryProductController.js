@@ -328,13 +328,13 @@ const uploadSubject = async (req, res, next) => {
 
 // export all above functions
 module.exports = {
+  getAllDomains,
+  getAllSubdomainsForDomain,
+  getAllSubjectsForSubdomain,
+  getAllPDFsForSubject,
   getSubjectDetails,
   getSubjectImages,
   getSubjectPDFs,
   getSubjectEverything,
   uploadSubject,
-  getAllDomains,
-  getAllSubdomainsForDomain,
-  getAllSubjectsForSubdomain,
-  getAllPDFsForSubject,
 };

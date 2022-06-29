@@ -1,6 +1,5 @@
-import React from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate, withRouter } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Total = (props) => {
   const navigate = useNavigate();
@@ -10,7 +9,7 @@ const Total = (props) => {
     <div className="total-container">
       <div className="total">
         <p>Total Items: {props.itemCount}</p>
-        <p>{`Total: $${props.total}`}</p>
+        <p>{`Total: ₹${props.total}`}</p>
       </div>
       <div className="checkout">
         <button

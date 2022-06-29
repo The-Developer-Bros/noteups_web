@@ -1,25 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
-import "./ProductDetailPage.scss";
-import {
-  fetchAsyncSubjectPDFs,
-  getSelectedSubjectDetails,
-  getSelectedSubjectPDFs,
-  removeSelectedSubjectPDFs,
-  removeSelectedSubjectDetails,
-  fetchAsyncSubjectDetails,
-  fetchAsyncSubjectsImages,
-  getSelectedSubjectImages,
-} from "../../../redux/slices/SubdomainSlice";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
   addProduct,
-  increase,
-  decrease,
-  removeProduct,
-  clearCart,
-  isInCart,
+  increase, isInCart
 } from "../../../redux/slices/CartSlice";
+import {
+  fetchAsyncSubjectDetails,
+  fetchAsyncSubjectsImages, getSelectedSubjectDetails, getSelectedSubjectImages, removeSelectedSubjectDetails
+} from "../../../redux/slices/SubdomainSlice";
+import "./ProductDetailPage.scss";
 
 function ProductDetailPage() {
   // Clear cache

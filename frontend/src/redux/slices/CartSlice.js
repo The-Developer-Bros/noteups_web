@@ -10,7 +10,7 @@ export const sumItems = (cartItems) => {
   return {
     itemCount: cartItems.reduce((total, prod) => total + prod.quantity, 0),
     total: cartItems.reduce(
-      (total, prod) => total + prod.price * prod.quantity,
+      (total, prod) => total + prod.subject_meta_data.price.toString().split(" ")[1] * prod.quantity,
       0
     ),
   };

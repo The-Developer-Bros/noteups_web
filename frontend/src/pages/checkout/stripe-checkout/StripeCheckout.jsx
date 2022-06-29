@@ -39,15 +39,20 @@ const StripeCheckout = () => {
   const handleGuestCheckout = async (e) => {
     e.preventDefault();
     const line_items = cartItems.map((item) => {
+      console.log("item ", item);
+      const priceWithCurrency = item.subject_meta_data.price.toString(); // 'INR 500'
+      const price = priceWithCurrency.split(" ")[1]; // '500'
+      const currency = priceWithCurrency.split(" ")[0]; // 'INR'
+
       return {
         quantity: item.quantity,
         price_data: {
-          currency: "inr",
-          unit_amount: item.price * 100, // amount is in cents
+          currency: currency,
+          unit_amount: parseInt(price) * 100,
           product_data: {
-            name: item.title,
-            description: item.description,
-            images: [item.imageUrl],
+            name: item.subject_meta_data.name,
+            description: item.subject_meta_data.description,
+            // images: [item.imageUrl],
           },
         },
       };

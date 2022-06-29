@@ -18,7 +18,7 @@ const ProductCard = (props) => {
             <Link to={`/products/${data.path.split("noteups/")[1]}`}>
                 <div className="card-inner">
                     <div className="card-top">
-                        <img src={data.poster} alt="movie-poster" />
+                        <img src={data.poster} alt="subject-poster" />
                     </div>
                     <div className="card-bottom">
                         <div className="card-info">

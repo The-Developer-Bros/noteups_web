@@ -28,7 +28,7 @@ function App() {
   const token = localStorage.getItem("token");
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/">
       <NavBar />
 
       <div className="App">

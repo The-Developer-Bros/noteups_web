@@ -3,11 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
   addProduct,
-  increase, isInCart
+  increase,
+  isInCart,
 } from "../../../redux/slices/CartSlice";
 import {
   fetchAsyncSubjectDetails,
-  fetchAsyncSubjectsImages, getSelectedSubjectDetails, getSelectedSubjectImages, removeSelectedSubjectDetails
+  fetchAsyncSubjectsImages,
+  getSelectedSubjectDetails,
+  getSelectedSubjectImages,
+  removeSelectedSubjectDetails,
 } from "../../../redux/slices/SubdomainSlice";
 import "./ProductDetailPage.scss";
 

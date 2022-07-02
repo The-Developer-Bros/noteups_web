@@ -1,11 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { backendClient } from "../../common/clients";
 
 export const fetchAsyncEngineeringSubdomains = createAsyncThunk(
   "subdomains/fetchAsyncEngineeringSubdomains",
   async (term) => {
-    const response = await fetch(`/productApi/engineering/subdomains`);
-    const subdomains = await response.json();
-    console.log(`fetched Engineering subdomains: ${subdomains}`);
+    // const response = await fetch(`/productApi/engineering/subdomains`);
+    // const subdomains = await response.json();
+    const response = await backendClient.get(
+      "/productApi/engineering/subdomains"
+    );
+    const subdomains = response.data;
+
+    console.log("fetched Engineering subdomains:", subdomains);
     subdomains.folders = subdomains.folders.filter((subdomain) =>
       subdomain.name.includes(term)
     );
@@ -16,9 +22,12 @@ export const fetchAsyncEngineeringSubdomains = createAsyncThunk(
 export const fetchAsyncArtsSubdomains = createAsyncThunk(
   "subdomains/fetchAsyncArtsSubdomains",
   async (term) => {
-    const response = await fetch(`/productApi/arts/subdomains`);
-    const subdomains = await response.json();
-    console.log(`fetched Arts subdomains: ${subdomains}`);
+    // const response = await fetch(`/productApi/arts/subdomains`);
+    // const subdomains = await response.json();
+    const response = await backendClient.get("/productApi/arts/subdomains");
+    const subdomains = response.data;
+
+    console.log("fetched Arts subdomains:", subdomains);
     subdomains.folders = subdomains.folders.filter((subdomain) =>
       subdomain.name.includes(term)
     );
@@ -29,9 +38,13 @@ export const fetchAsyncArtsSubdomains = createAsyncThunk(
 export const fetchAsyncCommerceSubdomains = createAsyncThunk(
   "subdomains/fetchAsyncCommerceSubdomains",
   async (term) => {
-    const response = await fetch(`/productApi/commerce/subdomains`);
-    const subdomains = await response.json();
-    console.log(`fetched Commerce subdomains: ${subdomains}`);
+    // const response = await fetch(`/productApi/commerce/subdomains`);
+    // const subdomains = await response.json();
+
+    const response = await backendClient.get("/productApi/commerce/subdomains");
+    const subdomains = response.data;
+
+    console.log("fetched Commerce subdomains:", subdomains);
     subdomains.folders = subdomains.folders.filter((subdomain) =>
       subdomain.name.includes(term)
     );
@@ -44,11 +57,17 @@ export const fetchAsyncSubjectPDFs = createAsyncThunk(
   "subdomains/fetchAsyncSubjectPDFs",
   async ({ domain, subdomain, subject }) => {
     // params can't be separated
-    const response = await fetch(
+    // const response = await fetch(
+    //   `/productApi/pdfs/${domain}/${subdomain}/${subject}`
+    // );
+    // const pdfs = await response.json();
+
+    const response = await backendClient.get(
       `/productApi/pdfs/${domain}/${subdomain}/${subject}`
     );
-    const pdfs = await response.json();
-    console.log(`fetched ${domain} ${subdomain} ${subject} pdfs: ${pdfs}`);
+    const pdfs = response.data;
+
+    console.log("fetched PDFs:", pdfs);
     return pdfs;
   }
 );
@@ -56,40 +75,60 @@ export const fetchAsyncSubjectPDFs = createAsyncThunk(
 export const fetchAsyncSubjectDetails = createAsyncThunk(
   "subdomains/fetchAsyncSubjectDetails",
   async ({ domain, subdomain, subject }) => {
-    // params can't be separated
-    const response = await fetch(
-      `/productApi/details/${domain}/${subdomain}/${subject}`
-    );
+    try {
+      // params can't be separated
+      // const response = await fetch(
+      //   `${process.env.REACT_APP_BACKEND_URL}/productApi/details/${domain}/${subdomain}/${subject}`
+      // );
 
-    const details = await response.json();
-    const subjectMetaDataSecureUrl = await fetch(details.secure_url);
-    const subjectMetaData = await subjectMetaDataSecureUrl.json();
+      // const details = await response.json();
+      const response = await backendClient.get(
+        `/productApi/details/${domain}/${subdomain}/${subject}`
+      );
+      const details = response.data;
 
-    // concatenate details and subjectMetaData
-    const subjectDetailsWithMetaData = {
-      ...details,
-      subject_meta_data: subjectMetaData,
-    };
+      const subjectMetaDataSecureUrl = await fetch(details.secure_url);
+      const subjectMetaData = await subjectMetaDataSecureUrl.json();
 
-    console.log(
-      `fetched ${domain} ${subdomain} ${subject} details: ${subjectDetailsWithMetaData}`
-    );
-    return subjectDetailsWithMetaData;
+      // concatenate details and subjectMetaData
+      const subjectDetailsWithMetaData = {
+        ...details,
+        subject_meta_data: subjectMetaData,
+      };
+
+      console.log(
+        "fetched subject details with meta data:",
+        subjectDetailsWithMetaData
+      );
+      return subjectDetailsWithMetaData;
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
 export const fetchAsyncSubjectsImages = createAsyncThunk(
   "subdomains/fetchAsyncSubjectsImages",
   async ({ domain, subdomain, subject }) => {
-    // params can't be separated
-    const response = await fetch(
-      `/productApi/images/${domain}/${subdomain}/${subject}`
-    );
-    // response is array of jsons
-    console.log("response", response);
-    const images = await response.json();
-    console.log(`fetched ${domain} ${subdomain} ${subject} images: ${images}`);
-    return images;
+    try {
+      // params can't be separated
+      // const response = await fetch(
+      //   `${process.env.REACT_APP_BACKEND_URL}/productApi/images/${domain}/${subdomain}/${subject}`
+      // );
+      // // response is array of jsons
+      // console.log("response", response);
+      // const images = await response.json();
+      
+      const response = await backendClient.get(
+        `/productApi/images/${domain}/${subdomain}/${subject}`
+      );
+      const images = response.data;
+
+      console.log("fetched images:", images);
+      return images;
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 

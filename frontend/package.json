@@ -64,5 +64,5 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://noteups-backend.herokuapp.com/"
+  "proxy": "https://localhost:4000"
 }

@@ -7,18 +7,18 @@ async function fetchFromAPI(endpoint, opts) {
   const { method, body } = { method: "POST", body: null, ...opts };
   // const user = auth.currentUser;
   // const token = user && (await user.getIdToken());
-  console.log(
-    "process.env.REACT_APP_BACKEND_URL ",
-    process.env.REACT_APP_BACKEND_URL
+
+  const res = await fetch(
+    `${process.env.REACT_APP_BACKEND_URL}/paymentApi/${endpoint}`,
+    {
+      method,
+      ...(body && { body: JSON.stringify(body) }),
+      headers: {
+        "Content-Type": "application/json",
+        //   Authorization: `Bearer ${token}`,
+      },
+    }
   );
-  const res = await fetch(`${process.env.REACT_APP_BACKEND_URL}/paymentApi/${endpoint}`, {
-    method,
-    ...(body && { body: JSON.stringify(body) }),
-    headers: {
-      "Content-Type": "application/json",
-      //   Authorization: `Bearer ${token}`,
-    },
-  });
 
   if (res.status === 200) {
     return res.json();
@@ -34,7 +34,6 @@ const StripeCheckout = () => {
   const itemCount = useSelector((state) => state.cart.itemCount);
   const total = useSelector((state) => state.cart.total);
   const cartItems = useSelector((state) => state.cart.cartItems);
-
 
   const handleGuestCheckout = async (e) => {
     e.preventDefault();

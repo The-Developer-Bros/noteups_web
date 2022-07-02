@@ -1,13 +1,12 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import Box from "@mui/material/Box";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 // import { Auth0LoginButton, Auth0LogoutButton, Auth0Profile } from "./Auth";
 // import SearchBar from './SearchBar';
-import { defaultState } from "../../redux/slices/AuthSlice";
 import { Button } from "@chakra-ui/button";
+import { defaultState } from "../../redux/slices/AuthSlice";
 
 import "./NavBar.scss";
 
@@ -21,19 +20,23 @@ const NavBar = () => {
   };
   const [navVisibility, setNavVisibility] = useState(false);
 
-  const changeBackground = () => {
-    if (window.location.pathname === "/") {
-      if (window.scrollY >= 700) {
-        setNavVisibility(true);
-      } else {
-        setNavVisibility(false);
-      }
-    } else {
-      setNavVisibility(true);
-    }
-  };
+  const location = useLocation();
 
-  window.addEventListener("scroll", changeBackground);
+  useEffect(() => {
+    const changeBackground = () => {
+      if (location.pathname === "/") {
+        if (window.scrollY >= 700) {
+          setNavVisibility(true);
+        } else {
+          setNavVisibility(false);
+        }
+      } else {
+        setNavVisibility(true);
+      }
+    };
+    changeBackground();
+    window.addEventListener("scroll", changeBackground);
+  }, [location]);
 
   // Sign in/out
   const { name, token } = useSelector((state) => state.auth);
@@ -43,7 +46,7 @@ const NavBar = () => {
   const signout = () => {
     localStorage.removeItem("token");
     // localStorage.removeItem("auth");
-    localStorage.removeItem("persist:root"); 
+    localStorage.removeItem("persist:root");
     dispatch(defaultState());
     navigate("/", { replace: true });
     window.location.reload();

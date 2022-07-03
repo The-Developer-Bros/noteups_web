@@ -1,5 +1,6 @@
 import { useStripe } from "@stripe/react-stripe-js";
 import { useState } from "react";
+import "../checkout.styles.scss";
 
 import { useSelector } from "react-redux";
 

@@ -10,7 +10,7 @@ async function createCheckoutSession(req, res) {
   });
 
   try {
-    const domainUrl = process.env.WEB_APP_URL;
+    const domainUrl = process.env.WEB_APP_URL || "http://localhost:3000";
     const { line_items, customer_email } = req.body;
 
     // check req body has line items and email

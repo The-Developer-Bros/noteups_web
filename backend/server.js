@@ -1,4 +1,6 @@
-require("dotenv").config();
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 require("./services/SentryService");
 require("./database/connectDBs");
 
@@ -56,7 +58,6 @@ app.use(responseTime({ digits: 2 }));
 
 app.use(passport.initialize());
 
-
 ///////////////////////////////////////////////////////////// ROUTES /////////////////////////////////////////////////////////////////
 app.get("/", async (req, res, next) => {
   res.send({ message: "Awesome it works 🐻" });
@@ -80,6 +81,14 @@ app.use((err, req, res, next) => {
     message: err.message,
   });
 });
+
+// static files (build of your frontend)
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend", "build")));
+  app.get("/*", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "build", "index.html"));
+  });
+}
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`🚀 @ http://localhost:${PORT}`));

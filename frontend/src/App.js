@@ -64,26 +64,20 @@ function App() {
           <Route path="success" element={<Success />} />
           <Route path="canceled" element={<Canceled />} />
 
-          {/* Auth Routes */}
-          {/* <Route
-            path="/"
-            element={user ? <LandingPage /> : <Navigate to="/signin" />}
-          /> */}
           <Route path="/" element={<LandingPage />} />
+          {/* Auth Routes */}
 
           <Route path="/send-verify-mail" element={<SendEmail />} />
           <Route path="/email-verify/:token" element={<EmailVerified />} />
 
           <Route
             path="/signin"
-            // element={!user ? <Signin /> : <Navigate to="/" />}
-            element={name ? <Navigate to="/" /> : <Signin />}
+            element={token && name ? <Navigate to="/" /> : <Signin />}
           />
 
           <Route
             path="/signup"
-            // element={!user ? <Signup /> : <Navigate to="/" />}
-            element={name ? <Navigate to="/" /> : <Signup />}
+            element={token && name ? <Navigate to="/" /> : <Signup />}
           />
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -91,6 +85,19 @@ function App() {
             path="/forgot-password-verify/:token"
             element={<ChangePassword />}
           />
+
+          {/* Protected routes for dashboard and account */}
+          <Route
+            path="/dashboard"
+            element={token ? <Navigate to="/" /> : <Navigate to="/signin" />}
+            // element={token && name ? <Dashboard /> : <Navigate to="/signin" />}
+          />
+          <Route
+            path="/account"
+            element={token ? <Navigate to="/" /> : <Navigate to="/signin" />}
+            // element={token && name ? <Account /> : <Navigate to="/signin" />}
+          />
+
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>

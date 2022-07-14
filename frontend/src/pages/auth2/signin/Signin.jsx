@@ -42,9 +42,10 @@ const Signin = () => {
     if (isSuccess) {
       dispatch(setUser({ name: data.name, token: data.token }));
       localStorage.setItem("token", data.token);
-      window.location.href = "/";
+      // window.location.href = "/"; // causes problem with redux persistor
     } else if (isError) {
       console.log(error);
+      localStorage.clear();
       if (error.data.status === 406) {
         toast({
           status: "success",

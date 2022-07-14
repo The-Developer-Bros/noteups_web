@@ -4,12 +4,16 @@ require("./database/connectDBs");
 
 const cors = require("cors");
 const express = require("express");
+const session = require("express-session");
+
 const createError = require("http-errors");
+const cookieSession = require("cookie-session");
 const morgan = require("morgan");
 
 // Passport
 const passport = require("passport");
 require("./middleware/passport");
+require("./services/PassportOAuthService");
 
 // NodeJS Strategies
 const compression = require("compression");
@@ -54,8 +58,22 @@ app.use(
 
 app.use(responseTime({ digits: 2 }));
 
+app.use(
+  cookieSession({
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    keys: [process.env.COOKIE_KEY],
+  })
+);
+app.use(
+  session({
+    secret: process.env.COOKIE_KEY,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: true },
+  })
+);
 app.use(passport.initialize());
-
+app.use(passport.session());
 
 ///////////////////////////////////////////////////////////// ROUTES /////////////////////////////////////////////////////////////////
 app.get("/", async (req, res, next) => {
@@ -63,7 +81,7 @@ app.get("/", async (req, res, next) => {
 });
 
 app.use("/user", require("./routes/UserRoutes"));
-app.use("/oauth", require("./routes/OAuthLoginRoutes"));
+app.use("/auth", require("./routes/OAuthLoginRoutes"));
 app.use("/productApi", require("./routes/CloudinaryProductRoutes"));
 app.use("/paymentApi", require("./routes/PaymentRoutes"));
 app.use("/api", require("./routes/api.route"));

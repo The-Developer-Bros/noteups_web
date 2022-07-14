@@ -78,6 +78,33 @@ const Signin = () => {
     dispatch,
   ]);
 
+  const redirectToGoogleSSO = async () => {
+    // <Link to="/auth/google">Google</Link>;
+    const baseUrl =
+      // process.env.REACT_APP_BACKEND_URL
+      // ||
+      "http://localhost:4000";
+    window.location.href = `${baseUrl}/auth/google`;
+  };
+
+  const redirectToFacebookSSO = async () => {
+    // <Link to="/auth/facebook">Facebook</Link>;
+    const baseUrl =
+      // process.env.REACT_APP_BACKEND_URL
+      // ||
+      "http://localhost:4000";
+    window.location.href = `${baseUrl}/auth/facebook`;
+  };
+
+  const redirectToGithubSSO = async () => {
+    // <Link to="/auth/github">Github</Link>;
+    const baseUrl =
+      // process.env.REACT_APP_BACKEND_URL
+      // ||
+      "http://localhost:4000";
+    window.location.href = `${baseUrl}/auth/github`;
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
       {/* {isAuth() ? <Redirect to="/" /> : null}
@@ -91,7 +118,7 @@ const Signin = () => {
             <div className="w-full flex-1 mt-8 text-indigo-500">
               <div className="flex flex-col items-center">
                 <button
-                  // onClick={renderProps.onClick}
+                  onClick={redirectToGoogleSSO}
                   // disabled={renderProps.disabled}
                   className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
                 >
@@ -102,7 +129,7 @@ const Signin = () => {
                 </button>
 
                 <button
-                  // onClick={renderProps.onClick}
+                  onClick={redirectToFacebookSSO}
                   className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
                 >
                   <div className=" p-2 rounded-full ">
@@ -112,7 +139,7 @@ const Signin = () => {
                 </button>
 
                 <button
-                  // onClick={renderProps.onClick}
+                  onClick={redirectToGithubSSO}
                   className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
                 >
                   <div className=" p-2 rounded-full ">

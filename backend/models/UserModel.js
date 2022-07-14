@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const UserModel = new mongoose.Schema({
   name: {
@@ -26,20 +26,26 @@ const UserModel = new mongoose.Schema({
   },
   googleId: {
     type: String,
-    default: null,
   },
   facebookId: {
     type: String,
-    default: null,
   },
   githubId: {
     type: String,
-    default: null,
   },
-  cart: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Cart",
+
+  tokens: { type: Array },
+  profile: {
+    name: { type: String },
+    gender: { type: String },
+    location: { type: String },
+    website: { type: String },
+    picture: { type: String },
   },
+  // cart: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Cart",
+  // },
 });
 
 module.exports = mongoose.model("User", UserModel);

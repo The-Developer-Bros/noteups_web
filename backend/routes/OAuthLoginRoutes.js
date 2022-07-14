@@ -5,22 +5,22 @@ const router = express.Router();
 
 //   Facebook Strategy
 router.get(
-  "/auth/facebook",
+  "/facebook",
   passport.authenticate("facebook", { scope: ["email", "public_profile"] })
 );
 router.get(
-  "/auth/facebook/callback",
-  passport.authenticate("facebook", { failureRedirect: "/login" }),
+  "/facebook/callback",
+  passport.authenticate("facebook", { failureRedirect: process.env.WEB_APP_URL || "http://localhost:3000" }),
   (req, res) => {
     res.redirect(req.session.returnTo || "/");
   }
 );
 
 //   Github Strategy
-router.get("/auth/github", passport.authenticate("github"));
+router.get("/github", passport.authenticate("github"));
 router.get(
-  "/auth/github/callback",
-  passport.authenticate("github", { failureRedirect: "/login" }),
+  "/github/callback",
+  passport.authenticate("github", { failureRedirect: process.env.WEB_APP_URL || "http://localhost:3000" }),
   (req, res) => {
     res.redirect(req.session.returnTo || "/");
   }
@@ -28,14 +28,15 @@ router.get(
 
 //   Google Strategy
 router.get(
-  "/auth/google",
+  "/google",
   passport.authenticate("google", { scope: "profile email" })
 );
 router.get(
-  "/auth/google/callback",
-  passport.authenticate("google", { failureRedirect: "/login" }),
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: process.env.WEB_APP_URL || "http://localhost:3000" }),
   (req, res) => {
-    res.redirect(req.session.returnTo || "/");
+    // res.redirect(req.session.returnTo || "/");
+    res.redirect("/");
   }
 );
 

@@ -7,7 +7,7 @@ const initialState = {
 
 export const authSlice = createSlice({
   name: "auth",
-  initialState,
+  initialState: initialState,
   reducers: {
     setUser: (state, action) => {
       state.name = action.payload.name;
@@ -22,4 +22,3 @@ export const authSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { setUser, defaultState } = authSlice.actions;
 export default authSlice.reducer;
-

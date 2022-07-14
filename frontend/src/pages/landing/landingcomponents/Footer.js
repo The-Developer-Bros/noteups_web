@@ -20,35 +20,35 @@ function Footer() {
                     <ul className="botton-nav">
                         <div className="links1">
                             <li>
-                                <a href="#">Team</a>
+                                <a href="/team">Team</a>
                             </li>
                             <li>
-                                <a href="#">Press</a>
+                                <a href="/press">Press</a>
                             </li>
                             <li>
-                                <a href="#">Fees</a>
+                                <a href="/fees">Fees</a>
                             </li>
                         </div>
                         <div className="links2">
                             <li>
-                                <a href="#">Services</a>
+                                <a href="/services">Services</a>
                             </li>
                             <li>
-                                <a href="#">Projects</a>
+                                <a href="/projects">Projects</a>
                             </li>
                             <li>
-                                <a href="#">Affiliate</a>
+                                <a href="/affiliate">Affiliate</a>
                             </li>
                         </div>
                         <div className="links3">
                             <li>
-                                <a href="#">Terms of use</a>
+                                <a href="/terms">Terms of use</a>
                             </li>
                             <li>
-                                <a href="#">Privacy Policy</a>
+                                <a href="/privacy">Privacy Policy</a>
                             </li>
                             <li>
-                                <a href="#">Contact us</a>
+                                <a href="/contact">Contact us</a>
                             </li>
                         </div>
                     </ul>

@@ -1,7 +1,5 @@
 import { useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-import { GoogleLogin } from "react-google-login";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
@@ -15,7 +13,6 @@ const Signin = () => {
   const navigate = useNavigate();
   const [signinUser, { data, isLoading, error, isError, isSuccess }] =
     useSigninUserMutation();
-  console.log(data);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -68,7 +65,17 @@ const Signin = () => {
       setFormData({ ...formData, textChange: "Loading..." });
     }
     setFormData({ ...formData, textChange: "Sign In" });
-  }, [isSuccess, isError, isLoading, error, data, dispatch, navigate, email, toast]); // dont use formData in the dependency array
+  }, [
+    isLoading,
+    isError,
+    isSuccess,
+    data,
+    error,
+    email,
+    navigate,
+    toast,
+    dispatch,
+  ]);
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
@@ -82,40 +89,36 @@ const Signin = () => {
             </h1>
             <div className="w-full flex-1 mt-8 text-indigo-500">
               <div className="flex flex-col items-center">
-                <GoogleLogin
-                  clientId={`${process.env.REACT_APP_GOOGLE_CLIENT}`}
-                  // onSuccess={responseGoogle}
-                  // onFailure={responseGoogle}
-                  cookiePolicy={"single_host_origin"}
-                  render={(renderProps) => (
-                    <button
-                      onClick={renderProps.onClick}
-                      disabled={renderProps.disabled}
-                      className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
-                    >
-                      <div className=" p-2 rounded-full ">
-                        <i className="fab fa-google " />
-                      </div>
-                      <span className="ml-4">Sign In with Google</span>
-                    </button>
-                  )}
-                ></GoogleLogin>
-                <FacebookLogin
-                  appId={`${process.env.REACT_APP_FACEBOOK_CLIENT}`}
-                  autoLoad={false}
-                  // callback={responseFacebook}
-                  render={(renderProps) => (
-                    <button
-                      onClick={renderProps.onClick}
-                      className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
-                    >
-                      <div className=" p-2 rounded-full ">
-                        <i className="fab fa-facebook" />
-                      </div>
-                      <span className="ml-4">Sign In with Facebook</span>
-                    </button>
-                  )}
-                />
+                <button
+                  // onClick={renderProps.onClick}
+                  // disabled={renderProps.disabled}
+                  className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
+                >
+                  <div className=" p-2 rounded-full ">
+                    <i className="fa-brands fa-google " />
+                  </div>
+                  <span className="ml-4">Sign In with Google</span>
+                </button>
+
+                <button
+                  // onClick={renderProps.onClick}
+                  className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
+                >
+                  <div className=" p-2 rounded-full ">
+                    <i className="fa-brands fa-facebook" />
+                  </div>
+                  <span className="ml-4">Sign In with Facebook</span>
+                </button>
+
+                <button
+                  // onClick={renderProps.onClick}
+                  className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
+                >
+                  <div className=" p-2 rounded-full ">
+                    <i className="fa-brands fa-github" />
+                  </div>
+                  <span className="ml-4">Sign In with GitHub</span>
+                </button>
 
                 <a
                   className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3

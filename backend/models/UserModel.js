@@ -13,7 +13,7 @@ const UserModel = new mongoose.Schema({
   },
   password: {
     type: String,
-    // required: true,
+    // required: true, // because we can have social login
   },
 
   isUserVerified: {

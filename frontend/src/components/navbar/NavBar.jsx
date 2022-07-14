@@ -40,6 +40,7 @@ const NavBar = () => {
 
   // Sign in/out
   const { name, token } = useSelector((state) => state.auth);
+  console.log("user in navbar", name, token);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

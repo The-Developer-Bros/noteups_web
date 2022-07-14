@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/react";
+import { useSelector } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import NavBar from "./components/navbar/NavBar";
-import BottomBar from "./components/bottombar/BottomBar";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import ChangePassword from "./pages/auth2/changepassword/ChangePassword";
 import EmailVerified from "./pages/auth2/emailverified/EmailVerified";
@@ -9,6 +9,10 @@ import ForgotPassword from "./pages/auth2/forgotpassword/ForgotPassword";
 import SendEmail from "./pages/auth2/sendemail/SendEmail";
 import Signin from "./pages/auth2/signin/Signin";
 import Signup from "./pages/auth2/signup/Signup";
+import CartPage from "./pages/cart/CartPage";
+import Checkout from "./pages/checkout/Checkout";
+import Canceled from "./pages/checkout/stripe-checkout/Canceled";
+import Success from "./pages/checkout/stripe-checkout/Success";
 import AboutPage from "./pages/info/about/AboutPage";
 import ContactPage from "./pages/info/contact/ContactPage";
 import ContributePage from "./pages/info/contribute/ContributePage";
@@ -19,13 +23,13 @@ import LandingPage from "./pages/landing/LandingPage";
 import ProductCategoriesPage from "./pages/product/categories/ProductCategoriesPage";
 import ProductDetailPage from "./pages/product/details/ProductDetailPage";
 import ProductListingPage from "./pages/product/listing/ProductListingPage";
-import CartPage from "./pages/cart/CartPage";
-import Checkout from "./pages/checkout/Checkout";
-import Success from "./pages/checkout/stripe-checkout/Success";
-import Canceled from "./pages/checkout/stripe-checkout/Canceled";
 
 function App() {
-  const token = localStorage.getItem("token");
+  // const token = localStorage.getItem("token");
+  // const user = useSelector((state) => state.auth);
+  const { name, token } = useSelector((state) => state.auth);
+  // const userName = useSelector((state) => state.auth.name);
+  // console.log("user in app", user);
 
   return (
     <BrowserRouter>
@@ -63,7 +67,7 @@ function App() {
           {/* Auth Routes */}
           {/* <Route
             path="/"
-            element={token ? <LandingPage /> : <Navigate to="/signin" />}
+            element={user ? <LandingPage /> : <Navigate to="/signin" />}
           /> */}
           <Route path="/" element={<LandingPage />} />
 
@@ -72,12 +76,14 @@ function App() {
 
           <Route
             path="/signin"
-            element={!token ? <Signin /> : <Navigate to="/" />}
+            // element={!user ? <Signin /> : <Navigate to="/" />}
+            element={name ? <Navigate to="/" /> : <Signin />}
           />
 
           <Route
             path="/signup"
-            element={!token ? <Signup /> : <Navigate to="/" />}
+            // element={!user ? <Signup /> : <Navigate to="/" />}
+            element={name ? <Navigate to="/" /> : <Signup />}
           />
 
           <Route path="/forgot-password" element={<ForgotPassword />} />

@@ -54,11 +54,15 @@ export const Auth0Profile = () => {
 
         <div className="userInfo">
           <h4>{user?.name}</h4>
-          {/* <ul>
-                        {Object.keys(user).map((key, idx) => {
-                            return <li key={idx}>{key}:{user[key]}</li>
-                        })}
-                    </ul> */}
+          <ul>
+            {Object.keys(user).map((key, idx) => {
+              return (
+                <li key={idx}>
+                  {key}:{user[key]}
+                </li>
+              );
+            })}
+          </ul>
         </div>
       </Box>
     )

@@ -9,8 +9,8 @@ const ProductCard = (props) => {
     const { data } = props;
     console.log("product card data is", data);
 
+    // const pathArray = data.path.split("/");
     const subdomainName = convertToSentenceCase(data.name);
-    const pathArray = data.path.split("/");
 
     return (
         <div className="card-item">
@@ -18,7 +18,7 @@ const ProductCard = (props) => {
             <Link to={`/products/${data.path.split("noteups/")[1]}`}>
                 <div className="card-inner">
                     <div className="card-top">
-                        <img src={data.poster} alt="movie-poster" />
+                        <img src={data.poster} alt="subject-poster" />
                     </div>
                     <div className="card-bottom">
                         <div className="card-info">

@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import NavBar from "./components/header/NavBar";
-import BottomBar from "./components/footer/BottomBar";
+import NavBar from "./components/navbar/NavBar";
+import BottomBar from "./components/bottombar/BottomBar";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import ChangePassword from "./pages/auth2/changepassword/ChangePassword";
 import EmailVerified from "./pages/auth2/emailverified/EmailVerified";

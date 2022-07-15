@@ -1,6 +1,6 @@
 import { useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { setUser } from "../../../redux/slices/AuthSlice";
@@ -8,27 +8,31 @@ import { useSigninUserMutation } from "../../../redux/store/api/authApi";
 import authSvg from "../assests/login.svg";
 
 const Signin = () => {
+  const user = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+
+
+
   const toast = useToast();
   const navigate = useNavigate();
   const [signinUser, { data, isLoading, error, isError, isSuccess }] =
     useSigninUserMutation();
 
   const [formData, setFormData] = useState({
-    email: "",
-    password1: "",
+    emailInput: "",
+    passwordInput: "",
     textChange: "Sign In",
   });
-  const { email, password1, textChange } = formData;
+  const { emailInput, passwordInput, textChange } = formData;
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (email && password1) {
+    if (emailInput && passwordInput) {
       setFormData({ ...formData, textChange: "Submitting" });
-      signinUser({ email: email, password: password1 });
+      signinUser({ email: emailInput, password: passwordInput });
     } else {
       toast({
         status: "error",
@@ -53,7 +57,7 @@ const Signin = () => {
           title: "Please check your email to verify your account",
         });
         navigate("/send-verify-mail", {
-          state: { email },
+          state: { emailInput },
         });
       } else {
         toast({
@@ -72,37 +76,33 @@ const Signin = () => {
     isSuccess,
     data,
     error,
-    email,
+    emailInput,
     navigate,
     toast,
     dispatch,
   ]);
 
+  ////////////////////////////////////////////// OAuth //////////////////////////////////////////////
+
+  const backendUrl =
+    // process.env.REACT_APP_BACKEND_URL
+    // ||
+    "http://localhost:4000";
+
+  // constantly Check if user is authenticated
+  // if user is authenticated, redirect to home page
+  // else show signin page
+
   const redirectToGoogleSSO = async () => {
-    // <Link to="/auth/google">Google</Link>;
-    const baseUrl =
-      // process.env.REACT_APP_BACKEND_URL
-      // ||
-      "http://localhost:4000";
-    window.location.href = `${baseUrl}/auth/google`;
+    window.location.href = `${backendUrl}/auth/google`;
   };
 
   const redirectToFacebookSSO = async () => {
-    // <Link to="/auth/facebook">Facebook</Link>;
-    const baseUrl =
-      // process.env.REACT_APP_BACKEND_URL
-      // ||
-      "http://localhost:4000";
-    window.location.href = `${baseUrl}/auth/facebook`;
+    window.location.href = `${backendUrl}/auth/facebook`;
   };
 
   const redirectToGithubSSO = async () => {
-    // <Link to="/auth/github">Github</Link>;
-    const baseUrl =
-      // process.env.REACT_APP_BACKEND_URL
-      // ||
-      "http://localhost:4000";
-    window.location.href = `${baseUrl}/auth/github`;
+    window.location.href = `${backendUrl}/auth/github`;
   };
 
   return (
@@ -172,14 +172,14 @@ const Signin = () => {
                   type="email"
                   placeholder="Email"
                   onChange={handleChange("email")}
-                  value={email}
+                  value={emailInput}
                 />
                 <input
                   className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                   type="password"
                   placeholder="Password"
-                  onChange={handleChange("password1")}
-                  value={password1}
+                  onChange={handleChange("passwordInput")}
+                  value={passwordInput}
                 />
                 <button
                   type="submit"

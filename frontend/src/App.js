@@ -1,6 +1,8 @@
 import * as Sentry from "@sentry/react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { backendClient } from "./common/clients";
 import NavBar from "./components/navbar/NavBar";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import ChangePassword from "./pages/auth2/changepassword/ChangePassword";
@@ -23,13 +25,32 @@ import LandingPage from "./pages/landing/LandingPage";
 import ProductCategoriesPage from "./pages/product/categories/ProductCategoriesPage";
 import ProductDetailPage from "./pages/product/details/ProductDetailPage";
 import ProductListingPage from "./pages/product/listing/ProductListingPage";
+import { defaultState, setUser } from "./redux/slices/AuthSlice";
 
 function App() {
-  // const token = localStorage.getItem("token");
-  // const user = useSelector((state) => state.auth);
-  const { name, token } = useSelector((state) => state.auth);
-  // const userName = useSelector((state) => state.auth.name);
-  // console.log("user in app", user);
+  const user = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchAuthentication = async () => {
+      const response = await backendClient
+        .get(`/auth/user`, { withCredentials: true })
+        .catch((err) => {
+          console.log("Not properly authenticated");
+          dispatch(defaultState());
+          // navigate("/signin/error");
+        });
+      console.log("response is ", response);
+
+      if (response && response.data) {
+        console.log("User: ", response.data);
+        dispatch(setUser(response.data));
+        // navigate("/products");
+      }
+    };
+
+    fetchAuthentication();
+  }, [dispatch]);
 
   return (
     <BrowserRouter>
@@ -72,12 +93,12 @@ function App() {
 
           <Route
             path="/signin"
-            element={token && name ? <Navigate to="/" /> : <Signin />}
+            element={user.name ? <Navigate to="/" /> : <Signin />}
           />
 
           <Route
             path="/signup"
-            element={token && name ? <Navigate to="/" /> : <Signup />}
+            element={user.name ? <Navigate to="/" /> : <Signup />}
           />
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -89,13 +110,17 @@ function App() {
           {/* Protected routes for dashboard and account */}
           <Route
             path="/dashboard"
-            element={token ? <Navigate to="/" /> : <Navigate to="/signin" />}
-            // element={token && name ? <Dashboard /> : <Navigate to="/signin" />}
+            element={
+              user.name ? <Navigate to="/" /> : <Navigate to="/signin" />
+            }
+            // element={user.name  ? <Dashboard /> : <Navigate to="/signin" />}
           />
           <Route
             path="/account"
-            element={token ? <Navigate to="/" /> : <Navigate to="/signin" />}
-            // element={token && name ? <Account /> : <Navigate to="/signin" />}
+            element={
+              user.name ? <Navigate to="/" /> : <Navigate to="/signin" />
+            }
+            // element={user.name  ? <Account /> : <Navigate to="/signin" />}
           />
 
           <Route path="*" element={<NotFoundPage />} />

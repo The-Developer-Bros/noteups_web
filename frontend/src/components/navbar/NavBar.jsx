@@ -39,8 +39,8 @@ const NavBar = () => {
   }, [location]);
 
   // Sign in/out
-  const { name, token } = useSelector((state) => state.auth);
-  console.log("user in navbar", name, token);
+  const user = useSelector((state) => state.auth);
+  console.log("user in navbar", user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -96,10 +96,10 @@ const NavBar = () => {
 
         {/* Login/Register Button for Chakra*/}
         <div className="login_box nav_item">
-          {token && name ? (
+          {user.name ? (
             <div className="login_container">
               <div className="login_text">
-                <p>{name}</p>
+                <p>{user.name}</p>
               </div>
               <div className="login_button">
                 <Button onClick={signout}>Signout</Button>

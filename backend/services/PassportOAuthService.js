@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const User = require("../models/UserModel");
 
 // passport.serializeUser((user, done) => {
-//     done(null, user.id);
+//   done(null, user.id);
 // });
 // passport.deserializeUser((id, done) => {
 //     // done(null, user);
@@ -17,22 +17,25 @@ const User = require("../models/UserModel");
 // });
 
 // passport.deserializeUser((id, done) => {
-//     // IMPORTANT: This modification is to make sure that mongoose returns the user object
-//     // User.findById(mongoose.Types.ObjectId(parseInt(id))).then(user => {
-//     //     console.log(user);
-//     //     done(null, user);
-//     // });
+//   // IMPORTANT: This modification is to make sure that mongoose returns the user object
+//   // User.findById(mongoose.Types.ObjectId(parseInt(id))).then(user => {
+//   //     console.log(user);
+//   //     done(null, user);
+//   // });
 
-//     User.findOne({_id : mongoose.Types.ObjectId(Number(id))}).then(user => {
-//         done(null, user);
-//     });
+//   User.findOne({ _id: mongoose.Types.ObjectId(Number(id)) }).then((user) => {
+//     console.log("found user", user);
+//     done(null, user);
+//   });
 // });
 
 passport.serializeUser((user, done) => {
+  console.log("serializeUser", user);
   done(null, user);
 });
 
 passport.deserializeUser((user, done) => {
+  console.log("deserializeUser", user);
   done(null, user);
 });
 
@@ -45,7 +48,6 @@ passport.use(
       passReqToCallback: true,
     },
     (req, accessToken, refreshToken, profile, done) => {
-      console.log("req.user ", req.user);
       if (req.user) {
         User.findOne({ googleId: profile.id }, (err, existingUser) => {
           if (err) {

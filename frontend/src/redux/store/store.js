@@ -14,7 +14,6 @@ import cartRedcuer from "../slices/CartSlice";
 import subdomainReducer from "../slices/SubdomainSlice";
 import { authApi } from "./api/authApi";
 
-
 // import monitorReducersEnhancer from './enhancers/monitorReducers'
 // import loggerMiddleware from './middleware/logger'
 
@@ -58,7 +57,7 @@ const initialState = {
     cartItems: [],
     itemCount: 0,
     total: 0,
-  }
+  },
 };
 
 const persistConfig = {
@@ -67,7 +66,30 @@ const persistConfig = {
 };
 
 // const composedEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const rootReducer = combineReducers(reducers);
+const appReducer = combineReducers(reducers);
+
+const rootReducer = (state, action) => {
+  if (action.type === "auth/defaultState") {
+    // localStorage.removeItem("persist:root");
+    localStorage.clear();
+    sessionStorage.clear();
+
+    console.log("cleared local storage", localStorage);
+    console.log("cleared session storage", sessionStorage);
+
+    // clear cookies
+    for (let cookie of document.cookie.split(";")) {
+      var c = cookie.trim();
+      if (c.startsWith("__cfduid")) {
+        document.cookie = c + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      }
+    }
+
+    return appReducer(undefined, action);
+  }
+  return appReducer(state, action);
+};
+
 const persistedReducer = persistReducer(
   persistConfig,
   rootReducer

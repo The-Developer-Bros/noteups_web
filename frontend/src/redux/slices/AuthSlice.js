@@ -34,6 +34,7 @@ export const authSlice = createSlice({
       state.__v = action.payload.__v || 0;
     },
     defaultState: (state) => {
+      // state = action.payload; // this has been done in the appReducer
       state = initialState;
     },
   },

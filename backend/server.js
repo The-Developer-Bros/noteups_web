@@ -4,10 +4,11 @@ require("./database/connectDBs");
 
 const cors = require("cors");
 const express = require("express");
-const session = require("express-session");
+// const session = require("express-session");
 
 const createError = require("http-errors");
 const cookieSession = require("cookie-session");
+const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 
 // Passport
@@ -35,6 +36,7 @@ app.use(
     origin: process.env.WEB_APP_URL,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     credentials: true,
+    optionSuccessStatus: 200,
     maxAge: 3600,
   })
 );
@@ -71,14 +73,16 @@ app.use(
     keys: [process.env.COOKIE_KEY],
   })
 );
-app.use(
-  session({
-    secret: process.env.COOKIE_KEY,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true },
-  })
-);
+app.use(cookieParser());
+// app.use(
+//   session({
+//     secret: process.env.SESSION_SECRET,
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: { secure: true },
+//     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+//   })
+// );
 app.use(passport.initialize());
 app.use(passport.session());
 

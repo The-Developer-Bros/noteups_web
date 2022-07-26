@@ -60,7 +60,7 @@ function App() {
           // navigate("/products");
         }
       } catch (err) {
-        console.log("Not properly authenticated");
+        console.log("Not properly authenticated from App");
         dispatch(defaultState());
         // navigate("/signin");
       }

@@ -47,39 +47,18 @@ const NavBar = () => {
   const handleSignout = async (e) => {
     e.preventDefault();
 
-    // make api GET call to backend for /api/logout
     try {
-      // const response = await backendClient
-      //   .get(`auth/api/logout`)
-      //   .catch((err) => {
-      //     console.log("Not properly authenticated from navbar");
-      //     dispatch(defaultState());
-      //     // navigate("/signin/error");
-      //   });
-      // if (response && response.data) {
-      //   console.log("User: ", response.data);
-      //   dispatch(defaultState());
-      //   window.location.reload();
-      // }
-
       const res = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/auth/api/logout`,
         { method: "POST", credentials: "same-origin" }
-      ).then((res) => {
-        console.log("fetch response is ", res);
-      });
+      ).then((res) => res.toString());
+      console.log("respose fron logout POST", res.toString());
 
-      // // localStorage.removeItem("token");
-      // // localStorage.removeItem("auth");
-      // // localStorage.removeItem("persist:root");
-
-      await dispatch(defaultState());
-      // navigate("/", { replace: true });
-      // window.location.reload();
+      dispatch(defaultState());
     } catch (err) {
       console.log(err);
       dispatch(defaultState());
-      // navigate("/signin");
+      navigate("/signin");
     }
   };
 

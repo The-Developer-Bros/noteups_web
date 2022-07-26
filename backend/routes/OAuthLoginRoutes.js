@@ -7,7 +7,7 @@ const router = express.Router();
 const baseURL = process.env.WEB_APP_URL || "http://localhost:3000";
 
 router.get("/user", isUserAuthenticated, (req, res) => {
-  return res.status(200).json(req.user);
+  res.status(200).json(req.user);
 });
 
 //   Google Strategy
@@ -55,18 +55,20 @@ router.get(
 router.post("/api/logout", (req, res) => {
   try {
     req.logout();
-    req.session = null; // clearing session for cookie-session
-    // req.session.destroy(); // clearing session for express-session
-    res.clearCookie("session", { domain: "localhost", path: "/" });
-    res.clearCookie("session.sig", { domain: "localhost", path: "/" });
-    res.clearCookie("connect.sid", { domain: "localhost", path: "/" });
-    res.clearCookie("connect.sid.sig", { domain: "localhost", path: "/" });
+    req.user = null;
+    // res.clearCookie("session", { domain: "localhost", path: "/" });
+    // res.clearCookie("session.sig", { domain: "localhost", path: "/" });
+    // res.clearCookie("connect.sid", { domain: "localhost", path: "/" });
+    // res.clearCookie("connect.sid.sig", { domain: "localhost", path: "/" });
 
     cookies = req.cookies;
     for (let cookie in cookies) {
       console.log("cookie", cookie);
       res.clearCookie(cookie, { domain: "localhost", path: "/" });
     }
+    // req.session = null; // clearing session for cookie-session
+    req.session.destroy(); // clearing session for express-session
+
     res.status(200).json({ message: "Logged out successfully" });
   } catch (err) {
     console.log(err);

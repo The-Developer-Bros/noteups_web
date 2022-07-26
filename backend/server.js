@@ -4,7 +4,9 @@ require("./database/connectDBs");
 
 const cors = require("cors");
 const express = require("express");
-// const session = require("express-session");
+const session = require("express-session");
+
+const MongoStore = require("connect-mongo");
 
 const createError = require("http-errors");
 const cookieSession = require("cookie-session");
@@ -23,6 +25,7 @@ const responseTime = require("response-time");
 
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
+const { connection } = require("./database/connectDBs");
 
 ///////////////////////////////////////////////////////////// APP /////////////////////////////////////////////////////////////////
 
@@ -67,22 +70,34 @@ app.use(
 
 app.use(responseTime({ digits: 2 }));
 
-app.use(
-  cookieSession({
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    keys: [process.env.COOKIE_KEY],
-  })
-);
-app.use(cookieParser());
 // app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET,
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: { secure: true },
-//     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+//   cookieSession({
+//     maxAge: 30 * 24 * 60 * 60 * 1000,
+//     keys: [process.env.COOKIE_KEY],
 //   })
 // );
+// app.use(cookieParser());
+
+const sessionStore = MongoStore.create({
+  mongoUrl: process.env.MONGODB_URI,
+  collection: "sessions",
+});
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+      keys: [process.env.COOKIE_KEY],
+      httpOnly: false,
+      sameSite: "strict",
+    },
+    expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    store: sessionStore,
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 

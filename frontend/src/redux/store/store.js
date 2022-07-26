@@ -3,6 +3,7 @@ import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
+import { clearFrontEndCookies } from "../../utils";
 import {
   subdomainDetailsReducer,
   subdomainListReducer,
@@ -76,15 +77,8 @@ const rootReducer = (state, action) => {
 
     console.log("cleared local storage", localStorage);
     console.log("cleared session storage", sessionStorage);
-
-    // clear cookies
-    for (let cookie of document.cookie.split(";")) {
-      var c = cookie.trim();
-      if (c.startsWith("__cfduid")) {
-        document.cookie = c + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-      }
-    }
-
+    clearFrontEndCookies();
+    console.log("cleared front end cookies", document.cookie);
     return appReducer(undefined, action);
   }
   return appReducer(state, action);

@@ -6,6 +6,9 @@ const mongoose = require("mongoose");
 // const User = mongoose.model("users");
 const User = require("../models/UserModel");
 
+const Sentry = require("@sentry/node");
+const Tracing = require("@sentry/tracing");
+
 // passport.serializeUser((user, done) => {
 //   done(null, user.id);
 // });
@@ -30,14 +33,113 @@ const User = require("../models/UserModel");
 // });
 
 passport.serializeUser((user, done) => {
-  console.log("serializeUser", user);
+  // console.log("serializeUser", user);
   done(null, user);
 });
 
 passport.deserializeUser((user, done) => {
-  console.log("deserializeUser", user);
+  // console.log("deserializeUser", user);
   done(null, user);
 });
+
+// passport.use(
+//   new GoogleStrategy(
+//     {
+//       clientID: process.env.GOOGLE_CLIENT_ID,
+//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+//       callbackURL: "/auth/google/callback",
+//       passReqToCallback: true,
+//     },
+//     (req, accessToken, refreshToken, profile, done) => {
+//       try {
+//         if (req.user) {
+//           User.findOne({ googleId: profile.id }, (err, existingUser) => {
+//             if (err) {
+//               console.log("error finding user", err);
+//               return done(err);
+//             }
+//             if (existingUser) {
+//               console.log("existing user", existingUser);
+//               done(null, existingUser);
+//             } else {
+//               console.log("new user", profile);
+//               const user = new User();
+//               user.googleId = profile.id;
+//               user.tokens.push({ kind: "google", accessToken });
+//               user.profile.name = profile._json.name;
+//               user.profile.gender = profile._json.gender;
+//               user.profile.picture = profile._json.picture;
+
+//               user.name = profile.displayName;
+//               user.email = profile.emails[0].value;
+
+//               user.save((err) => {
+//                 if (err) {
+//                   console.log("error saving user", err);
+//                   done(err);
+//                 } else {
+//                   console.log("saved user", user);
+//                   done(null, user);
+//                 }
+//               });
+//             }
+//           });
+//         } else {
+//           User.findOne({ googleId: profile.id }, (err, existingUser) => {
+//             if (err) {
+//               console.log("error finding user", err);
+//               done(err);
+//             } else if (existingUser) {
+//               console.log("existing user", existingUser);
+//               done(null, existingUser);
+//             } else {
+//               User.findOne(
+//                 { email: profile.emails[0].value },
+//                 (err, existingEmailUser) => {
+//                   if (err) {
+//                     console.log("error finding user", err);
+//                     done(err);
+//                   } else if (existingEmailUser) {
+//                     console.log("existing email user", existingEmailUser);
+//                     done(null, existingEmailUser);
+//                   } else {
+//                     console.log("new user", profile);
+//                     const user = new User();
+
+//                     user.googleId = profile.id;
+//                     user.tokens.push({ kind: "google", accessToken });
+//                     user.profile.name = profile._json.name;
+//                     user.profile.gender = profile._json.gender;
+//                     user.profile.picture = profile._json.picture;
+
+//                     user.name = profile.displayName;
+//                     user.email = profile.emails[0].value;
+
+//                     user.save((err) => {
+//                       if (err) {
+//                         console.log("error saving user", err);
+//                         done(err);
+//                       } else {
+//                         console.log(
+//                           "Google account has been linked to your account",
+//                           user
+//                         );
+//                         done(null, user);
+//                       }
+//                     });
+//                   }
+//                 }
+//               );
+//             }
+//           });
+//         }
+//       } catch (err) {
+//         console.log("error", err);
+//         done(err);
+//       }
+//     }
+//   )
+// );
 
 passport.use(
   new GoogleStrategy(
@@ -48,73 +150,92 @@ passport.use(
       passReqToCallback: true,
     },
     (req, accessToken, refreshToken, profile, done) => {
-      if (req.user) {
-        User.findOne({ googleId: profile.id }, (err, existingUser) => {
-          if (err) {
-            return done(err);
-          }
-          if (existingUser) {
-            console.log("errors", {
-              msg: "There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.",
-            });
-            done(err);
-          } else {
-            User.findById(req.user.id, (err, user) => {
-              if (err) {
-                return done(err);
-              }
 
-              user.googleId = profile.id;
-              user.tokens.push({ kind: "google", accessToken });
-              user.profile.name = profile._json.name;
-              user.profile.gender = profile._json.gender;
-              user.profile.picture = profile._json.picture;
+      const passportGoogleStrategyAuthenticationTransaction = Sentry.startTransaction({
+        op: "passport.google.strategy.authentication",
+        description: "Google authentication",
+        name: "passport.google.strategy.authentication",
+      });
 
-              user.name = profile.displayName;
-              user.email = profile.emails[0].value;
-
-              user.save((err) => {
-                console.log("info", { msg: "Google account has been linked." });
-                done(err, user);
+      try {
+        if (req.user) {
+          User.findOne({ googleId: profile.id }, (err, existingUser) => {
+            if (err) {
+              return done(err);
+            }
+            if (existingUser) {
+              console.log("errors", {
+                msg: "There is already a Google account that belongs to you. Sign in with that account or delete it, then link it with your current account.",
               });
-            });
-          }
-        });
-      } else {
-        User.findOne({ googleId: profile.id }, (err, existingUser) => {
-          if (err) {
-            return done(err);
-          }
-          if (existingUser) {
-            return done(null, existingUser);
-          }
-          User.findOne(
-            { email: profile.emails[0].value },
-            (err, existingEmailUser) => {
-              if (err) {
-                return done(err);
-              }
-              if (existingEmailUser) {
-                console.log("errors", {
-                  msg: "There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.",
-                });
-                done(err);
-              } else {
-                const user = new User();
-                user.name = profile.displayName;
-                user.email = profile.emails[0].value;
+              // done(err);
+              done(null, existingUser);
+            } else {
+              User.findById(req.user.id, (err, user) => {
+                if (err) {
+                  return done(err);
+                }
+
                 user.googleId = profile.id;
                 user.tokens.push({ kind: "google", accessToken });
                 user.profile.name = profile._json.name;
                 user.profile.gender = profile._json.gender;
                 user.profile.picture = profile._json.picture;
+
+                user.name = profile.displayName;
+                user.email = profile.emails[0].value;
+
                 user.save((err) => {
+                  console.log("info", {
+                    msg: "Google account has been linked.",
+                  });
                   done(err, user);
                 });
-              }
+              });
             }
-          );
-        });
+          });
+        } else {
+          User.findOne({ googleId: profile.id }, (err, existingUser) => {
+            if (err) {
+              return done(err);
+            }
+            if (existingUser) {
+              return done(null, existingUser);
+            }
+            User.findOne(
+              { email: profile.emails[0].value },
+              (err, existingEmailUser) => {
+                if (err) {
+                  return done(err);
+                }
+                if (existingEmailUser) {
+                  console.log("errors", {
+                    msg: "There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.",
+                  });
+                  // done(err);
+                  done(null, existingEmailUser);
+                } else {
+                  const user = new User();
+                  user.name = profile.displayName;
+                  user.email = profile.emails[0].value;
+                  user.googleId = profile.id;
+                  user.tokens.push({ kind: "google", accessToken });
+                  user.profile.name = profile._json.name;
+                  user.profile.gender = profile._json.gender;
+                  user.profile.picture = profile._json.picture;
+                  user.save((err) => {
+                    done(err, user);
+                  });
+                }
+              }
+            );
+          });
+        }
+      } catch (error) {
+        console.log(error);
+    Sentry.captureException(error);
+        res.status(500).send(error);
+      } finally {
+        passportGoogleStrategyAuthenticationTransaction.finish();
       }
     }
   )

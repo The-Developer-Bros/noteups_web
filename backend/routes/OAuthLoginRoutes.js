@@ -7,8 +7,7 @@ const router = express.Router();
 const baseURL = process.env.WEB_APP_URL || "http://localhost:3000";
 
 router.get("/user", isUserAuthenticated, (req, res) => {
-  console.log("req.user in oauth", req.user);
-  res.send(req.user);
+  res.status(200).json(req.user);
 });
 
 //   Google Strategy
@@ -23,9 +22,6 @@ router.get(
   }),
   (req, res) => {
     // res.redirect(req.session.returnTo || "/");
-    console.log("req.session.returnTo", req.session.returnTo);
-    console.log("req.user", req.user);
-    console.log("res.user", res.user);
     res.redirect(baseURL);
   }
 );
@@ -40,7 +36,6 @@ router.get(
   passport.authenticate("facebook", { failureRedirect: `${baseURL}/signin` }),
   (req, res) => {
     // res.redirect(req.session.returnTo || "/");
-    console.log("req.session.returnTo", req.session.returnTo);
     res.redirect(baseURL);
   }
 );

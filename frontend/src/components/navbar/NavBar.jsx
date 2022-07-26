@@ -44,10 +44,13 @@ const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const signout = () => {
-    localStorage.removeItem("token");
+  const handleSignout = (e) => {
+    e.preventDefault();
+
+    // localStorage.removeItem("token");
     // localStorage.removeItem("auth");
-    localStorage.removeItem("persist:root");
+    // localStorage.removeItem("persist:root");
+    localStorage.clear();
     dispatch(defaultState());
     navigate("/", { replace: true });
     window.location.reload();
@@ -102,7 +105,7 @@ const NavBar = () => {
                 <p>{user.name}</p>
               </div>
               <div className="login_button">
-                <Button onClick={signout}>Signout</Button>
+                <Button onClick={(e) => handleSignout(e)}>Sign Out</Button>
               </div>
             </div>
           ) : (

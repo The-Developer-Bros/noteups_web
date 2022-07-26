@@ -11,8 +11,6 @@ const Signin = () => {
   const user = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
-
-
   const toast = useToast();
   const navigate = useNavigate();
   const [signinUser, { data, isLoading, error, isError, isSuccess }] =

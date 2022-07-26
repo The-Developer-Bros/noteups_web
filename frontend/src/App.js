@@ -2,7 +2,6 @@ import * as Sentry from "@sentry/react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { backendClient } from "./common/clients";
 import NavBar from "./components/navbar/NavBar";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import ChangePassword from "./pages/auth2/changepassword/ChangePassword";
@@ -31,26 +30,44 @@ function App() {
   const user = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
+  // const fetchAuthentication = async () => {
+  //   const response = await backendClient.get(`/auth/user, {withCredentials: true}`).catch((err) => {
+  //     console.log("Not properly authenticated");
+  //     dispatch(defaultState());
+  //     // navigate("/signin/error");
+  //   });
+  //   console.log("response is ", response);
+
+  //   if (response && response.data) {
+  //     console.log("User: ", response.data);
+  //     dispatch(setUser(response.data));
+  //     // navigate("/products");
+  //   }
+  // };
+
   useEffect(() => {
     const fetchAuthentication = async () => {
-      const response = await backendClient
-        .get(`/auth/user`, { withCredentials: true })
-        .catch((err) => {
-          console.log("Not properly authenticated");
-          dispatch(defaultState());
-          // navigate("/signin/error");
-        });
-      console.log("response is ", response);
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/auth/user`,
+          { credentials: "include" }
+        ).then((res) => res.json());
+        console.log("response is ", response);
 
-      if (response && response.data) {
-        console.log("User: ", response.data);
-        dispatch(setUser(response.data));
-        // navigate("/products");
+        if (response) {
+          console.log("User: ", response);
+          dispatch(setUser(response));
+          // navigate("/products");
+        }
+      } catch (err) {
+        console.log("Not properly authenticated");
+        dispatch(defaultState());
+        // navigate("/signin");
       }
     };
-
     fetchAuthentication();
-  }, [dispatch]);
+    console.log("user in app", user);
+  }, []); // do not include any dependencies here, otherwise it will run every time the component is rendered
 
   return (
     <BrowserRouter>

@@ -20,7 +20,7 @@ export const cloudinaryClient = axios.create({
 });
 
 export const backendClient = axios.create({
-  baseURL: process.env.REACT_APP_BACKEND_URL || "https://localhost:4000",
+  baseURL: process.env.REACT_APP_BACKEND_URL || "http://localhost:4000",
   headers: {
     "X-Requested-With": "XMLHttpRequest",
     "Content-Type": "application/json",

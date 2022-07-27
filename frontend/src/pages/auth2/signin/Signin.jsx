@@ -1,6 +1,6 @@
 import { useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { setUser } from "../../../redux/slices/AuthSlice";
@@ -8,7 +8,6 @@ import { useSigninUserMutation } from "../../../redux/store/api/authApi";
 import authSvg from "../assests/login.svg";
 
 const Signin = () => {
-  const user = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const toast = useToast();
@@ -17,20 +16,21 @@ const Signin = () => {
     useSigninUserMutation();
 
   const [formData, setFormData] = useState({
-    emailInput: "",
-    passwordInput: "",
+    email: "",
+    password1: "",
     textChange: "Sign In",
   });
-  const { emailInput, passwordInput, textChange } = formData;
+  const { email, password1, textChange } = formData;
+
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (emailInput && passwordInput) {
+    if (email && password1) {
       setFormData({ ...formData, textChange: "Submitting" });
-      signinUser({ email: emailInput, password: passwordInput });
+      signinUser({ email: email, password: password1 });
     } else {
       toast({
         status: "error",
@@ -55,7 +55,7 @@ const Signin = () => {
           title: "Please check your email to verify your account",
         });
         navigate("/send-verify-mail", {
-          state: { emailInput },
+          state: { email },
         });
       } else {
         toast({
@@ -69,16 +69,16 @@ const Signin = () => {
     }
     setFormData({ ...formData, textChange: "Sign In" });
   }, [
-    isLoading,
-    isError,
     isSuccess,
-    data,
+    isError,
+    isLoading,
     error,
-    emailInput,
-    navigate,
-    toast,
+    data,
     dispatch,
-  ]);
+    navigate,
+    email,
+    toast,
+  ]); // dont use formData in the dependency array
 
   ////////////////////////////////////////////// OAuth //////////////////////////////////////////////
 
@@ -170,14 +170,14 @@ const Signin = () => {
                   type="email"
                   placeholder="Email"
                   onChange={handleChange("email")}
-                  value={emailInput}
+                  value={email}
                 />
                 <input
                   className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-5"
                   type="password"
                   placeholder="Password"
-                  onChange={handleChange("passwordInput")}
-                  value={passwordInput}
+                  onChange={handleChange("password1")}
+                  value={password1}
                 />
                 <button
                   type="submit"

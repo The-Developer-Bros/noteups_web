@@ -14,20 +14,37 @@ const User = require("../models/UserModel");
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
 
-let testAccount = {
-  user: "mh24zp4pacbatnfm@ethereal.email",
-  pass: "9WeAYqT7qFhX5m9M77",
-};
+let testAccount = null;
+let transporter = null;
 
-let transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: testAccount.user, // generated ethereal user
-    pass: testAccount.pass, // generated ethereal password
-  },
+const createTransportTransactions = Sentry.startTransaction({
+  name: "createTransport",
+  operation: "createTransport",
 });
+
+async function createTransport() {
+  testAccount = await nodemailer.createTestAccount();
+  // await is needed to make sure that the test account is created before we use it
+
+  transporter = nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: testAccount.user, // generated ethereal user
+      pass: testAccount.pass, // generated ethereal password
+    },
+  });
+}
+
+createTransport()
+  .catch((err) => {
+    console.log("error creating transport", err);
+    Sentry.captureException(err);
+  })
+  .finally(() => {
+    createTransportTransactions.finish();
+  });
 
 const signupUser = async (req, res, next) => {
   const signupUserTransactions = Sentry.startTransaction({
@@ -71,6 +88,14 @@ const signinUser = async (req, res, next) => {
 
     const user = await User.findOne({ email });
     if (!user) return next(createHttpError(404, "User not Found!"));
+
+    // If password doesn't exist then generate a new one
+    // This situation happens when the user is created by OAuth provider
+    if (!user.password) {
+      const hashedPassword = await bcrypt.hash(password, 8);
+      user.password = hashedPassword;
+      await user.save();
+    }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword)

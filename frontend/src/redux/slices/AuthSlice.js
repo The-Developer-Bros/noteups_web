@@ -12,6 +12,7 @@ const initialState = {
     name: null,
     picture: null,
   },
+  stripeCustomerId: null,
   _id: null,
   __v: 0,
 };
@@ -33,6 +34,7 @@ export const authSlice = createSlice({
         name: null,
         picture: null,
       };
+      state.stripeCustomerId = action.payload.stripeCustomerId || null;
       state._id = action.payload._id || null;
       state.__v = action.payload.__v || 0;
     },

@@ -52,6 +52,52 @@ async function createCheckoutSession(req, res) {
   }
 }
 
+function createStripeSubscription(req, res) {
+  const createStripeSubscriptionTransaction = Sentry.startTransaction({
+    op: "createStripeSubscription",
+    name: "Create Stripe Subscription",
+  });
+
+  try {
+    const domainUrl = process.env.WEB_APP_URL || "http://localhost:3000";
+    const { line_items, customer_email } = req.body;
+
+    // check req body has line items and email
+    if (!customer_email || !line_items) {
+      return res.status(400).send({
+        message:
+          "Missing line items or customer email(Required Session Parameters)",
+      });
+    }
+
+    let session;
+
+    session = stripeAPI.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items,
+      mode: "subscription",
+      success_url: `${domainUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${domainUrl}/canceled`,
+      customer_email,
+      shipping_address_collection: {
+        //   India , USA, europe , australia
+        allowed_countries: ["IN", "US", "FR", "AU"],
+      },
+      // trial
+      trial_period_days: 7,
+    });
+  } catch (error) {
+    console.log(error);
+    Sentry.captureException(error);
+    res.status(400).send({
+      message: "Error creating subscription",
+      error,
+    });
+  } finally {
+    createStripeSubscriptionTransaction.finish();
+  }
+}
+
 function webhook(req, res) {
   const webhookTransaction = Sentry.startTransaction({
     op: "webhook",
@@ -97,5 +143,6 @@ function webhook(req, res) {
 
 module.exports = {
   createCheckoutSession,
+  createStripeSubscription,
   webhook,
 };

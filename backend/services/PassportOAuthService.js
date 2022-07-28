@@ -9,6 +9,8 @@ const User = require("../models/UserModel");
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
 
+const stripeService = require("../services/payments/StripeService");
+
 // passport.serializeUser((user, done) => {
 //   done(null, user.id);
 // });
@@ -149,13 +151,13 @@ passport.use(
       callbackURL: "/auth/google/callback",
       passReqToCallback: true,
     },
-    (req, accessToken, refreshToken, profile, done) => {
-
-      const passportGoogleStrategyAuthenticationTransaction = Sentry.startTransaction({
-        op: "passport.google.strategy.authentication",
-        description: "Google authentication",
-        name: "passport.google.strategy.authentication",
-      });
+    async (req, accessToken, refreshToken, profile, done) => {
+      const passportGoogleStrategyAuthenticationTransaction =
+        Sentry.startTransaction({
+          op: "passport.google.strategy.authentication",
+          description: "Google authentication",
+          name: "passport.google.strategy.authentication",
+        });
 
       try {
         if (req.user) {
@@ -170,7 +172,7 @@ passport.use(
               // done(err);
               done(null, existingUser);
             } else {
-              User.findById(req.user.id, (err, user) => {
+              User.findById(req.user.id, async (err, user) => {
                 if (err) {
                   return done(err);
                 }
@@ -184,9 +186,14 @@ passport.use(
                 user.name = profile.displayName;
                 user.email = profile.emails[0].value;
 
+                // Create Stripe Customer
+                const customer = await stripeService.addNewCustomer(user.email);
+                user.stripeCustomerId = customer.id;
+
                 user.save((err) => {
                   console.log("info", {
                     msg: "Google account has been linked.",
+                    user: user,
                   });
                   done(err, user);
                 });
@@ -203,13 +210,14 @@ passport.use(
             }
             User.findOne(
               { email: profile.emails[0].value },
-              (err, existingEmailUser) => {
+              async (err, existingEmailUser) => {
                 if (err) {
                   return done(err);
                 }
                 if (existingEmailUser) {
                   console.log("errors", {
                     msg: "There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.",
+                    existingEmailUser: existingEmailUser,
                   });
                   // done(err);
                   done(null, existingEmailUser);
@@ -222,7 +230,18 @@ passport.use(
                   user.profile.name = profile._json.name;
                   user.profile.gender = profile._json.gender;
                   user.profile.picture = profile._json.picture;
+
+                  // Create Stripe Customer
+                  const customer = await stripeService.addNewCustomer(
+                    user.email
+                  );
+                  user.stripeCustomerId = customer.id;
+
                   user.save((err) => {
+                    console.log("info", {
+                      msg: "Google account has been linked.",
+                      user: user,
+                    });
                     done(err, user);
                   });
                 }
@@ -232,52 +251,11 @@ passport.use(
         }
       } catch (error) {
         console.log(error);
-    Sentry.captureException(error);
+        Sentry.captureException(error);
         res.status(500).send(error);
       } finally {
         passportGoogleStrategyAuthenticationTransaction.finish();
       }
-    }
-  )
-);
-
-passport.use(
-  new FacebookStrategy(
-    {
-      clientID: process.env.FACEBOOK_CLIENT_ID,
-      clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
-      callbackURL: "/auth/facebook/callback",
-    },
-    function (accessToken, refreshToken, profile, done) {
-      //check user table for anyone with a facebook ID of profile.id
-      User.findOne(
-        {
-          "facebook.id": profile.id,
-        },
-        function (err, user) {
-          if (err) {
-            return done(err);
-          }
-          //No user was found... so create a new user with values from Facebook (all the profile. stuff)
-          if (!user) {
-            user = new User({
-              name: profile.displayName,
-              email: profile.emails[0].value,
-              username: profile.username,
-              provider: "facebook",
-              //now in the future searching on User.findOne({'facebook.id': profile.id } will match because of this next line
-              facebook: profile._json,
-            });
-            user.save(function (err) {
-              if (err) console.log(err);
-              return done(err, user);
-            });
-          } else {
-            //found user. Return
-            return done(err, user);
-          }
-        }
-      );
     }
   )
 );

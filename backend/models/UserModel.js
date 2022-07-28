@@ -53,6 +53,10 @@ const UserModel = new mongoose.Schema({
   //   type: mongoose.Schema.Types.ObjectId,
   //   ref: "Cart",
   // },
+  stripeCustomerId: {
+    type: String,
+    default: null,
+  },
 });
 
 module.exports = mongoose.model("User", UserModel);

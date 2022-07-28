@@ -3,7 +3,7 @@ const stripeAPI = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
 
-const addNewCustomer = async (email) => {
+const addNewCustomer = async (name, email) => {
   const addNewCustomerTransaction = Sentry.startTransaction({
     op: "addNewCustomer",
     name: "Add New Customer",
@@ -11,8 +11,9 @@ const addNewCustomer = async (email) => {
 
   try {
     const customer = await stripeAPI.customers.create({
-      email,
-      description: "New Customer",
+      name: name,
+      email: email,
+      description: `${name} - ${email} created account on ${new Date()}`,
     });
 
     return customer;

@@ -187,7 +187,10 @@ passport.use(
                 user.email = profile.emails[0].value;
 
                 // Create Stripe Customer
-                const customer = await stripeService.addNewCustomer(user.email);
+                const customer = await stripeService.addNewCustomer(
+                  user.profile.name,
+                  user.email
+                );
                 user.stripeCustomerId = customer.id;
 
                 user.save((err) => {
@@ -233,6 +236,7 @@ passport.use(
 
                   // Create Stripe Customer
                   const customer = await stripeService.addNewCustomer(
+                    user.profile.name,
                     user.email
                   );
                   user.stripeCustomerId = customer.id;

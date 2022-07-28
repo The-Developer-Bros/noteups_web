@@ -1,5 +1,6 @@
 import { useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSignupUserMutation } from "../../../redux/store/api/authApi";
 import authSvg from "../assests/auth.svg";
 
@@ -7,6 +8,8 @@ const Signup = () => {
   const [signupUser, { data, isLoading, error, isError, isSuccess }] =
     useSignupUserMutation();
   console.log("data", data);
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -63,7 +66,9 @@ const Signup = () => {
         title: "User created successfully",
         duration: 5000,
       });
-      window.location.href = "/signin";
+      navigate("/send-verify-mail", {
+        state: { email },
+      });
     } else if (isError) {
       toast({
         title: "Error creating user",

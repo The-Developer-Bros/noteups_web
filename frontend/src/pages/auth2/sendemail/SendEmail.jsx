@@ -19,10 +19,11 @@ const SendEmail = () => {
       isClosable: true,
     });
   }
-  console.log("data", data);
 
   useEffect(() => {
     try {
+      console.log("data", data);
+      console.log("state", state);
       sendMail({ email: state.email });
     } catch (error) {
       toast({

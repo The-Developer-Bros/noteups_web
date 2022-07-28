@@ -33,8 +33,15 @@ const UserModel = new mongoose.Schema({
   githubId: {
     type: String,
   },
-
-  tokens: { type: Array },
+  token: {
+    // this token is for JWT token
+    type: String,
+    default: null,
+  },
+  tokens: {
+    // these tokens are for OAuth tokens
+    type: Array,
+  },
   profile: {
     name: { type: String },
     gender: { type: String },

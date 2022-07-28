@@ -6,6 +6,7 @@ const initialState = {
   googleId: null,
   isUserVerified: false,
   verifyToken: null,
+  token: null,
   tokens: [],
   profile: {
     name: null,
@@ -21,6 +22,8 @@ export const authSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.name = action.payload.name || null;
+      state.token = action.payload.token || null;
+
       state.email = action.payload.email || null;
       state.googleId = action.payload.googleId || null;
       state.isUserVerified = action.payload.isUserVerified || false;

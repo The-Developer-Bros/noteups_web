@@ -15,7 +15,11 @@ const SubjectSubscriptionModel = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  endDate: {
+  trialEndDate: {
+    type: Date,
+    default: null,
+  },
+  subscriptionEndDate: {
     type: Date,
     default: null,
   },

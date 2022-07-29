@@ -1,5 +1,26 @@
 const mongoose = require("mongoose");
 
+const SubjectSubscriptionModel = new mongoose.Schema({
+  subjectId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Subject",
+    required: true,
+  },
+  packageType: {
+    type: String,
+    enum: ["none", "standard", "premimum"],
+    default: "none",
+  },
+  hasTrial: {
+    type: Boolean,
+    default: false,
+  },
+  endDate: {
+    type: Date,
+    default: null,
+  },
+});
+
 const UserModel = new mongoose.Schema({
   name: {
     type: String,
@@ -57,6 +78,17 @@ const UserModel = new mongoose.Schema({
     type: String,
     default: null,
   },
+  subscriptions: {
+    type: [SubjectSubscriptionModel],
+    default: [],
+  },
 });
 
-module.exports = mongoose.model("User", UserModel);
+module.exports = {
+  User: mongoose.model("User", UserModel),
+
+  SubjectSubscription: mongoose.model(
+    "SubjectSubscription",
+    SubjectSubscriptionModel
+  ),
+};

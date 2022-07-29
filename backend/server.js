@@ -26,10 +26,15 @@ const responseTime = require("response-time");
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
 const { connection } = require("./database/connectDBs");
+const { stripeWebhooks } = require("./controllers/payment/StripeWebhooks");
 
 ///////////////////////////////////////////////////////////// APP /////////////////////////////////////////////////////////////////
 
 const app = express();
+
+app.post("/stripe-webhook", express.raw({ type: "*/*" }), stripeWebhooks); 
+// stripe webhook needs express.raw because it is sending a raw body
+
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
@@ -108,8 +113,9 @@ app.get("/", async (req, res, next) => {
 
 app.use("/user", require("./routes/UserRoutes"));
 app.use("/auth", require("./routes/OAuthLoginRoutes"));
+app.use("/mongo", require("./routes/MongoProductRoutes"));
 app.use("/productApi", require("./routes/CloudinaryProductRoutes"));
-app.use("/paymentApi", require("./routes/PaymentRoutes"));
+app.use("/stripeApi", require("./routes/payment/StripeRoutes"));
 app.use("/api", require("./routes/api.route"));
 
 ///////////////////////////////////////////////////////////// ERROR HANDLING /////////////////////////////////////////////////////////////////

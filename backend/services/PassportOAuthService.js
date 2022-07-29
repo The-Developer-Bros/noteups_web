@@ -197,6 +197,7 @@ passport.use(
                   console.log("info", {
                     msg: "Google account has been linked.",
                     user: user,
+                    customer: customer,
                   });
                   done(err, user);
                 });
@@ -245,6 +246,7 @@ passport.use(
                     console.log("info", {
                       msg: "Google account has been linked.",
                       user: user,
+                      customer: customer,
                     });
                     done(err, user);
                   });

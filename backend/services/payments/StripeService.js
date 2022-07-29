@@ -45,7 +45,27 @@ const getCustomerByID = async (customerId) => {
   }
 };
 
+// const retrievePricesList = async () => {
+//   const retrievePricesListTransaction = Sentry.startTransaction({
+//     op: "retrievePricesList",
+//     name: "Retrieve Prices List",
+//   });
+
+//   try {
+//     const prices = await stripeAPI.prices.list();
+
+//     return prices;
+//   } catch (error) {
+//     console.log(error);
+//     Sentry.captureException(error);
+//     throw error;
+//   } finally {
+//     retrievePricesListTransaction.finish();
+//   }
+// };
+
 module.exports = {
   addNewCustomer,
   getCustomerByID,
+  // retrievePricesList,
 };

@@ -3,8 +3,8 @@ import "./CartPage.scss";
 import { MinusCircleIcon, PlusCircleIcon, TrashIcon } from "./icons";
 
 const CartItem = (props) => {
-
   const dispatch = useDispatch();
+  console.log("props", props);
 
   return (
     <div className="cart-item">
@@ -12,8 +12,8 @@ const CartItem = (props) => {
         <img src={props.imageUrl} alt="product" />
       </div>
       <div className="name-price">
-        <h4>{props.subject_meta_data.subject}</h4>
-        <p>{props.subject_meta_data.price}</p>
+        <h4>{props.subjectDetails.subject_meta_data.subject}</h4>
+        <p>{props.subjectDetails.subject_meta_data.price}</p>
       </div>
       <div className="quantity">
         <p>{`Quantity: ${props.quantity}`}</p>
@@ -21,14 +21,40 @@ const CartItem = (props) => {
       <div className="btns-container">
         <button
           className="btn-increase"
-          onClick={() => dispatch(props.increase(props))}
+          onClick={() => {
+            try {
+              dispatch(
+                props.increase({
+                  subjectDetails: props.subjectDetails,
+                  packageType: props.packageType,
+                  billingCycle: props.billingCycle,
+                  productStripeId: props.productStripeId,
+                })
+              );
+            } catch (error) {
+              console.log(error);
+            }
+          }}
         >
           <PlusCircleIcon width="20px" />
         </button>
         {props.quantity === 1 && (
           <button
             className="btn-trash"
-            onClick={() => dispatch(props.removeProduct(props))}
+            onClick={() => {
+              try {
+                dispatch(
+                  props.removeProduct({
+                    subjectDetails: props.subjectDetails,
+                    packageType: props.packageType,
+                    billingCycle: props.billingCycle,
+                    productStripeId: props.productStripeId,
+                  })
+                );
+              } catch (error) {
+                console.log(error);
+              }
+            }}
           >
             <TrashIcon width="20px" />
           </button>
@@ -36,7 +62,20 @@ const CartItem = (props) => {
         {props.quantity > 1 && (
           <button
             className="btn-decrease"
-            onClick={() => dispatch(props.decrease(props))}
+            onClick={() => {
+              try {
+                dispatch(
+                  props.decrease({
+                    subjectDetails: props.subjectDetails,
+                    packageType: props.packageType,
+                    billingCycle: props.billingCycle,
+                    productStripeId: props.productStripeId,
+                  })
+                );
+              } catch (error) {
+                console.log(error);
+              }
+            }}
           >
             <MinusCircleIcon width="20px" />
           </button>

@@ -9,6 +9,7 @@ import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/integration/react";
 import App from "./App";
 import "./index.scss";
+import "./ReactToggle.scss"
 import store from "./redux/store/store";
 
 import { loadStripe } from "@stripe/stripe-js";

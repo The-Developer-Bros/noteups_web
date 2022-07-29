@@ -88,3 +88,15 @@
   }
     
 }
+
+.subject-package-select-options{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 20px;
+    padding: 10px;
+    button + button {
+      margin: 20px;
+  }
+    
+}

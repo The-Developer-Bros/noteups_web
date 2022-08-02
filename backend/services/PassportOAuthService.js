@@ -4,7 +4,7 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 
 const mongoose = require("mongoose");
 // const User = mongoose.model("users");
-const User = require("../models/UserModel");
+const { User } = require("../models/UserModel");
 
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
@@ -258,7 +258,7 @@ passport.use(
       } catch (error) {
         console.log(error);
         Sentry.captureException(error);
-        res.status(500).send(error);
+        done(error);
       } finally {
         passportGoogleStrategyAuthenticationTransaction.finish();
       }

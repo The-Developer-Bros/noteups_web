@@ -75,6 +75,8 @@ function App() {
 
       <div className="App">
         <Routes>
+          <Route path="/" element={<LandingPage />} />
+
           {/* Info Routes */}
           <Route path="about" element={<AboutPage />} />
           <Route path="pricing" element={<PricingPage />} />
@@ -102,7 +104,6 @@ function App() {
           <Route path="success" element={<Success />} />
           <Route path="canceled" element={<Canceled />} />
 
-          <Route path="/" element={<LandingPage />} />
           {/* Auth Routes */}
 
           <Route path="/send-verify-mail" element={<SendEmail />} />

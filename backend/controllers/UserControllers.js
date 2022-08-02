@@ -9,7 +9,7 @@ const createHttpError = require("http-errors");
 const InternalServerError = require("http-errors").InternalServerError;
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-const User = require("../models/UserModel");
+const { User } = require("../models/UserModel");
 
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
@@ -232,8 +232,8 @@ const sendForgotPasswordMail = async (req, res, next) => {
       from: '"Noteups Customer Care" <customer.care@noteups.com>', // sender address
       to: `${email}`, // list of receivers
       subject: "For Forgot Password Verification Mail", // Subject line
-      html: `Your Verification for forgot password Link <a href="${process.env.FRONTEND_URL}/forgot-password-verify/${jwtToken}">Link</a>`, // html body
-      text: `Your Verification for forgot password Link ${process.env.FRONTEND_URL}/forgot-password-verify/${jwtToken}`, // plain text body
+      html: `Your Verification for forgot password Link <a href="${process.env.WEB_APP_URL}/forgot-password-verify/${jwtToken}">Link</a>`, // html body
+      text: `Your Verification for forgot password Link ${process.env.WEB_APP_URL}/forgot-password-verify/${jwtToken}`, // plain text body
     });
 
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));

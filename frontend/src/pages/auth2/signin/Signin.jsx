@@ -1,4 +1,3 @@
-import { useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
@@ -7,10 +6,12 @@ import { setUser } from "../../../redux/slices/AuthSlice";
 import { useSigninUserMutation } from "../../../redux/store/api/authApi";
 import authSvg from "../assests/login.svg";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Signin = () => {
   const dispatch = useDispatch();
 
-  const toast = useToast();
   const navigate = useNavigate();
   const [signinUser, { data, isLoading, error, isError, isSuccess }] =
     useSigninUserMutation();
@@ -32,16 +33,13 @@ const Signin = () => {
       setFormData({ ...formData, textChange: "Submitting" });
       signinUser({ email: email, password: password1 });
     } else {
-      toast({
-        status: "error",
-        duration: 5000,
-        title: "Please fill all fields",
-      });
+      toast.warn("Please fill all fields");
     }
   };
 
   useEffect(() => {
     if (isSuccess) {
+      toast.success("Login Successful");
       dispatch(setUser({ name: data.name, token: data.token }));
       localStorage.setItem("token", data.token);
       // window.location.href = "/"; // causes problem with redux persistor
@@ -49,43 +47,23 @@ const Signin = () => {
       console.log(error);
       localStorage.clear();
       if (error.data.status === 406) {
-        toast({
-          status: "success",
-          duration: 5000,
-          title: "Please check your email to verify your account",
-        });
+        toast.warn("Please check your email to verify your account");
         navigate("/send-verify-mail", {
           state: { email },
         });
       } else {
-        toast({
-          status: "error",
-          duration: 5000,
-          title: "Invalid email or password",
-        });
+        toast.error(`Invalid credentials: ${error.data.message}`);
       }
     } else if (isLoading) {
       setFormData({ ...formData, textChange: "Loading..." });
     }
     setFormData({ ...formData, textChange: "Sign In" });
-  }, [
-    isSuccess,
-    isError,
-    isLoading,
-    error,
-    data,
-    dispatch,
-    navigate,
-    email,
-    toast,
-  ]); // dont use formData in the dependency array
+  }, [isSuccess, isError, isLoading, error, navigate, email]); // dont use formData in the dependency array
 
   ////////////////////////////////////////////// OAuth //////////////////////////////////////////////
 
   const backendUrl =
-    // process.env.REACT_APP_BACKEND_URL
-    // ||
-    "http://localhost:4000";
+    process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
 
   // constantly Check if user is authenticated
   // if user is authenticated, redirect to home page
@@ -105,8 +83,8 @@ const Signin = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-      {/* {isAuth() ? <Redirect to="/" /> : null}
-      <ToastContainer /> */}
+      {/* {isAuth() ? <Redirect to="/" /> : null}*/}
+      <ToastContainer />
       <div className="max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1">
         <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
           <div className="mt-12 flex flex-col items-center">

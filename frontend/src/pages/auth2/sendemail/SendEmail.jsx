@@ -1,43 +1,37 @@
-import { Grid, Heading, Spinner, useToast } from "@chakra-ui/react";
+import { Grid, Heading, Spinner } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useSendMailForVerificationMutation } from "../../../redux/store/api/authApi";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const SendEmail = () => {
-  const toast = useToast();
   const { state } = useLocation();
 
   const [sendMail, { data, isLoading, error, isError }] =
     useSendMailForVerificationMutation();
 
   if (isError) {
-    toast({
-      title: error.data.message,
-      description: "",
-      status: "error",
-      duration: 5000,
-      isClosable: true,
-    });
+    toast.error(error.data.message);
   }
 
   useEffect(() => {
     try {
-      console.log("data", data);
-      console.log("state", state);
       sendMail({ email: state.email });
+      toast.success("Email sent successfully");
+      toast.info("Please check your email.Redirecting to login page");
+      setTimeout(() => {
+        window.location.href = "/signin";
+      }, 5000);
     } catch (error) {
-      toast({
-        title: error.message,
-        description: "",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      toast.error(error.message);
     }
-  }, [sendMail, toast, state]);
+  }, [sendMail, state]);
 
   return (
     <>
+      <ToastContainer />
       {isLoading ? (
         <Spinner />
       ) : (

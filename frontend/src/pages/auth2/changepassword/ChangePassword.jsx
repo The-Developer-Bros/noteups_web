@@ -1,12 +1,14 @@
-import { useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useResetPasswordMutation } from "../../../redux/store/api/authApi";
 import authSvg from "../assests/reset.svg";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const ChangePassword = () => {
   const { token } = useParams();
-  const toast = useToast();
+
   console.log(token);
 
   const [resetPassword, { data, isError, isLoading, error, isSuccess }] =
@@ -33,20 +35,10 @@ const ChangePassword = () => {
           token: token,
         });
       } else {
-        toast({
-          title: "Token is required (User might have not logged in)",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
+        toast.error("Token is required (User might have not logged in)");
       }
     } else {
-      toast({
-        title: "Passwords do not match",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      toast.error("Passwords do not match");
     }
   };
 
@@ -58,25 +50,23 @@ const ChangePassword = () => {
         textChange: "Submit",
         // token: '',
       });
-      toast({
-        title: "Password Reset Successfully",
-        status: "success",
-        duration: 5000,
-      });
+      toast.success("Password Reset Successfully");
+      // Redirect to login page after 5 seconds
+      toast.info("Redirecting to login page in 5 seconds");
+      setTimeout(() => {
+        window.location.href = "/signin";
+      }, 5000);
     } else if (isError) {
-      toast({
-        title: error.data.message,
-        status: "error",
-        duration: 5000,
-      });
+      toast.error(error.data.message);
     } else if (isLoading) {
+      toast.info("Submitting");
       setFormData({ ...formData, textChange: "Submitting" });
     }
   }, [isSuccess, isError, error, isLoading, toast]);
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-      {/* <ToastContainer /> */}
+      <ToastContainer />
       <div className="max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1">
         <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
           <div className="mt-12 flex flex-col items-center">

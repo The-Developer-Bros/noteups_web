@@ -1,9 +1,7 @@
-require("dotenv").config();
-require("./connectDBs");
-
 const mongoose = require("mongoose");
 const cloudinary = require("cloudinary").v2;
 const { Domain, Subdomain, Subject } = require("../models/ProductModel");
+const { User } = require("../models/UserModel");
 
 const domains = Domain.find({});
 const subdomains = Subdomain.find({});
@@ -27,8 +25,29 @@ const listSubjects = async () => {
   return subjects;
 };
 
+const listUserSubscriptions = async () => {
+  try {
+    const users = await User.find({});
+    // console.log(users);
+    const userSubscriptions = [];
+    users.forEach((user) => {
+      userSubscriptions.push({
+        user: user.name,
+        subscriptions: user.subscriptions,
+      });
+    });
+    console.log(userSubscriptions);
+    return userSubscriptions;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 module.exports = {
-    listDomains,
-    listSubdomains,
-    listSubjects,
-}
+  listDomains,
+  listSubdomains,
+  listSubjects,
+
+  listUserSubscriptions,
+};

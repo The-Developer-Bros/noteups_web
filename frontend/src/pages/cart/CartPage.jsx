@@ -1,15 +1,10 @@
 import React from "react";
-import "./CartPage.scss";
+import { useSelector } from "react-redux";
 import {
-  addProduct,
-  increase,
-  decrease,
-  removeProduct,
-  clearCart,
-  isInCart,
+  addProduct, clearCart, decrease, increase, isInCart, removeProduct
 } from "../../redux/slices/CartSlice";
-import { useDispatch, useSelector } from "react-redux";
 import CartItem from "./CartItem";
+import "./CartPage.scss";
 import Total from "./Total";
 
 //   export default CartPage;
@@ -29,10 +24,14 @@ const CartPage = () => {
           <>
             <div className="cart-page">
               <div className="cart-item-container">
-                {cartItems.map((subjectDetails) => (
+                {cartItems.map((cartItem) => (
                   <CartItem
-                    {...subjectDetails}
-                    key={subjectDetails.public_id}
+                    key={cartItem.subjectDetails.public_id}
+                    subjectDetails={cartItem.subjectDetails}
+                    quantity={cartItem.quantity}
+                    packageType={cartItem.packageType}
+                    billingCycle={cartItem.billingCycle}
+                    productStripeId={cartItem.productStripeId}
                     addProduct={addProduct}
                     increase={increase}
                     decrease={decrease}

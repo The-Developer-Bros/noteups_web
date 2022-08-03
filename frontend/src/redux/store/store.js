@@ -3,6 +3,7 @@ import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
+import { clearFrontEndCookies } from "../../utils";
 import {
   subdomainDetailsReducer,
   subdomainListReducer,
@@ -13,7 +14,6 @@ import authReducer from "../slices/AuthSlice";
 import cartRedcuer from "../slices/CartSlice";
 import subdomainReducer from "../slices/SubdomainSlice";
 import { authApi } from "./api/authApi";
-
 
 // import monitorReducersEnhancer from './enhancers/monitorReducers'
 // import loggerMiddleware from './middleware/logger'
@@ -58,7 +58,7 @@ const initialState = {
     cartItems: [],
     itemCount: 0,
     total: 0,
-  }
+  },
 };
 
 const persistConfig = {
@@ -67,7 +67,23 @@ const persistConfig = {
 };
 
 // const composedEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-const rootReducer = combineReducers(reducers);
+const appReducer = combineReducers(reducers);
+
+const rootReducer = (state, action) => {
+  if (action.type === "auth/defaultState") {
+    // localStorage.removeItem("persist:root");
+    localStorage.clear();
+    sessionStorage.clear();
+
+    console.log("cleared local storage", localStorage);
+    console.log("cleared session storage", sessionStorage);
+    clearFrontEndCookies();
+    console.log("cleared front end cookies", document.cookie);
+    return appReducer(undefined, action);
+  }
+  return appReducer(state, action);
+};
+
 const persistedReducer = persistReducer(
   persistConfig,
   rootReducer

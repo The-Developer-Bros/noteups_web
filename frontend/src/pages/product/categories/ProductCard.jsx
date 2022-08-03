@@ -9,8 +9,8 @@ const ProductCard = (props) => {
     const { data } = props;
     console.log("product card data is", data);
 
+    // const pathArray = data.path.split("/");
     const subdomainName = convertToSentenceCase(data.name);
-    const pathArray = data.path.split("/");
 
     return (
         <div className="card-item">

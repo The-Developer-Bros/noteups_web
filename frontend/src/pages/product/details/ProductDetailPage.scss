@@ -66,25 +66,58 @@
     margin-top: 20px;
 
     .subject-poster-img {
-        height: 450px;
-        width: 400px;
-        border-radius: 10%;
+      height: 450px;
+      width: 400px;
+      border-radius: 10%;
     }
   }
 }
 
-.section-left{
-    min-width: 75%;
+.section-left {
+  min-width: 75%;
 }
 
-
-.subject-interact-buttons{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    margin-top: 20px;
-    button + button {
-      margin: 20px;
+.subject-interact-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  margin-top: 20px;
+  button + button {
+    margin: 20px;
   }
-    
 }
+
+.subject-package-select-options {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 20px;
+  padding: 10px;
+  button + button {
+    margin: 20px;
+  }
+}
+
+.subject-interact-buttons {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin: 20px;
+  padding: 10px;
+  button + button {
+    margin: 20px;
+  }
+}
+
+.subject-package-select,
+.subject-billing-cycle-select {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
+  button + button {
+    margin: 20px;
+  }
+}
+
+////////////////////////////////////////////////////////// Checkout button ////////////////////////////////////////////////////////////////////

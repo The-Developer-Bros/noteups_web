@@ -1,13 +1,12 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import Box from "@mui/material/Box";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 // import { Auth0LoginButton, Auth0LogoutButton, Auth0Profile } from "./Auth";
 // import SearchBar from './SearchBar';
-import { defaultState } from "../../redux/slices/AuthSlice";
 import { Button } from "@chakra-ui/button";
+import { defaultState } from "../../redux/slices/AuthSlice";
 
 import "./NavBar.scss";
 
@@ -21,32 +20,46 @@ const NavBar = () => {
   };
   const [navVisibility, setNavVisibility] = useState(false);
 
-  const changeBackground = () => {
-    if (window.location.pathname === "/") {
-      if (window.scrollY >= 700) {
-        setNavVisibility(true);
-      } else {
-        setNavVisibility(false);
-      }
-    } else {
-      setNavVisibility(true);
-    }
-  };
+  const location = useLocation();
 
-  window.addEventListener("scroll", changeBackground);
+  useEffect(() => {
+    const changeBackground = () => {
+      if (location.pathname === "/") {
+        if (window.scrollY >= 700) {
+          setNavVisibility(true);
+        } else {
+          setNavVisibility(false);
+        }
+      } else {
+        setNavVisibility(true);
+      }
+    };
+    changeBackground();
+    window.addEventListener("scroll", changeBackground);
+  }, [location]);
 
   // Sign in/out
-  const { name, token } = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.auth);
+  console.log("user in navbar", user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const signout = () => {
-    localStorage.removeItem("token");
-    // localStorage.removeItem("auth");
-    localStorage.removeItem("persist:root"); 
-    dispatch(defaultState());
-    navigate("/", { replace: true });
-    window.location.reload();
+  const handleSignout = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch(
+        `${process.env.REACT_APP_BACKEND_URL}/auth/api/logout`,
+        { method: "POST", credentials: "same-origin" }
+      ).then((res) => res.toString());
+      console.log("respose fron logout POST", res.toString());
+
+      dispatch(defaultState());
+    } catch (err) {
+      console.log(err);
+      dispatch(defaultState());
+      navigate("/signin");
+    }
   };
 
   return (
@@ -92,13 +105,13 @@ const NavBar = () => {
 
         {/* Login/Register Button for Chakra*/}
         <div className="login_box nav_item">
-          {token && name ? (
+          {user.name ? (
             <div className="login_container">
               <div className="login_text">
-                <p>{name}</p>
+                <p>{user.name}</p>
               </div>
               <div className="login_button">
-                <Button onClick={signout}>Signout</Button>
+                <Button onClick={(e) => handleSignout(e)}>Sign Out</Button>
               </div>
             </div>
           ) : (

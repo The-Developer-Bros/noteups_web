@@ -1,4 +1,29 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+
+const SubjectSubscriptionModel = new mongoose.Schema({
+  subjectId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Subject",
+    required: true,
+  },
+  packageType: {
+    type: String,
+    enum: ["none", "standard", "premimum"],
+    default: "none",
+  },
+  hasTrial: {
+    type: Boolean,
+    default: false,
+  },
+  trialEndDate: {
+    type: Date,
+    default: null,
+  },
+  subscriptionEndDate: {
+    type: Date,
+    default: null,
+  },
+});
 
 const UserModel = new mongoose.Schema({
   name: {
@@ -13,7 +38,7 @@ const UserModel = new mongoose.Schema({
   },
   password: {
     type: String,
-    // required: true,
+    // required: true, // because we can have social login
   },
 
   isUserVerified: {
@@ -26,20 +51,48 @@ const UserModel = new mongoose.Schema({
   },
   googleId: {
     type: String,
-    default: null,
   },
   facebookId: {
     type: String,
-    default: null,
   },
   githubId: {
     type: String,
+  },
+  token: {
+    // this token is for JWT token
+    type: String,
     default: null,
   },
-  cart: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Cart",
+  tokens: {
+    // these tokens are for OAuth tokens
+    type: Array,
+  },
+  profile: {
+    name: { type: String },
+    gender: { type: String },
+    location: { type: String },
+    website: { type: String },
+    picture: { type: String },
+  },
+  // cart: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Cart",
+  // },
+  stripeCustomerId: {
+    type: String,
+    default: null,
+  },
+  subscriptions: {
+    type: [SubjectSubscriptionModel],
+    default: [],
   },
 });
 
-module.exports = mongoose.model("User", UserModel);
+module.exports = {
+  User: mongoose.model("User", UserModel),
+
+  SubjectSubscription: mongoose.model(
+    "SubjectSubscription",
+    SubjectSubscriptionModel
+  ),
+};

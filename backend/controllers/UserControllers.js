@@ -9,25 +9,42 @@ const createHttpError = require("http-errors");
 const InternalServerError = require("http-errors").InternalServerError;
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
-const User = require("../models/UserModel");
+const { User } = require("../models/UserModel");
 
 const Sentry = require("@sentry/node");
 const Tracing = require("@sentry/tracing");
 
-let testAccount = {
-  user: "mh24zp4pacbatnfm@ethereal.email",
-  pass: "9WeAYqT7qFhX5m9M77",
-};
+let testAccount = null;
+let transporter = null;
 
-let transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
-  secure: false, // true for 465, false for other ports
-  auth: {
-    user: testAccount.user, // generated ethereal user
-    pass: testAccount.pass, // generated ethereal password
-  },
+const createTransportTransactions = Sentry.startTransaction({
+  name: "createTransport",
+  operation: "createTransport",
 });
+
+async function createTransport() {
+  testAccount = await nodemailer.createTestAccount();
+  // await is needed to make sure that the test account is created before we use it
+
+  transporter = nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: testAccount.user, // generated ethereal user
+      pass: testAccount.pass, // generated ethereal password
+    },
+  });
+}
+
+createTransport()
+  .catch((err) => {
+    console.log("error creating transport", err);
+    Sentry.captureException(err);
+  })
+  .finally(() => {
+    createTransportTransactions.finish();
+  });
 
 const signupUser = async (req, res, next) => {
   const signupUserTransactions = Sentry.startTransaction({
@@ -71,6 +88,14 @@ const signinUser = async (req, res, next) => {
 
     const user = await User.findOne({ email });
     if (!user) return next(createHttpError(404, "User not Found!"));
+
+    // If password doesn't exist then generate a new one
+    // This situation happens when the user is created by OAuth provider
+    if (!user.password) {
+      const hashedPassword = await bcrypt.hash(password, 8);
+      user.password = hashedPassword;
+      await user.save();
+    }
 
     const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword)
@@ -207,8 +232,8 @@ const sendForgotPasswordMail = async (req, res, next) => {
       from: '"Noteups Customer Care" <customer.care@noteups.com>', // sender address
       to: `${email}`, // list of receivers
       subject: "For Forgot Password Verification Mail", // Subject line
-      html: `Your Verification for forgot password Link <a href="${process.env.FRONTEND_URL}/forgot-password-verify/${jwtToken}">Link</a>`, // html body
-      text: `Your Verification for forgot password Link ${process.env.FRONTEND_URL}/forgot-password-verify/${jwtToken}`, // plain text body
+      html: `Your Verification for forgot password Link <a href="${process.env.WEB_APP_URL}/forgot-password-verify/${jwtToken}">Link</a>`, // html body
+      text: `Your Verification for forgot password Link ${process.env.WEB_APP_URL}/forgot-password-verify/${jwtToken}`, // plain text body
     });
 
     console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));

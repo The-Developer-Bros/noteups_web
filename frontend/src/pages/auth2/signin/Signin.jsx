@@ -1,7 +1,4 @@
-import { useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-import { GoogleLogin } from "react-google-login";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
@@ -9,13 +6,15 @@ import { setUser } from "../../../redux/slices/AuthSlice";
 import { useSigninUserMutation } from "../../../redux/store/api/authApi";
 import authSvg from "../assests/login.svg";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Signin = () => {
   const dispatch = useDispatch();
-  const toast = useToast();
+
   const navigate = useNavigate();
   const [signinUser, { data, isLoading, error, isError, isSuccess }] =
     useSigninUserMutation();
-  console.log(data);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -23,6 +22,7 @@ const Signin = () => {
     textChange: "Sign In",
   });
   const { email, password1, textChange } = formData;
+
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
   };
@@ -33,89 +33,96 @@ const Signin = () => {
       setFormData({ ...formData, textChange: "Submitting" });
       signinUser({ email: email, password: password1 });
     } else {
-      toast({
-        status: "error",
-        duration: 5000,
-        title: "Please fill all fields",
-      });
+      toast.warn("Please fill all fields");
     }
   };
 
   useEffect(() => {
     if (isSuccess) {
+      toast.success("Login Successful");
       dispatch(setUser({ name: data.name, token: data.token }));
       localStorage.setItem("token", data.token);
-      window.location.href = "/";
+      // window.location.href = "/"; // causes problem with redux persistor
     } else if (isError) {
       console.log(error);
+      localStorage.clear();
       if (error.data.status === 406) {
-        toast({
-          status: "success",
-          duration: 5000,
-          title: "Please check your email to verify your account",
-        });
+        toast.warn("Please check your email to verify your account");
         navigate("/send-verify-mail", {
           state: { email },
         });
       } else {
-        toast({
-          status: "error",
-          duration: 5000,
-          title: "Invalid email or password",
-        });
+        toast.error(`Invalid credentials: ${error.data.message}`);
       }
     } else if (isLoading) {
       setFormData({ ...formData, textChange: "Loading..." });
     }
     setFormData({ ...formData, textChange: "Sign In" });
-  }, [isSuccess, isError, isLoading, error, data, dispatch, navigate, email, toast]); // dont use formData in the dependency array
+  }, [isSuccess, isError, isLoading, error, navigate, email]); // dont use formData in the dependency array
+
+  ////////////////////////////////////////////// OAuth //////////////////////////////////////////////
+
+  const backendUrl =
+    process.env.REACT_APP_BACKEND_URL || "http://localhost:4000";
+
+  // constantly Check if user is authenticated
+  // if user is authenticated, redirect to home page
+  // else show signin page
+
+  const redirectToGoogleSSO = async () => {
+    window.location.href = `${backendUrl}/auth/google`;
+  };
+
+  const redirectToFacebookSSO = async () => {
+    window.location.href = `${backendUrl}/auth/facebook`;
+  };
+
+  const redirectToGithubSSO = async () => {
+    window.location.href = `${backendUrl}/auth/github`;
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-      {/* {isAuth() ? <Redirect to="/" /> : null}
-      <ToastContainer /> */}
+      {/* {isAuth() ? <Redirect to="/" /> : null}*/}
+      <ToastContainer />
       <div className="max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1">
         <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
           <div className="mt-12 flex flex-col items-center">
             <h1 className="text-2xl xl:text-3xl font-extrabold">
-              Sign In for Congar
+              Sign In for Noteups
             </h1>
             <div className="w-full flex-1 mt-8 text-indigo-500">
               <div className="flex flex-col items-center">
-                <GoogleLogin
-                  clientId={`${process.env.REACT_APP_GOOGLE_CLIENT}`}
-                  // onSuccess={responseGoogle}
-                  // onFailure={responseGoogle}
-                  cookiePolicy={"single_host_origin"}
-                  render={(renderProps) => (
-                    <button
-                      onClick={renderProps.onClick}
-                      disabled={renderProps.disabled}
-                      className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
-                    >
-                      <div className=" p-2 rounded-full ">
-                        <i className="fab fa-google " />
-                      </div>
-                      <span className="ml-4">Sign In with Google</span>
-                    </button>
-                  )}
-                ></GoogleLogin>
-                <FacebookLogin
-                  appId={`${process.env.REACT_APP_FACEBOOK_CLIENT}`}
-                  autoLoad={false}
-                  // callback={responseFacebook}
-                  render={(renderProps) => (
-                    <button
-                      onClick={renderProps.onClick}
-                      className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
-                    >
-                      <div className=" p-2 rounded-full ">
-                        <i className="fab fa-facebook" />
-                      </div>
-                      <span className="ml-4">Sign In with Facebook</span>
-                    </button>
-                  )}
-                />
+                <button
+                  onClick={redirectToGoogleSSO}
+                  // disabled={renderProps.disabled}
+                  className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline"
+                >
+                  <div className=" p-2 rounded-full ">
+                    <i className="fa-brands fa-google " />
+                  </div>
+                  <span className="ml-4">Sign In with Google</span>
+                </button>
+
+                <button
+                  onClick={redirectToFacebookSSO}
+                  className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
+                >
+                  <div className=" p-2 rounded-full ">
+                    <i className="fa-brands fa-facebook" />
+                  </div>
+                  <span className="ml-4">Sign In with Facebook</span>
+                </button>
+
+                <button
+                  onClick={redirectToGithubSSO}
+                  className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3 bg-indigo-100 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-5"
+                >
+                  <div className=" p-2 rounded-full ">
+                    <i className="fa-brands fa-github" />
+                  </div>
+                  <span className="ml-4">Sign In with GitHub</span>
+                </button>
 
                 <a
                   className="w-full max-w-xs font-bold shadow-sm rounded-lg py-3

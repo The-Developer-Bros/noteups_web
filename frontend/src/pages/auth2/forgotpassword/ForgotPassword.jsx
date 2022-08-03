@@ -1,13 +1,13 @@
-import { useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useSendMailForgotPasswordMutation } from "../../../redux/store/api/authApi";
 import authSvg from "../assests/forget.svg";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const ForgotPassword = () => {
   const [sendMail, { data, isLoading, error, isError, isSuccess }] =
     useSendMailForgotPasswordMutation();
-
-  const toast = useToast();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -24,13 +24,9 @@ const ForgotPassword = () => {
       sendMail({
         email: email,
       });
+      toast.success("Email sent successfully");
     } else {
-      toast({
-        title: "Invalid Input",
-        description: "Please fill all fields",
-        status: "error",
-        duration: 5000,
-      });
+      toast.error("Please fill all fields");
     }
   };
 
@@ -40,39 +36,28 @@ const ForgotPassword = () => {
         email: "",
         textChange: "Submit",
       });
-      toast({
-        title: "Success",
-        description: "Please check your email",
-        status: "success",
-        duration: 5000,
-      });
-      // Wait for 5 seconds and redirect to login page
+      toast.success("Please check your email.Redirecting to login page");
       setTimeout(() => {
         window.location.href = "/signin";
       }, 5000);
     } else if (isError) {
-      toast({
-        title: error.data.message,
-        description: "",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      toast.error(error.data.message);
       setFormData({
         email: "",
         textChange: "Submit",
       });
     } else if (isLoading) {
+      toast.info("Please wait...");
       setFormData({
         email: "",
         textChange: "Submitting",
       });
     }
-  }, [isLoading, isError, isSuccess, error, toast]);
+  }, [isLoading, isError, isSuccess, error]);
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-      {/* <ToastContainer /> */}
+      <ToastContainer />
       <div className="max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1">
         <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
           <div className="mt-12 flex flex-col items-center">

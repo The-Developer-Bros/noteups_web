@@ -1,12 +1,17 @@
-import { useToast } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSignupUserMutation } from "../../../redux/store/api/authApi";
 import authSvg from "../assests/auth.svg";
+
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Signup = () => {
   const [signupUser, { data, isLoading, error, isError, isSuccess }] =
     useSignupUserMutation();
   console.log("data", data);
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -15,11 +20,12 @@ const Signup = () => {
     password2: "",
     textChange: "Sign Up",
   });
-  const toast = useToast();
+
   const { name, email, password1, password2, textChange } = formData;
   const handleChange = (text) => (e) => {
     setFormData({ ...formData, [text]: e.target.value });
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (name && email && password1) {
@@ -31,21 +37,12 @@ const Signup = () => {
           email: formData.email,
           password: formData.password1,
         });
+        toast.info("Signing up...");
       } else {
-        toast({
-          title: "Passwords do not match",
-          status: "error",
-          duration: 5000,
-          isClosable: true,
-        });
+        toast.error("Passwords do not match");
       }
     } else {
-      toast({
-        title: "Please fill in all fields",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      toast.error("Please fill in all fields");
     }
   };
 
@@ -58,19 +55,12 @@ const Signup = () => {
         password2: "",
         textChange: "Sign Up",
       });
-      toast({
-        status: "success",
-        title: "User created successfully",
-        duration: 5000,
+      toast.success("User created successfully");
+      navigate("/send-verify-mail", {
+        state: { email },
       });
-      window.location.href = "/signin";
     } else if (isError) {
-      toast({
-        title: "Error creating user",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
+      toast.error("Error creating user");
       console.log("error", error);
       setFormData({
         name: "",
@@ -80,17 +70,17 @@ const Signup = () => {
         textChange: "Sign Up",
       });
     }
-  }, [isSuccess, isError, error, toast]);
+  }, [isSuccess, isError, error, navigate, email]);
 
   return (
     <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-      {/* {isAuth() ? <Redirect to='/' /> : null}
-      <ToastContainer /> */}
+      {/* {isAuth() ? <Redirect to='/' /> : null}*/}
+      <ToastContainer />
       <div className="max-w-screen-xl m-0 sm:m-20 bg-white shadow sm:rounded-lg flex justify-center flex-1">
         <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12">
           <div className="mt-12 flex flex-col items-center">
             <h1 className="text-2xl xl:text-3xl font-extrabold">
-              Sign Up for Congar
+              Sign Up for Noteups
             </h1>
 
             <form

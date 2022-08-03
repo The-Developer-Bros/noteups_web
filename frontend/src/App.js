@@ -1,7 +1,8 @@
 import * as Sentry from "@sentry/react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import NavBar from "./components/header/NavBar";
-import BottomBar from "./components/footer/BottomBar";
+import NavBar from "./components/navbar/NavBar";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import ChangePassword from "./pages/auth2/changepassword/ChangePassword";
 import EmailVerified from "./pages/auth2/emailverified/EmailVerified";
@@ -9,6 +10,10 @@ import ForgotPassword from "./pages/auth2/forgotpassword/ForgotPassword";
 import SendEmail from "./pages/auth2/sendemail/SendEmail";
 import Signin from "./pages/auth2/signin/Signin";
 import Signup from "./pages/auth2/signup/Signup";
+import CartPage from "./pages/cart/CartPage";
+import Checkout from "./pages/checkout/Checkout";
+import Canceled from "./pages/checkout/stripe-checkout/Canceled";
+import Success from "./pages/checkout/stripe-checkout/Success";
 import AboutPage from "./pages/info/about/AboutPage";
 import ContactPage from "./pages/info/contact/ContactPage";
 import ContributePage from "./pages/info/contribute/ContributePage";
@@ -19,13 +24,50 @@ import LandingPage from "./pages/landing/LandingPage";
 import ProductCategoriesPage from "./pages/product/categories/ProductCategoriesPage";
 import ProductDetailPage from "./pages/product/details/ProductDetailPage";
 import ProductListingPage from "./pages/product/listing/ProductListingPage";
-import CartPage from "./pages/cart/CartPage";
-import Checkout from "./pages/checkout/Checkout";
-import Success from "./pages/checkout/stripe-checkout/Success";
-import Canceled from "./pages/checkout/stripe-checkout/Canceled";
+import { defaultState, setUser } from "./redux/slices/AuthSlice";
 
 function App() {
-  const token = localStorage.getItem("token");
+  const user = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  // const fetchAuthentication = async () => {
+  //   const response = await backendClient.get(`/auth/user, {withCredentials: true}`).catch((err) => {
+  //     console.log("Not properly authenticated");
+  //     dispatch(defaultState());
+  //     // navigate("/signin/error");
+  //   });
+  //   console.log("response is ", response);
+
+  //   if (response && response.data) {
+  //     console.log("User: ", response.data);
+  //     dispatch(setUser(response.data));
+  //     // navigate("/products");
+  //   }
+  // };
+
+  useEffect(() => {
+    const fetchAuthentication = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_BACKEND_URL}/auth/user`,
+          { credentials: "include" }
+        ).then((res) => res.json());
+        console.log("response is ", response);
+
+        if (response) {
+          console.log("User: ", response);
+          dispatch(setUser(response));
+          // navigate("/products");
+        }
+      } catch (err) {
+        console.log("Not properly authenticated from App");
+        dispatch(defaultState());
+        // navigate("/signin");
+      }
+    };
+    fetchAuthentication();
+    console.log("user in app", user);
+  }, []); // do not include any dependencies here, otherwise it will run every time the component is rendered
 
   return (
     <BrowserRouter>
@@ -33,6 +75,8 @@ function App() {
 
       <div className="App">
         <Routes>
+          <Route path="/" element={<LandingPage />} />
+
           {/* Info Routes */}
           <Route path="about" element={<AboutPage />} />
           <Route path="pricing" element={<PricingPage />} />
@@ -61,23 +105,18 @@ function App() {
           <Route path="canceled" element={<Canceled />} />
 
           {/* Auth Routes */}
-          {/* <Route
-            path="/"
-            element={token ? <LandingPage /> : <Navigate to="/signin" />}
-          /> */}
-          <Route path="/" element={<LandingPage />} />
 
           <Route path="/send-verify-mail" element={<SendEmail />} />
           <Route path="/email-verify/:token" element={<EmailVerified />} />
 
           <Route
             path="/signin"
-            element={!token ? <Signin /> : <Navigate to="/" />}
+            element={user.name ? <Navigate to="/" /> : <Signin />}
           />
 
           <Route
             path="/signup"
-            element={!token ? <Signup /> : <Navigate to="/" />}
+            element={user.name ? <Navigate to="/" /> : <Signup />}
           />
 
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -85,6 +124,23 @@ function App() {
             path="/forgot-password-verify/:token"
             element={<ChangePassword />}
           />
+
+          {/* Protected routes for dashboard and account */}
+          <Route
+            path="/dashboard"
+            element={
+              user.name ? <Navigate to="/" /> : <Navigate to="/signin" />
+            }
+            // element={user.name  ? <Dashboard /> : <Navigate to="/signin" />}
+          />
+          <Route
+            path="/account"
+            element={
+              user.name ? <Navigate to="/" /> : <Navigate to="/signin" />
+            }
+            // element={user.name  ? <Account /> : <Navigate to="/signin" />}
+          />
+
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>

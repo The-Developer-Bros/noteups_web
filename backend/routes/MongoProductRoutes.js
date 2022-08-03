@@ -7,10 +7,13 @@ const {
   listDomains,
   listSubdomains,
   listSubjects,
+  listUserSubscriptions,
 } = require("../controllers/MongoProductController");
 
-router.get("/mongo/domains", listDomains);
-router.get("/mongo/subdomains", listSubdomains);
-router.get("/mongo/subjects", listSubjects);
+router.get("/domains", listDomains);
+router.get("/subdomains", listSubdomains);
+router.get("/subjects", listSubjects);
+router.get("/subscriptions", listUserSubscriptions);
+
 // Export the router
 module.exports = router;

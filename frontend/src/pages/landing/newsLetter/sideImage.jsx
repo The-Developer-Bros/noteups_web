@@ -35,7 +35,7 @@ export function SideImage(props) {
   return (
     <SideImageContainer>
       <Image>
-        <img src={BookLoverImg} />
+        <img src={BookLoverImg} alt="book-lover" />
       </Image>
     </SideImageContainer>
   );

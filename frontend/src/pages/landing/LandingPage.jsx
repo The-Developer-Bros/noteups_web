@@ -1,4 +1,4 @@
-import CardSection from "./landingcomponents/CardSection";
+import CardSection from "./landingcomponents/CertificationSection";
 import Header from "./landingcomponents/Header";
 import { OuterLayout } from "./styles/Layouts";
 import styled from "styled-components";
@@ -12,6 +12,8 @@ import "./LandingPage.scss";
 import bg from "./img/bg.svg";
 import HeaderContent from "./landingcomponents/HeaderContent";
 import { NewsLetter } from "./newsLetter";
+import CertificationSection from "./landingcomponents/CertificationSection";
+import CustomerSupportSection from "./landingcomponents/CustomerSupportSection";
 
 function LandingPage() {
   return (
@@ -25,7 +27,7 @@ function LandingPage() {
       <OuterLayout>
         <MainStyled>
           <Fade left>
-            <CardSection />
+            <CertificationSection />
           </Fade>
           <Fade right>
             <ChartSection />
@@ -34,12 +36,15 @@ function LandingPage() {
             <MessagingSection />
           </Fade>
           <Fade right>
-            <PaymentSection />
+            <CustomerSupportSection />
           </Fade>
           <Fade left>
-            <FAQSection />
+            <PaymentSection />
           </Fade>
           <Fade right>
+            <FAQSection />
+          </Fade>
+          <Fade left>
             <NewsLetter />
           </Fade>
         </MainStyled>

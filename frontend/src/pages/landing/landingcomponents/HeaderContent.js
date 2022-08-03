@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Secondarybutton from "./SecondaryButton";
 // import phone from "../img/phone.svg";
-import VRStudy from "../img2/vr-study-transparent.png"
+import VRStudy from "../img2/vr-study-transparent.png";
 import ring1 from "../img/ring_orange.svg";
 import message1 from "../img/message_pink.svg";
 import message2 from "../img/message_blue.svg";
@@ -15,7 +15,7 @@ function HeaderContent() {
         <div className="left-content">
           <div className="left-text-container">
             <h1>The Best Study notes under one roof</h1>
-            <p className="white">
+            <p className="left-subtext-containre">
               We are committed to providing affordable and quality notes to
               students, working professionals, and teachers
             </p>
@@ -46,6 +46,17 @@ const HeaderContentStyled = styled.div`
     display: flex;
     align-items: center;
     padding-right: 3rem;
+
+    .left-text-container {
+      color: white;
+    }
+
+    .left-subtext-containre {
+      color: white;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
     .white {
       color: white;
     }

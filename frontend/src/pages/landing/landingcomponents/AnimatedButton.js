@@ -20,7 +20,7 @@ const AnimatedButtonStyled = styled.button`
     padding: 1rem 2rem;
     font-family: inherit;
     font-size: inherit;
-    color: inherit;
+    color: white;
     border-radius: 20px;
     outline: none;
     border: none;

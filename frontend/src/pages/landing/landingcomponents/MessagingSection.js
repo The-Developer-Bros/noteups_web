@@ -6,7 +6,7 @@ import avatar2 from "../img/avatar2.svg";
 import avatar3 from "../img/avatar3.svg";
 import avatar4 from "../img/avatar4.svg";
 import avatar5 from "../img/avatar5.svg";
-import messaging from "../img2/message-conversation.png";
+import messaging from "../img2/landing-messaging2-transparent.png";
 import bgCircles from "../img/circleBg.svg";
 
 function MessagingSection() {

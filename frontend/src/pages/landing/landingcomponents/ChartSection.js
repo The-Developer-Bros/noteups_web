@@ -14,23 +14,22 @@ function ChartSection() {
         <div className="chart-con">
           <div className="chart-left">
             <div className="stats">
-              <div className="stats-money">
-                <ChartStats name={"Balance"} amount={"$250"} />
-                <ChartStats name={"Last Transaction"} amount={"$1,000"} />
+              <div className="stats-progress">
+                <ChartStats name={"Days Streak"} amount={17} />
+                <ChartStats name={"Exercises Completed"} amount={5} />
               </div>
               <img src={chart} alt="" />
             </div>
           </div>
           <div className="chart-right">
             <h2 className="secondary-heading">
-              Manage your finances like a pro in no time
+              Manage your progress on exercises and quizzes
             </h2>
             <Roll right>
               <p>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem
-                officia nemo distinctio dolores necessitatibus odit magni
-                corrupti error, voluptate alias adipisci ducimus nostrum
-                maiores. Ad?
+                You can track your progress on exercises and quizzes and see
+                how you are doing. You can also see your progress on your
+                exercises and quizzes.
               </p>
             </Roll>
             <Bounce right>
@@ -61,7 +60,7 @@ const ChartStyled = styled.section`
           border-radius: 62px;
           width: 100%;
         }
-        .stats-money {
+        .stats-progress {
           display: flex;
           padding-bottom: 1.3rem;
           justify-content: space-between;

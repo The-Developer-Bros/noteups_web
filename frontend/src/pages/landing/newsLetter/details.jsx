@@ -1,6 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const DetailsContainer = styled.div`
   height: 100%;
   display: flex;
@@ -57,7 +60,7 @@ const EmailInput = styled.input`
   &::placeholder {
     color: #272727;
   }
-  
+
   @media (max-width: 1200px) {
     padding-right: 4rem;
   }
@@ -78,7 +81,6 @@ const EmailInput = styled.input`
     padding-left: 0;
     padding-right: 0rem;
   }
-
 `;
 
 const SubscribeButton = styled.button`
@@ -107,16 +109,43 @@ const SubscribeButton = styled.button`
 export function Details(props) {
   return (
     <DetailsContainer>
+      <ToastContainer />
       <InnerContainer>
         <Header>Hey, wait...</Header>
         <SubHeader>Subscribe to our newsletter!</SubHeader>
         <Text>
-          You will never miss our podcasts, latest news, etc. Our newsletter is
-          once a week, every wednesday.
+          You will be the first to know about our latest news and updates. Our
+          newsletter is sent out every week.
         </Text>
         <FormGroup>
           <EmailInput type="text" placeholder="example@email.com" />
-          <SubscribeButton>Subscribe</SubscribeButton>
+          <SubscribeButton
+            value="email"
+            // Check if email is valid
+            onClick={() => {
+              try {
+                const email = document.getElementById("email").value;
+                if (email.includes("@") && email.includes(".")) {
+                  props.subscribe(email);
+                  toast.success("Subscribed!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                  });
+                } else {
+                  toast.error("Please enter a valid email address");
+                }
+              } catch (error) {
+                toast.error(error);
+              }
+            }}
+          >
+            Subscribe
+          </SubscribeButton>
         </FormGroup>
       </InnerContainer>
     </DetailsContainer>

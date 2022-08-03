@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { convertToSentenceCase } from "../../../utils";
 
 const ProductListingCard = ({ domain, subdomain, subject }) => {
   console.log(`subject:`, subject);
@@ -20,7 +21,8 @@ const ProductListingCard = ({ domain, subdomain, subject }) => {
         }`;
       }}
     >
-      <h2>{subject.name}</h2>
+      <h1>{convertToSentenceCase(subject.name)}</h1>
+      {/* remove /v1 from poster */}
       <img src={subject.poster} alt={subject.name} />
     </motion.div>
   );

@@ -29,7 +29,7 @@ async function fetchFromAPI(endpoint, opts) {
     toast.success("Payment Requested Successfully");
     return res.json();
   } else {
-    toast.error(`Something went wrong`);
+    toast.error(`Error Occured: ${res.statusText}`);
     throw new Error(res.statusText);
   }
 }

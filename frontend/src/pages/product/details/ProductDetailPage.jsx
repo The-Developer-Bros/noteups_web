@@ -4,14 +4,14 @@ import { useParams } from "react-router-dom";
 import {
   addProduct,
   increase,
-  isInCart
+  isInCart,
 } from "../../../redux/slices/CartSlice";
 import {
   fetchAsyncSubjectDetails,
   fetchAsyncSubjectsImages,
   getSelectedSubjectDetails,
   getSelectedSubjectImages,
-  removeSelectedSubjectDetails
+  removeSelectedSubjectDetails,
 } from "../../../redux/slices/SubdomainSlice";
 import "./ProductDetailPage.scss";
 
@@ -22,6 +22,10 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { useState } from "react";
 import { backendClient } from "../../../common/clients";
+import { convertToSentenceCase } from "../../../utils";
+
+import CheckoutButton from "../../../components/checkoutbutton/CheckoutButton";
+import CardIcon from "./images/credit-card.svg";
 
 // Products to Price Map
 const productToPriceMap = {
@@ -149,7 +153,7 @@ function ProductDetailPage() {
         <>
           <div className="section-left">
             <div className="subject-title">
-              {subjectDetails.subject_meta_data.name}
+              {convertToSentenceCase(subjectDetails.subject_meta_data.subject)}
             </div>
             <div className="subject-year">
               {subjectDetails.subject_meta_data.Year}
@@ -167,11 +171,19 @@ function ProductDetailPage() {
             <div className="subject-info">
               <div>
                 <span>Domain </span>
-                <span>{subjectDetails.subject_meta_data.domain}</span>
+                <span>
+                  {convertToSentenceCase(
+                    subjectDetails.subject_meta_data.domain
+                  )}
+                </span>
               </div>
               <div>
                 <span>Subdomain </span>
-                <span>{subjectDetails.subject_meta_data.subdomain}</span>
+                <span>
+                  {convertToSentenceCase(
+                    subjectDetails.subject_meta_data.subdomain
+                  )}
+                </span>
               </div>
             </div>
             <div className="subject-description">
@@ -203,8 +215,8 @@ function ProductDetailPage() {
               </div>
 
               {itemInCart.message === "Item not in cart" && (
-                <button
-                  className="button is-black nomad-btn"
+                <CheckoutButton
+                  className="checkout-button"
                   onClick={() => {
                     console.log(
                       "addproduct ",
@@ -228,14 +240,12 @@ function ProductDetailPage() {
                       toast.error("Error adding product to cart");
                     }
                   }}
-                >
-                  ADD TO CART
-                </button>
+                  text="ADD TO CART"
+                  imgSrc={CardIcon}
+                />
               )}
               {itemInCart.message === "Item already in cart" && (
-                <button
-                  className="button is-white nomad-btn"
-                  id="btn-white-outline"
+                <CheckoutButton
                   onClick={() => {
                     console.log("increase ", subjectDetails.subject_meta_data);
                     try {
@@ -256,9 +266,9 @@ function ProductDetailPage() {
                       toast.error("Error increasing product quantity");
                     }
                   }}
-                >
-                  ADD MORE
-                </button>
+                  text="ADD MORE"
+                  imgSrc={CardIcon}
+                />
               )}
 
               {itemInCart.message !== "Item not in cart" &&
@@ -270,14 +280,13 @@ function ProductDetailPage() {
                 )}
 
               {/* Go to pdf viewer button */}
-              <button
-                className="button subject-pdf-viewer is-black nomad-btn"
+              <CheckoutButton
                 onClick={() => {
                   window.open(subjectDetails.subject_meta_data.pdf_url);
                 }}
-              >
-                PDF VIEWER
-              </button>
+                text="VIEW PDF"
+                imgSrc={CardIcon}
+              />
             </div>
           </div>
           <ToastContainer />

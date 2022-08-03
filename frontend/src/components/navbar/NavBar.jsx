@@ -3,9 +3,7 @@ import { useEffect, useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-// import { Auth0LoginButton, Auth0LogoutButton, Auth0Profile } from "./Auth";
-// import SearchBar from './SearchBar';
-import { Button } from "@chakra-ui/button";
+
 import { defaultState } from "../../redux/slices/AuthSlice";
 
 import "./NavBar.scss";
@@ -106,26 +104,37 @@ const NavBar = () => {
         {/* Login/Register Button for Chakra*/}
         <div className="login_box nav_item">
           {user.name ? (
-            <div className="login_container">
-              <div className="login_text">
-                <p>{user.name}</p>
+            <>
+              <div className="login_container">
+                <div className="logged_in_user">
+                  <h2>{user.name}</h2>
+                </div>
+                <div className="signout_button">
+                  <button onClick={(e) => handleSignout(e)}>Sign Out</button>
+                </div>
               </div>
-              <div className="login_button">
-                <Button onClick={(e) => handleSignout(e)}>Sign Out</Button>
-              </div>
-            </div>
+            </>
           ) : (
-            <div className="login_container">
-              <div className="login_button">
-                <Button
+            <>
+              <div className="login_container">
+                <button
+                  className="signin_button"
                   onClick={() => {
                     navigate("/signin");
                   }}
                 >
-                  Login
-                </Button>
+                  Sign In
+                </button>
+                <button
+                  className="signup_button"
+                  onClick={() => {
+                    navigate("/signup");
+                  }}
+                >
+                  Sign Up
+                </button>
               </div>
-            </div>
+            </>
           )}
         </div>
 

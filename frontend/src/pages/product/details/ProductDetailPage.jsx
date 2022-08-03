@@ -24,7 +24,7 @@ import { useState } from "react";
 import { backendClient } from "../../../common/clients";
 import { convertToSentenceCase } from "../../../utils";
 
-import CheckoutButton from "../../../components/checkoutbutton/CheckoutButton";
+import CheckoutButton from "../../../components/buttons/CheckoutButton";
 import CardIcon from "./images/credit-card.svg";
 
 // Products to Price Map

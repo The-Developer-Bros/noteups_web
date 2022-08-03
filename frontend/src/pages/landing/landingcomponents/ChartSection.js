@@ -1,11 +1,10 @@
 import React from "react";
-import styled from "styled-components";
-import { InnerLayout } from "../styles/Layouts";
-import ChartStats from "./ChartStats";
-import chart from "../img/chart.svg";
-import AnimatedButton from "./AnimatedButton";
 import { Bounce, Roll } from "react-reveal";
-import RubberBand from "react-reveal/RubberBand";
+import styled from "styled-components";
+import chart from "../img/chart.svg";
+import { InnerLayout } from "../styles/Layouts";
+import AnimatedButton from "./AnimatedButton";
+import ChartStats from "./ChartStats";
 
 function ChartSection() {
   return (
@@ -27,13 +26,13 @@ function ChartSection() {
             </h2>
             <Roll right>
               <p>
-                You can track your progress on exercises and quizzes and see
-                how you are doing. You can also see your progress on your
-                exercises and quizzes.
+                You can track your progress on exercises and quizzes and see how
+                you are doing. You can also see your progress on your exercises
+                and quizzes.
               </p>
             </Roll>
             <Bounce right>
-              <AnimatedButton name={"Learn More"} />
+              <AnimatedButton name={"Explore Products"} />
             </Bounce>
           </div>
         </div>

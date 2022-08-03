@@ -2,11 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import Secondarybutton from "./SecondaryButton";
 // import phone from "../img/phone.svg";
-import VRStudy from "../img2/vr-study-transparent.png";
-import ring1 from "../img/ring_orange.svg";
-import message1 from "../img/message_pink.svg";
-import message2 from "../img/message_blue.svg";
 import { Fade } from "react-reveal";
+import message2 from "../img/message_blue.svg";
+import message1 from "../img/message_pink.svg";
+import ring1 from "../img/ring_orange.svg";
+import VRStudy from "../img2/vr-study-transparent.png";
 
 function HeaderContent() {
   return (
@@ -19,7 +19,7 @@ function HeaderContent() {
               We are committed to providing affordable and quality notes to
               students, working professionals, and teachers
             </p>
-            <Secondarybutton name={"Register Now"} />
+            <Secondarybutton name={"Explore Products"} />
           </div>
         </div>
       </Fade>

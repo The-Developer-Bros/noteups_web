@@ -1,19 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  name: null,
-  email: null,
-  googleId: null,
+  profile: {
+    name: "",
+    picture: "",
+  },
+  _id: "",
   isUserVerified: false,
   verifyToken: null,
   token: null,
   tokens: [],
-  profile: {
-    name: null,
-    picture: null,
-  },
-  stripeCustomerId: null,
-  _id: null,
+  stripeCustomerId: "",
+  subscriptions: [],
+  name: "",
+  email: "",
+  googleId: "",
   __v: 0,
 };
 
@@ -22,20 +23,17 @@ export const authSlice = createSlice({
   initialState: initialState,
   reducers: {
     setUser: (state, action) => {
-      state.name = action.payload.name || null;
-      state.token = action.payload.token || null;
-
-      state.email = action.payload.email || null;
-      state.googleId = action.payload.googleId || null;
+      state.profile = action.payload.profile || {};
+      state._id = action.payload._id || "";
       state.isUserVerified = action.payload.isUserVerified || false;
       state.verifyToken = action.payload.verifyToken || null;
+      state.token = action.payload.token || null;
       state.tokens = action.payload.tokens || [];
-      state.profile = action.payload.profile || {
-        name: null,
-        picture: null,
-      };
-      state.stripeCustomerId = action.payload.stripeCustomerId || null;
-      state._id = action.payload._id || null;
+      state.stripeCustomerId = action.payload.stripeCustomerId || "";
+      state.subscriptions = action.payload.subscriptions || [];
+      state.name = action.payload.name || "";
+      state.email = action.payload.email || "";
+      state.googleId = action.payload.googleId || "";
       state.__v = action.payload.__v || 0;
     },
     defaultState: (state) => {

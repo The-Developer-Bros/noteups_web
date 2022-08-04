@@ -1,4 +1,97 @@
-# Noteups
+# Noteups - A Lecture Notes Sharing Platform
+
+## Deployed Site Link for Frontend
+
+[FRONTEND LINK](https://noteups-frontend.netlify.app/)
+
+## Deployed Site Link for Backend
+
+[BACKEND LINK](https://noteups-backend.herokuapp.com/)
+
+### Server Routes
+
+```js
+app.use("/user", require("./routes/UserRoutes"));
+app.use("/auth", require("./routes/OAuthLoginRoutes"));
+app.use("/mongo", require("./routes/MongoProductRoutes"));
+app.use("/productApi", require("./routes/CloudinaryProductRoutes"));
+app.use("/stripeApi", require("./routes/payment/StripeRoutes"));
+app.use("/api", require("./routes/api.route"));
+```
+
+### Cloudinary Product Routes
+
+```js
+router.get("/domains", getAllDomains);
+router.get("/:domain/subdomains", getAllSubdomainsForDomain);
+router.get("/:domain/:subdomain/subjects", getAllSubjectsForSubdomain);
+
+router.get("/:domain/:subdomain/:subject", getAllPDFsForSubject);
+
+router.get("/details/:domain/:subdomain/:subject", getSubjectDetails);
+router.get("/images/:domain/:subdomain/:subject", getSubjectImages);
+router.get("/pdfs/:domain/:subdomain/:subject", getSubjectPDFs);
+router.get("/everything/:domain/:subdomain/:subject", getSubjectEverything);
+
+router.post("/upload/:domain/:subdomain/:subject", uploadSubject);
+```
+
+### Mongo Product Routes
+
+```js
+router.get("/domains", listDomains);
+router.get("/subdomains", listSubdomains);
+router.get("/subjects", listSubjects);
+router.get("/subscriptions", listUserSubscriptions);
+```
+
+### OAuth Routes
+
+```js
+router.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] }));
+router.get("/auth/google/callback", passport.authenticate("google", { failureRedirect: "/" }), (req, res) => {
+  res.redirect("/");
+}
+
+.. more coming soon
+
+```
+
+### User Routes
+
+```js
+router.post("/signup", signupUserValidation, signupUser);
+router.post("/signin", signinUserValidation, signinUser);
+
+router.post(
+  "/send-verification-mail",
+  sendVerificationMailValidation,
+  sendVerificationMail
+);
+
+router.post("/verify-user-mail", verifyUserMailValidation, verifyUserMail);
+
+router.post(
+  "/forgot-password",
+  sendForgotPasswordMailValidation,
+  sendForgotPasswordMail
+);
+
+router.post(
+  "/verify-forgot-mail",
+  verifyForgotMailValidation,
+  verifyForgotMail
+);
+```
+
+### Stripe Routes
+
+```js
+router.get("/prices", retrievePricesList);
+router.post("/create-checkout-session", createCheckoutSession);
+router.post("/create-subscription-session", createSubscriptionSession);
+router.post("/webhook", stripeWebhooks);
+```
 
 ## Frontend Deployed on -> Netlify
 
@@ -26,11 +119,11 @@
 
 <!-- URL -->
 
-# URL for tutorial
+# How to deploy on Netlify and Heroku
 
-- [Tutorial](https://niruhan.medium.com/deploying-mern-fullstack-application-on-the-web-for-free-with-netlify-and-heroku-87d888012635)
+- [Post](https://niruhan.medium.com/deploying-mern-fullstack-application-on-the-web-for-free-with-netlify-and-heroku-87d888012635)
 
 # Contact
 
 - Later entire app to be migrated to AWS
-- [Medium Tutorial](https://medium.com/@patrickmichelberger/building-a-serverless-e-commerce-app-with-aws-lambda-stripe-and-react-4663e241710b)
+- [How to migrate to AWS ?](https://medium.com/@patrickmichelberger/building-a-serverless-e-commerce-app-with-aws-lambda-stripe-and-react-4663e241710b)

@@ -32,7 +32,7 @@ const { stripeWebhooks } = require("./controllers/payment/StripeWebhooks");
 
 const app = express();
 
-app.post("/stripe-webhook", express.raw({ type: "*/*" }), stripeWebhooks); 
+app.post("/stripe-webhook", express.raw({ type: "*/*" }), stripeWebhooks);
 // stripe webhook needs express.raw because it is sending a raw body
 
 app.use(express.json({ limit: "50mb" }));
@@ -94,10 +94,27 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
+      // this is age for the cookie in milliseconds
       maxAge: 30 * 24 * 60 * 60 * 1000,
+
+      // this is the key for the cookie
       keys: [process.env.COOKIE_KEY],
+
+      // An HttpOnly Cookie is a tag added to a browser cookie that prevents client-side scripts from accessing data.
       httpOnly: false,
-      sameSite: "strict",
+
+      // Note: Standards related to the Cookie SameSite attribute recently changed such that:
+      // The cookie-sending behavior if SameSite is not specified is SameSite=Lax. Previously the default was that cookies were sent for all requests.
+      // Cookies with SameSite=None must now also specify the Secure attribute (they require a secure context/HTTPS).
+      // Cookies from the same domain are no longer considered to be from the same site if sent using a different scheme (http: or https:).
+
+      // Specifies the boolean or string to be the value for the SameSite Set-Cookie attribute. By default, this is false.
+      // true will set the SameSite attribute to Strict for strict same site enforcement.
+      // false will not set the SameSite attribute.
+      // 'lax' will set the SameSite attribute to Lax for lax same site enforcement.
+      // 'none' will set the SameSite attribute to None for an explicit cross-site cookie.
+      // 'strict' will set the SameSite attribute to Strict for strict same site enforcement.
+      sameSite: 'none',
     },
     expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     store: sessionStore,

@@ -1,19 +1,16 @@
-import CardSection from "./landingcomponents/CertificationSection";
-import Header from "./landingcomponents/Header";
-import { OuterLayout } from "./styles/Layouts";
+import { motion } from "framer-motion";
 import styled from "styled-components";
-import ChartSection from "./landingcomponents/ChartSection";
-import MessagingSection from "./landingcomponents/MessagingSection";
-import PaymentSection from "./landingcomponents/PaymentSection";
-import FAQSection from "./landingcomponents/FAQSection";
-import Footer from "./landingcomponents/Footer";
-import { Fade } from "react-reveal";
 import "./LandingPage.scss";
 import bg from "./img/bg.svg";
-import HeaderContent from "./landingcomponents/HeaderContent";
-import { NewsLetter } from "./newsLetter";
 import CertificationSection from "./landingcomponents/CertificationSection";
+import ChartSection from "./landingcomponents/ChartSection";
 import CustomerSupportSection from "./landingcomponents/CustomerSupportSection";
+import FAQSection from "./landingcomponents/FAQSection";
+import HeaderContent from "./landingcomponents/HeaderContent";
+import MessagingSection from "./landingcomponents/MessagingSection";
+import PaymentSection from "./landingcomponents/PaymentSection";
+import { NewsLetter } from "./newsLetter";
+import { OuterLayout } from "./styles/Layouts";
 
 function LandingPage() {
   return (
@@ -26,27 +23,55 @@ function LandingPage() {
 
       <OuterLayout>
         <MainStyled>
-          <Fade left>
+          <motion.div
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+          >
             <CertificationSection />
-          </Fade>
-          <Fade right>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+          >
             <ChartSection />
-          </Fade>
-          <Fade left>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+          >
             <MessagingSection />
-          </Fade>
-          <Fade right>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+          >
             <CustomerSupportSection />
-          </Fade>
-          <Fade left>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: -100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+          >
             <PaymentSection />
-          </Fade>
-          <Fade right>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+          >
             <FAQSection />
-          </Fade>
-          <Fade left>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+          >
             <NewsLetter />
-          </Fade>
+          </motion.div>
         </MainStyled>
       </OuterLayout>
     </div>

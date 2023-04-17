@@ -1,15 +1,14 @@
 import React from "react";
 import styled from "styled-components";
+import active from "../img/active.svg";
+import checkDisabled from "../img/check-disabled.svg";
+import check from "../img/check.svg";
+import inactive from "../img/inactive.svg";
 import { InnerLayout } from "../styles/Layouts";
 import Card from "./Card";
-import card from "../img/creditcard.svg";
-import active from "../img/active.svg";
-import inactive from "../img/inactive.svg";
-import check from "../img/check.svg";
-import checkDisabled from "../img/check-disabled.svg";
 
-import landingStandard from "../img2/landing-standard.jpg";
 import landingPremium from "../img2/landing-premium.jpg";
+import landingStandard from "../img2/landing-standard.jpg";
 
 function PaymentSection() {
   return (

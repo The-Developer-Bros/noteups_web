@@ -1,5 +1,5 @@
 import React from "react";
-import { Bounce, Roll } from "react-reveal";
+import { motion } from "framer-motion";
 import styled from "styled-components";
 import chart from "../img/chart.svg";
 import { InnerLayout } from "../styles/Layouts";
@@ -24,16 +24,22 @@ function ChartSection() {
             <h2 className="secondary-heading">
               Manage your progress on exercises and quizzes
             </h2>
-            <Roll right>
-              <p>
-                You can track your progress on exercises and quizzes and see how
-                you are doing. You can also see your progress on your exercises
-                and quizzes.
-              </p>
-            </Roll>
-            <Bounce right>
+            <motion.p
+              initial={{ x: 60, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.7 }}
+            >
+              You can track your progress on exercises and quizzes and see how
+              you are doing. You can also see your progress on your exercises
+              and quizzes.
+            </motion.p>
+            <motion.div
+              initial={{ x: 60, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
               <AnimatedButton name={"Explore Products"} />
-            </Bounce>
+            </motion.div>
           </div>
         </div>
       </InnerLayout>

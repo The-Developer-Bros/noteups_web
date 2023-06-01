@@ -1,40 +1,60 @@
 import React from "react";
 import styled from "styled-components";
 import Secondarybutton from "./SecondaryButton";
-// import phone from "../img/phone.svg";
-import { Fade } from "react-reveal";
+import { motion } from "framer-motion";
 import message2 from "../img/message_blue.svg";
 import message1 from "../img/message_pink.svg";
 import ring1 from "../img/ring_orange.svg";
 import VRStudy from "../img2/vr-study-transparent.png";
 
 function HeaderContent() {
+  const leftContentVariants = {
+    hidden: { opacity: 0, x: -50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { type: "spring", delay: 0.2, duration: 1 },
+    },
+  };
+  const rightContentVariants = {
+    hidden: { opacity: 0, x: 50 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { type: "spring", delay: 0.2, duration: 1 },
+    },
+  };
   return (
     <HeaderContentStyled>
-      <Fade left cascade>
-        <div className="left-content">
-          <div className="left-text-container">
-            <h1>The Best Study notes under one roof</h1>
-            <p className="left-subtext-containre">
-              We are committed to providing affordable and quality notes to
-              students, working professionals, and teachers
-            </p>
-            <Secondarybutton name={"Explore Products"} />
-          </div>
+      <motion.div
+        className="left-content"
+        variants={leftContentVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <div className="left-text-container">
+          <h1>The Best Study notes under one roof</h1>
+          <p className="left-subtext-containre">
+            We are committed to providing affordable and quality notes to
+            students, working professionals, and teachers
+          </p>
+          <Secondarybutton name={"Explore Products"} />
         </div>
-      </Fade>
-      <Fade right>
-        <div className="right-content">
-          <img src={VRStudy} alt="" className="VRStudy" />
-          <img src={ring1} alt="" className="ring1" />
-          <img src={message1} alt="" className="message1" />
-          <img src={message2} alt="" className="message2" />
-        </div>
-      </Fade>
+      </motion.div>
+      <motion.div
+        className="right-content"
+        variants={rightContentVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <img src={VRStudy} alt="" className="VRStudy" />
+        <img src={ring1} alt="" className="ring1" />
+        <img src={message1} alt="" className="message1" />
+        <img src={message2} alt="" className="message2" />
+      </motion.div>
     </HeaderContentStyled>
   );
 }
-
 const HeaderContentStyled = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);

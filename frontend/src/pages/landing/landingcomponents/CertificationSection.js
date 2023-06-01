@@ -15,8 +15,8 @@ function CertificationSection() {
               Get the best certification from our company
             </h2>
             <p>
-              We provide you with exercise certificates for your training.
-              After you have completed the exercises, you can get your certificate.
+              We provide you with exercise certificates for your training. After
+              you have completed the exercises, you can get your certificate.
               These certificates can be used at job interviews.
             </p>
           </div>

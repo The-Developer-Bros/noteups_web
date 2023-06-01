@@ -1,10 +1,31 @@
 import React from "react";
 import styled from "styled-components";
-import { InnerLayout } from "../styles/Layouts";
 import lines from "../img/lines.svg";
 import questions from "../questions";
+import { InnerLayout } from "../styles/Layouts";
 import Question from "./Question";
+
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
+
 function FAQSection() {
+  const [selectedId, setSelectedId] = useState(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSelectedId(questions[0].id);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleSelect = (id) => {
+    if (id === selectedId) {
+      setSelectedId(null);
+    } else {
+      setSelectedId(id);
+    }
+  };
+
   return (
     <FaqStyled>
       <InnerLayout>
@@ -21,9 +42,24 @@ function FAQSection() {
         </div>
 
         <div className="questions-con">
-          {questions.map((q) => {
-            return <Question key={q.id} {...q} />;
-          })}
+          <AnimatePresence initial={false}>
+            {questions.map((q) => (
+              <motion.div
+                layout
+                key={q.id}
+                onClick={() => handleSelect(q.id)}
+                className="question"
+              >
+                <Question
+                  key={q.id}
+                  id={q.id}
+                  title={q.title}
+                  description={q.description}
+                  isSelected={selectedId === q.id}
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </InnerLayout>
     </FaqStyled>

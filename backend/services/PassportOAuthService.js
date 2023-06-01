@@ -4,7 +4,6 @@ const FacebookStrategy = require("passport-facebook").Strategy;
 const GitHubStrategy = require("passport-github2").Strategy;
 
 const mongoose = require("mongoose");
-// const User = mongoose.model("users");
 const { User } = require("../models/UserModel");
 
 const stripeService = require("../services/payments/StripeService");
@@ -118,10 +117,17 @@ passport.use(
             });
 
             if (existingEmailUser) {
-              console.log("errors", {
-                msg: "There is already an account using this email address. Sign in to that account and link it with Google manually from Account Settings.",
-                existingEmailUser: existingEmailUser,
-              });
+              // Update existingEmailUser with Google ID and other information
+              existingEmailUser.googleId = profile.id;
+              existingEmailUser.tokens.push({ kind: "google", accessToken });
+              existingEmailUser.profile.name = profile._json.name;
+              existingEmailUser.profile.gender = profile._json.gender;
+              existingEmailUser.profile.picture = profile._json.picture;
+
+              // Save changes to existingEmailUser
+              await existingEmailUser.save();
+
+              // Log in with existingEmailUser
               done(null, existingEmailUser);
             } else {
               const user = new User();
@@ -187,39 +193,53 @@ passport.use(
         if (profile._json.email) {
           User.findOne(
             { email: profile._json.email },
-            async (err, existingUser) => {
+            async (err, existingEmailUser) => {
               if (err) {
                 return done(err);
               }
-              if (existingUser) {
-                return done(null, existingUser);
-              }
-              const user = new User();
-              user.email = profile._json.email;
-              user.name = `${profile.name.givenName} ${profile.name.familyName}`;
-              user.facebookId = profile.id;
-              user.tokens.push({ kind: "facebook", accessToken });
-              user.profile.name = user.name;
-              user.profile.picture = `https://graph.facebook.com/${profile.id}/picture?type=large`;
-
-              // Create Stripe Customer
-              const customer = await stripeService.addNewCustomer(
-                user.profile.name,
-                user.email
-              );
-              user.stripeCustomerId = customer.id;
-
-              user.save((err) => {
-                if (err) {
-                  return done(err);
-                }
-                console.log("info", {
-                  msg: "Facebook account has been linked.",
-                  user: user,
-                  customer: customer,
+              if (existingEmailUser) {
+                // Update existingEmailUser with Facebook ID and other information
+                existingEmailUser.facebookId = profile.id;
+                existingEmailUser.tokens.push({
+                  kind: "facebook",
+                  accessToken,
                 });
-                done(null, user);
-              });
+                existingEmailUser.profile.name = `${profile.name.givenName} ${profile.name.familyName}`;
+                existingEmailUser.profile.picture = `https://graph.facebook.com/${profile.id}/picture?type=large`;
+
+                // Save changes to existingEmailUser
+                await existingEmailUser.save();
+
+                // Log in with existingEmailUser
+                done(null, existingEmailUser);
+              } else {
+                const user = new User();
+                user.email = profile._json.email;
+                user.name = `${profile.name.givenName} ${profile.name.familyName}`;
+                user.facebookId = profile.id;
+                user.tokens.push({ kind: "facebook", accessToken });
+                user.profile.name = user.name;
+                user.profile.picture = `https://graph.facebook.com/${profile.id}/picture?type=large`;
+
+                // Create Stripe Customer
+                const customer = await stripeService.addNewCustomer(
+                  user.profile.name,
+                  user.email
+                );
+                user.stripeCustomerId = customer.id;
+
+                user.save((err) => {
+                  if (err) {
+                    return done(err);
+                  }
+                  console.log("info", {
+                    msg: "Facebook account has been linked.",
+                    user: user,
+                    customer: customer,
+                  });
+                  done(null, user);
+                });
+              }
             }
           );
         } else {
@@ -266,30 +286,41 @@ passport.use(
                 return done(err);
               }
               if (existingEmailUser) {
-                return done(null, existingEmailUser);
-              }
-              const user = new User();
-              user.email = profile.emails[0].value;
-              user.githubId = profile.id;
-              user.tokens.push({ kind: "github", accessToken });
-              user.profile.name = profile.displayName;
-              user.profile.picture = profile._json.avatar_url;
+                // Update existingEmailUser with GitHub ID and other information
+                existingEmailUser.githubId = profile.id;
+                existingEmailUser.tokens.push({ kind: "github", accessToken });
+                existingEmailUser.profile.name = profile.displayName;
+                existingEmailUser.profile.picture = profile._json.avatar_url;
 
-              // Create Stripe Customer
-              const customer = await stripeService.addNewCustomer(
-                user.profile.name,
-                user.email
-              );
-              user.stripeCustomerId = customer.id;
+                // Save changes to existingEmailUser
+                await existingEmailUser.save();
 
-              user.save((err) => {
-                console.log("info", {
-                  msg: "GitHub account has been linked.",
-                  user: user,
-                  customer: customer,
+                // Log in with existingEmailUser
+                done(null, existingEmailUser);
+              } else {
+                const user = new User();
+                user.email = profile.emails[0].value;
+                user.githubId = profile.id;
+                user.tokens.push({ kind: "github", accessToken });
+                user.profile.name = profile.displayName;
+                user.profile.picture = profile._json.avatar_url;
+
+                // Create Stripe Customer
+                const customer = await stripeService.addNewCustomer(
+                  user.profile.name,
+                  user.email
+                );
+                user.stripeCustomerId = customer.id;
+
+                user.save((err) => {
+                  console.log("info", {
+                    msg: "GitHub account has been linked.",
+                    user: user,
+                    customer: customer,
+                  });
+                  done(err, user);
                 });
-                done(err, user);
-              });
+              }
             }
           );
         } else {

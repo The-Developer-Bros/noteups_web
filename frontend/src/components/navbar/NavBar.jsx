@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -9,14 +9,12 @@ import { defaultState } from "../../redux/slices/AuthSlice";
 import "./NavBar.scss";
 
 const NavBar = () => {
-  // const { isLoading, error } = useAuth0();
-
   // Navbar Visibility
-  const [click, setClick] = useState(false);
-  const handleClick = () => {
-    setClick(!click);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const handleMenuClick = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
-  const [navVisibility, setNavVisibility] = useState(false);
+  const [isNavBarVisible, setIsNavBarVisible] = useState(false);
 
   const location = useLocation();
 
@@ -24,12 +22,12 @@ const NavBar = () => {
     const changeBackground = () => {
       if (location.pathname === "/") {
         if (window.scrollY >= 700) {
-          setNavVisibility(true);
+          setIsNavBarVisible(true);
         } else {
-          setNavVisibility(false);
+          setIsNavBarVisible(false);
         }
       } else {
-        setNavVisibility(true);
+        setIsNavBarVisible(true);
       }
     };
     changeBackground();
@@ -61,14 +59,14 @@ const NavBar = () => {
   };
 
   return (
-    <Box className={navVisibility ? "navbar_active" : "navbar"}>
+    <Box className={isNavBarVisible ? "navbar_active" : "navbar"}>
       <nav className="navbar_container">
         <Link to="/" className="navbar_logo">
           NOTEUPS
         </Link>
 
         <div className="nav_menu_container">
-          <ul className={click ? "nav_menu active" : "nav_menu"}>
+          <ul className={isMenuOpen ? "nav_menu active" : "nav_menu"}>
             <li className="nav_item">
               <Link to="/products" className="nav_links">
                 <i className="fas fa-list" /> Products
@@ -155,8 +153,8 @@ const NavBar = () => {
           )}
         </div> */}
 
-        <div className="hamburger" onClick={handleClick}>
-          {click ? (
+        <div className="hamburger" onClick={handleMenuClick}>
+          {isMenuOpen ? (
             <FaTimes className="hamburger_bars" size={20} />
           ) : (
             <FaBars className="hamburger_bars" size={20} />
